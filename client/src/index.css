@@ -1,0 +1,18 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Poppins;
+}
+
+.custom-btn{
+  border: none !important;
+}
+
+.custom-btn:hover{
+  color: white !important;
+  border-color: transparent !important;
+}
