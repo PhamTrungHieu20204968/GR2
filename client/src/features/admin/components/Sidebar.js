@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Menu } from "antd";
+import { useNavigate } from "react-router-dom";
 function getItem(label, key, icon, children, type) {
   return {
     key,
@@ -19,7 +20,21 @@ const items = [
   getItem("Bài viết", "sub3", null, [getItem("Danh sách bài viết", "4")]),
   getItem("Đơn hàng", "sub4", null, [getItem("Danh sách đơn hàng", "5")]),
 ];
-function Sidebar({ SelectedKey = ["1"], OpenKeys = ["sub1"] }) {
+function Sidebar({ SelectedKey = "1", OpenKeys = ["sub1"] }) {
+  const navigate = useNavigate();
+  const handlerClickMenu = ({ key }) => {
+    if (key === SelectedKey) {
+      return;
+    }
+    switch (key) {
+      case 1:
+        navigate("/admin");
+        break;
+
+      default:
+        break;
+    }
+  };
   return (
     <div className='h-screen w-full'>
       <Menu
@@ -29,6 +44,7 @@ function Sidebar({ SelectedKey = ["1"], OpenKeys = ["sub1"] }) {
         mode='inline'
         theme='dark'
         items={items}
+        onClick={handlerClickMenu}
       />
     </div>
   );

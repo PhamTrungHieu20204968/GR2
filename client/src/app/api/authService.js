@@ -8,7 +8,6 @@ export const AuthService = apiService.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["user"],
     }),
 
     signUp: builder.mutation({
@@ -17,7 +16,6 @@ export const AuthService = apiService.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["user"],
     }),
 
   }),

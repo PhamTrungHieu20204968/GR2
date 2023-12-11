@@ -8,11 +8,15 @@ body {
   font-family: Poppins;
 }
 
-.custom-btn{
+.custom-btn {
   border: none !important;
 }
 
-.custom-btn:hover{
+.custom-btn:hover {
   color: white !important;
   border-color: transparent !important;
+}
+
+.ant-btn-primary {
+  background-color: #30b5b2;
 }

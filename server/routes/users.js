@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const usersController = require("../controllers/UsersController");
 require("dotenv").config();
+const { validateToken } = require("../middlewares/AuthMiddleware");
 
 router.post("/signup", usersController.singUp);
 
@@ -28,4 +29,5 @@ router.get(
 );
 
 router.get("/getOne", usersController.getOne);
+router.get("/getAll", validateToken, usersController.getAll);
 module.exports = router;

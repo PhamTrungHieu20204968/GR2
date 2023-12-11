@@ -27,7 +27,9 @@ function App() {
           console.log(err);
         });
     };
-    getToken();
+    if (!JSON.parse(localStorage.getItem("token"))) {
+      getToken();
+    }
   }, []);
 
   return (

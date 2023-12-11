@@ -3,7 +3,6 @@ const bcrypt = require("bcrypt");
 require("dotenv").config();
 
 const { sign } = require("jsonwebtoken");
-const { where } = require("sequelize");
 
 class UsersController {
   // [POST] /signup
@@ -108,6 +107,15 @@ class UsersController {
     } else {
       res.json({ error: "Không tìm thấy người dùng!" });
     }
+  }
+
+  // [GET] /getAll
+  async getAll(req, res) {
+    if (req.user.id < 2) {
+      res.json({ error: "Không có quyền truy cập!" });
+    }
+    const List = await users.findAll({ where: { role: 1 } });
+    res.json(List);
   }
 }
 
