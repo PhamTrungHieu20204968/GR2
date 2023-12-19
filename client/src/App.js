@@ -1,11 +1,12 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { ConfigProvider } from "antd";
 import React, { useEffect } from "react";
-import { message } from "antd";
 import Home from "features/home/Home";
 import Login from "features/auth/pages/Login";
 import Signup from "features/auth/pages/Signup";
 import HomeAdmin from "features/admin/pages/HomeAdmin";
+import CreateProduct from "features/admin/pages/CreateProduct";
+import ListProducts from "features/admin/pages/ListProducts";
 function App() {
   useEffect(() => {
     const getToken = () => {
@@ -20,8 +21,11 @@ function App() {
       })
         .then((response) => {
           if (response.status === 200) {
-            localStorage.setItem("token", JSON.stringify(response));
+            return response.json();
           } else throw new Error("Đăng nhập thất bại!");
+        })
+        .then((data) => {
+          localStorage.setItem("token", JSON.stringify(data));
         })
         .catch((err) => {
           console.log(err);
@@ -48,6 +52,8 @@ function App() {
 
           <Route path='admin'>
             <Route index element={<HomeAdmin />} />
+            <Route path='create-product' element={<CreateProduct />} />
+            <Route path='list-products' element={<ListProducts />} />
           </Route>
         </Routes>
       </BrowserRouter>

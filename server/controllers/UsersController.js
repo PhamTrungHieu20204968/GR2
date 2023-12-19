@@ -75,19 +75,18 @@ class UsersController {
         "secretkey"
         //   { expiresIn: "4h" }
       );
-      res.status(200);
-      res.json({
+      return res.status(200).json({
         role: _user.role,
         accessToken,
       });
     } else {
       res.status(403);
-      res.json({ error: "Đăng nhập thất bại" });
+      return res.json({ error: "Đăng nhập thất bại" });
     }
   }
   // [GET] Google:login failed
   async googleLoginFailed(req, res) {
-    res.json({
+    return res.json({
       error: "Thất bại",
     });
   }
@@ -103,19 +102,19 @@ class UsersController {
     const id = req.user?.id;
     const _user = await users.findOne({ where: { id } });
     if (_user) {
-      res.json(_user);
+      return res.json(_user);
     } else {
-      res.json({ error: "Không tìm thấy người dùng!" });
+      return res.json({ error: "Không tìm thấy người dùng!" });
     }
   }
 
   // [GET] /getAll
   async getAll(req, res) {
-    if (req.user.id < 2) {
-      res.json({ error: "Không có quyền truy cập!" });
+    if (req.user.role < 2) {
+      return res.json({ error: "Không có quyền truy cập!" });
     }
     const List = await users.findAll({ where: { role: 1 } });
-    res.json(List);
+    return res.json(List);
   }
 }
 

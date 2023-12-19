@@ -24,7 +24,10 @@ function Signup() {
           navigate("/login");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        message.error("Đăng ký thất bại");
+        console.log(err);
+      });
   };
 
   const loginWithGoogleHandler = () => {

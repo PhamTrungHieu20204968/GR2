@@ -27,16 +27,21 @@ function Sidebar({ SelectedKey = "1", OpenKeys = ["sub1"] }) {
       return;
     }
     switch (key) {
-      case 1:
+      case "1":
         navigate("/admin");
         break;
-
+      case "2":
+        navigate("/admin/list-products");
+        break;
+      case "3":
+        navigate("/admin/create-product");
+        break;
       default:
         break;
     }
   };
   return (
-    <div className='h-screen w-full'>
+    <div className='h-screen w-full max-w-xs fixed top-0 left-0'>
       <Menu
         className='h-full text-lg p-1'
         defaultSelectedKeys={SelectedKey}

@@ -7,7 +7,7 @@ export const UserService = apiService.injectEndpoints({
         url: `users/getAll`,
         headers,
       }),
-      providesTags: ["users"],
+      providesTags: ["user"],
     }),
 
     createUser: builder.mutation({
@@ -17,7 +17,7 @@ export const UserService = apiService.injectEndpoints({
         body: data,
         headers,
       }),
-      invalidatesTags: ["users"],
+      invalidatesTags: ["user"],
     }),
 
     updateUser: builder.mutation({
@@ -27,7 +27,7 @@ export const UserService = apiService.injectEndpoints({
         body: data,
         headers,
       }),
-      invalidatesTags: ["users"],
+      invalidatesTags: ["user"],
     }),
   }),
 });

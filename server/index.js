@@ -17,17 +17,15 @@ app.use(
 
 app.use(express.json());
 app.use(
-	cors({
-		origin: "http://localhost:3000",
-		methods: "GET,POST,PUT,DELETE",
-		credentials: true,
-	})
+  cors({
+    origin: "http://localhost:3000",
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+  })
 );
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-
 
 const db = require("./models");
 
