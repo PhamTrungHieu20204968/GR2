@@ -11,10 +11,19 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.users, { foreignKey: "userId" });
     }
   }
   searchs.init({
-    search: DataTypes.STRING
+    search: DataTypes.STRING,
+    userId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: users,
+        key: "id",
+      },
+      allowNull: false,
+    },
   }, {
     sequelize,
     modelName: 'searchs',

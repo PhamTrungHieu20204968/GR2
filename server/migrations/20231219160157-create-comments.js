@@ -18,6 +18,12 @@ module.exports = {
       edited: {
         type: Sequelize.INTEGER
       },
+      userId: {
+        type: Sequelize.DataTypes.INTEGER,
+      },
+      blogId: {
+        type: Sequelize.DataTypes.INTEGER,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

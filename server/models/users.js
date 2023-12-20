@@ -9,7 +9,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.hasMany(models.blogs, { foreignKey: "blogId" });
+      this.hasMany(models.blogs, { foreignKey: "userId" });
+      this.hasMany(models.searchs, { foreignKey: "userId" });
+      this.hasMany(models.comments, { foreignKey: "userId" });
+      this.hasMany(models.likes, { foreignKey: "userId" });
+      this.hasMany(models.rates, { foreignKey: "userId" });
+      this.hasMany(models.orders, { foreignKey: "userId" });
     }
   }
   users.init(
