@@ -1,6 +1,17 @@
-import { Button, Col, Popconfirm, Result, Row, Space, Spin, Table, message } from "antd";
+import {
+  Button,
+  Col,
+  Popconfirm,
+  Result,
+  Row,
+  Space,
+  Spin,
+  Table,
+  message,
+} from "antd";
 import React, { useState } from "react";
 import Search from "antd/es/input/Search";
+import { useNavigate } from "react-router-dom";
 
 import Sidebar from "../components/Sidebar";
 import {
@@ -10,7 +21,7 @@ import {
 
 function ListProducts() {
   const [searchValue, setSearchValue] = useState("");
-
+  const navigate = useNavigate();
   const [deleteProduct] = useDeleteProductMutation();
   const { data, isError, isLoading } = useGetAllProductsAdminQuery({
     accessToken: JSON.parse(localStorage.getItem("token")),
@@ -26,7 +37,8 @@ function ListProducts() {
       headers: {
         accessToken: JSON.parse(localStorage.getItem("token")),
       },
-    }).then((res) => {
+    })
+      .then((res) => {
         if (res.data.error) {
           message.error(res.data.error);
         } else {
@@ -100,7 +112,12 @@ function ListProducts() {
       key: "action",
       render: (_, record) => (
         <Space size='middle'>
-          <Button type='primary'>Sửa</Button>
+          <Button
+            type='primary'
+            onClick={() => navigate(`/admin/update-product/${record.id}`)}
+          >
+            Sửa
+          </Button>
           <Popconfirm
             title='Xóa sản phẩm này?'
             description='Bạn có chắc chắn xóa?'
@@ -121,7 +138,6 @@ function ListProducts() {
     setSearchValue(e.target.value);
   };
 
-  console.log(data);
   return (
     <div className='w-full h-screen overflow-y-auto overflow-x-hidden'>
       <Row gutter={16} className='pr-4'>

@@ -9,6 +9,13 @@ export const ProductService = apiService.injectEndpoints({
       providesTags: ["product"],
     }),
 
+    getProduct: builder.query({
+      query: (id) => ({
+        url: `products/${id}`,
+      }),
+      providesTags: ["product"],
+    }),
+
     getAllProductsAdmin: builder.query({
       query: () => ({
         url: `products/admin`,
@@ -20,6 +27,16 @@ export const ProductService = apiService.injectEndpoints({
       query: ({ data, headers }) => ({
         url: `products/create`,
         method: "POST",
+        body: data,
+        headers,
+      }),
+      invalidatesTags: ["product"],
+    }),
+
+    updateProduct: builder.mutation({
+      query: ({ id, data, headers }) => ({
+        url: `products/update/${id}`,
+        method: "PUT",
         body: data,
         headers,
       }),
@@ -42,4 +59,6 @@ export const {
   useCreateProductMutation,
   useGetAllProductsAdminQuery,
   useDeleteProductMutation,
+  useGetProductQuery,
+  useUpdateProductMutation,
 } = ProductService;

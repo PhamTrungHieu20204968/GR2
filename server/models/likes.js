@@ -1,5 +1,8 @@
 "use strict";
 const { Model } = require("sequelize");
+const users = require("./users");
+const blogs = require("./blogs");
+const comments = require("./comments");
 module.exports = (sequelize, DataTypes) => {
   class likes extends Model {
     /**
@@ -11,7 +14,10 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(models.users, { foreignKey: "userId" });
       this.belongsTo(models.blogs, { foreignKey: "blogId" });
-      this.belongsTo(models.comments, { foreignKey: "commentId" });
+      this.belongsTo(models.comments, {
+        foreignKey: "commentId",
+        as: "CommentId",
+      });
     }
   }
   likes.init(

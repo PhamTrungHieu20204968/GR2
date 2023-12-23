@@ -50,6 +50,34 @@ class ProductsController {
     }
   }
 
+  // [GET] /:id
+  async getProduct(req, res) {
+    const id = parseInt(req.params.id);
+    try {
+      const _product = await products.findOne({
+        where: { id },
+        include: [
+          { model: images, attributes: ["url", "id"] },
+          {
+            model: descriptions,
+            attributes: ["id", "description"],
+            include: [
+              {
+                model: images,
+                attributes: ["url", "id"],
+              },
+            ],
+          },
+          categories,
+        ],
+      });
+      return res.json(_product);
+    } catch (error) {
+      console.log(error);
+      return res.json({ error: "Lỗi kết nối server!" });
+    }
+  }
+
   // [GET] /categories
 
   async getAllCategories(req, res) {
@@ -68,6 +96,70 @@ class ProductsController {
         include: [images, categories],
       });
       return res.json(list);
+    } catch (error) {
+      console.log(error);
+      return res.json({ error: "Lỗi kết nối server!" });
+    }
+  }
+
+  // [PUT] /update/:id
+  async updateProduct(req, res) {
+    if (req.user.role < 2) {
+      return res.json({ error: "Không có quyền truy cập!" });
+    }
+
+    const id = parseInt(req.params.id);
+    try {
+      const [_category, _created] = await categories.findOrCreate({
+        where: { name: req.body.category },
+        default: {
+          name: req.body.category,
+        },
+      });
+
+      await products.update(
+        {
+          name: req.body.name,
+          price: req.body.price,
+          quantity: req.body.quantity,
+          categoryId: _category.id,
+        },
+        { where: { id } }
+      );
+
+      await descriptions.destroy({
+        where: {
+          productId: id,
+        },
+      });
+
+      await images.destroy({
+        where: {
+          productId: id,
+        },
+      });
+
+      req.body.descriptions?.map(async (item) => {
+        const _description = await descriptions.create({
+          description: item.description,
+          productId: id,
+        });
+
+        if (item.image) {
+          await images.create({
+            url: item.image,
+            descriptionId: _description.id,
+          });
+        }
+      });
+
+      req.body.images?.map(async (item) => {
+        await images.create({
+          url: item.image,
+          productId: id,
+        });
+      });
+      return res.json("Update thành công!");
     } catch (error) {
       console.log(error);
       return res.json({ error: "Lỗi kết nối server!" });

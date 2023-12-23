@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const users = require("./users");
 module.exports = (sequelize, DataTypes) => {
   class searchs extends Model {
     /**

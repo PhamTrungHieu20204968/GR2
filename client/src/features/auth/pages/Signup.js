@@ -19,7 +19,6 @@ function Signup() {
         if (res.data.error) {
           message.error(res.data.error);
         } else {
-          localStorage.setItem("token", JSON.stringify(res.data));
           message.success("Đăng ký thành công");
           navigate("/login");
         }
