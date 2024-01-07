@@ -1,11 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800;900&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  font-family: Poppins;
+  font-family: Roboto;
 }
 
 .custom-btn {
@@ -19,4 +19,111 @@ body {
 
 .ant-btn-primary {
   background-color: #30b5b2;
+}
+
+.ant-carousel .slick-dots li {
+  width: 40px;
+}
+
+.product-card {
+  animation: fadeInAnimation ease 1s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  transform: translate3d(300px, 0, 0);
+}
+
+@keyframes fadeInAnimation {
+  0% {
+    transform: translate3d(300px, 0, 0);
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.product-card .product-img {
+  transition: all ease-in 0.3s;
+}
+
+.product-card:hover .product-img {
+  scale: 110%;
+}
+.product-card:hover .product-card__card-icon {
+  display: block;
+}
+.product-card__card-icon {
+  display: none;
+
+  .icon-filled {
+    display: none;
+  }
+}
+
+.product-card__card-icon:hover {
+  .icon-outline {
+    display: none;
+  }
+
+  .icon-filled {
+    display: block;
+  }
+}
+
+.home__title {
+  width: 100%;
+  text-align: center;
+  font-size: 3rem;
+  margin-bottom: 32px;
+}
+
+.fly-in {
+  animation: flyInAnimation ease 1s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  transform: translate3d(300px, 0, 0);
+}
+
+.home__title::after {
+  content: "";
+  display: block;
+  background: url(./assets/imgs/sleigh-bell.svg) no-repeat;
+  width: 100px;
+  height: 62px;
+  margin: 0 auto;
+  margin-top: 10px;
+  background-size: 100px 62px;
+}
+
+@keyframes flyInAnimation {
+  0% {
+    transform: translate3d(0, 100px, 0);
+    opacity: 0;
+  }
+
+  80% {
+    opacity: 0.8;
+    transform: translate3d(0, -20px, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.footer {
+  background: url(./assets/imgs/bg_ft.jpg) no-repeat;
+}
+
+.list-pink-dot::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 5px;
+  background-color: #fe908b;
+  display: inline-block;
+  vertical-align: baseline;
+  margin: 0 15px 0 5px;
 }

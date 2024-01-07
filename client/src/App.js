@@ -8,6 +8,7 @@ import HomeAdmin from "features/admin/pages/HomeAdmin";
 import CreateProduct from "features/admin/pages/CreateProduct";
 import UpdateProduct from "features/admin/pages/UpdateProduct";
 import ListProducts from "features/admin/pages/ListProducts";
+import Products from "features/products/pages/Products";
 function App() {
   useEffect(() => {
     const getToken = () => {
@@ -50,6 +51,7 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
+          <Route path='/products' element={<Products />} />
 
           <Route path='admin'>
             <Route index element={<HomeAdmin />} />
