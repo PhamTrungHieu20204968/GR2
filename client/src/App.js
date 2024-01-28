@@ -51,7 +51,7 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
-          <Route path='/products' element={<Products />} />
+          <Route path='/products/:category' element={<Products />} />
 
           <Route path='admin'>
             <Route index element={<HomeAdmin />} />

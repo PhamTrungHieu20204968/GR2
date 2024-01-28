@@ -26,19 +26,19 @@ function Header() {
             Giới thiệu
           </Link>
           <Link
-            to='/'
+            to='/products/pets'
             className='h-full px-4 hover:bg-primary flex items-center'
           >
             Thú cưng
           </Link>
           <Link
-            to='/'
+            to='/products/foods'
             className='h-full px-4 hover:bg-primary flex items-center'
           >
             Đồ ăn
           </Link>
           <Link
-            to='/'
+            to='/products/accessories'
             className='h-full px-4 hover:bg-primary flex items-center'
           >
             Phụ kiện

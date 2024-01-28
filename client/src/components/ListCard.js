@@ -1,17 +1,25 @@
 import React from "react";
-import { Button } from "antd";
+import { Button, Col, Row } from "antd";
 
 import ProductCard from "./ProductCard";
 
 function ListCard() {
   return (
     <div className='list-card w-full'>
-      <div className='flex justify-between w-full'>
-        <ProductCard></ProductCard>
-        <ProductCard></ProductCard>
-        <ProductCard></ProductCard>
-        <ProductCard></ProductCard>
-      </div>
+      <Row gutter={16}>
+        <Col span={6}>
+          <ProductCard></ProductCard>
+        </Col>
+        <Col span={6}>
+          <ProductCard></ProductCard>
+        </Col>
+        <Col span={6}>
+          <ProductCard></ProductCard>
+        </Col>
+        <Col span={6}>
+          <ProductCard></ProductCard>
+        </Col>
+      </Row>
       <div className='mx-auto my-8 w-full flex justify-center'>
         <Button
           className='uppercase font-bold fly-in hover:drop-shadow-2xl'

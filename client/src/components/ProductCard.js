@@ -3,7 +3,7 @@ import { ShoppingOutlined, ShoppingFilled } from "@ant-design/icons";
 
 function ProductCard() {
   return (
-    <div className='product-card mx-4 bg-[#eee] text-center rounded-lg'>
+    <div className='product-card bg-[#eee] text-center rounded-lg'>
       <div className='w-full overflow-hidden relative'>
         <img
           className='product-img'
@@ -19,7 +19,7 @@ function ProductCard() {
         CHÓ CẢNH
       </p>
       <p className='product-name hover:text-pink-500'>chó Doberman Pinscher</p>
-      <p className='product-price my-4'>
+      <p className='product-price py-4'>
         <b>8,875,000 ₫</b>
       </p>
     </div>

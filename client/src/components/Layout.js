@@ -5,9 +5,9 @@ import Footer from "./Footer";
 
 function Layout({ children }) {
   return (
-    <div className='layout overflow-x-hidden'>
+    <div className='layout overflow-x-hidden flex flex-col h-full w-full'>
       <Header></Header>
-      {children}
+      <div className='mt-[70px] flex-1'>{children}</div>
       <Footer></Footer>
     </div>
   );
