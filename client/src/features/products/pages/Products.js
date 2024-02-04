@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Col, Row, Select } from "antd";
+import { Col, Row, Select, Pagination } from "antd";
 
 import Layout from "components/Layout";
 import SideBar from "../components/SideBar";
@@ -14,7 +14,7 @@ function Products() {
       <div className='container mx-auto pt-3 h-full'>
         <div className='flex justify-between'>
           <div className='uppercase text-xl'>
-            <Link to='/' className='text-gray-400 hover:text-black'>
+            <Link to='/' className='text-gray-400 font-bold hover:text-black'>
               Trang chủ
             </Link>
             <span className='mx-2 text-gray-400'>/</span>
@@ -61,7 +61,7 @@ function Products() {
             ></SideBar>
           </Col>
           <Col span={18} className='content'>
-            <Row gutter={16}>
+            <Row gutter={[16, 24]}>
               <Col span={8}>
                 <ProductCard></ProductCard>
               </Col>
@@ -70,6 +70,9 @@ function Products() {
               </Col>
               <Col span={8}>
                 <ProductCard></ProductCard>
+              </Col>
+              <Col span={24} className='w-full flex justify-end'>
+                <Pagination defaultCurrent={1} total={50} />
               </Col>
             </Row>
           </Col>

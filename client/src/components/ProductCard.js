@@ -1,9 +1,18 @@
 import React from "react";
 import { ShoppingOutlined, ShoppingFilled } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 function ProductCard() {
+  const navigate = useNavigate();
+  const handleOnclickProduct = () => {
+    navigate("/products/pets/Đàn bulldog anh 4 tháng");
+  };
+
   return (
-    <div className='product-card bg-[#eee] text-center rounded-lg'>
+    <div
+      className='product-card bg-[#eee] text-center rounded-lg'
+      onClick={handleOnclickProduct}
+    >
       <div className='w-full overflow-hidden relative'>
         <img
           className='product-img'
@@ -18,7 +27,9 @@ function ProductCard() {
       <p className='product-category text-xs text-[#353535] opacity-70 mt-2'>
         CHÓ CẢNH
       </p>
-      <p className='product-name hover:text-pink-500'>chó Doberman Pinscher</p>
+      <p className='product-name hover:text-pink-500 cursor-pointer'>
+        chó Doberman Pinscher
+      </p>
       <p className='product-price py-4'>
         <b>8,875,000 ₫</b>
       </p>

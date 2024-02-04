@@ -9,6 +9,7 @@ import CreateProduct from "features/admin/pages/CreateProduct";
 import UpdateProduct from "features/admin/pages/UpdateProduct";
 import ListProducts from "features/admin/pages/ListProducts";
 import Products from "features/products/pages/Products";
+import ProductDetail from "features/products/pages/ProductDetail";
 function App() {
   useEffect(() => {
     const getToken = () => {
@@ -52,6 +53,7 @@ function App() {
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
           <Route path='/products/:category' element={<Products />} />
+          <Route path='/products/:category/:name' element={<ProductDetail />} />
 
           <Route path='admin'>
             <Route index element={<HomeAdmin />} />

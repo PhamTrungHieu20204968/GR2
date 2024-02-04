@@ -1,5 +1,4 @@
 import React from "react";
-import Search from "antd/es/input/Search";
 import { Button, Slider } from "antd";
 
 function SideBar({ setPriceValue, priceValue }) {
@@ -9,13 +8,6 @@ function SideBar({ setPriceValue, priceValue }) {
 
   return (
     <div className='w-full p-4 border-2'>
-      <Search
-        placeholder='Tên sản phẩm'
-        allowClear
-        // onSearch={onSearch}
-        className='w-full'
-      />
-
       <div className='font-bold relative uppercase py-4 before:bottom-0 before:absolute before:content-[""] before:w-1/6 before:h-1 before:bg-gray-200'>
         DANH MỤC SẢN PHẨM
       </div>
@@ -41,7 +33,10 @@ function SideBar({ setPriceValue, priceValue }) {
           }}
         />
         <div className='flex justify-between items-center'>
-          <Button type='primary'>Lọc</Button>
+          <div>
+            <Button className="mr-4" type='primary'>Lọc</Button>
+            <Button type='default'>Xóa</Button>
+          </div>
 
           <div>
             Giá: <b>{priceValue[0] + " - " + priceValue[1]}</b>
