@@ -89,8 +89,8 @@ class ProductsController {
     }
   }
 
-  //  [GET] /admin
-  async getAllProductsAdmin(req, res) {
+  //  [GET] /
+  async getAllProducts(req, res) {
     try {
       const list = await products.findAll({
         include: [images, categories],

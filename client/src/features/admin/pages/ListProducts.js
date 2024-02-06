@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 import Sidebar from "../components/Sidebar";
 import {
-  useGetAllProductsAdminQuery,
+  useGetAllProductsQuery,
   useDeleteProductMutation,
 } from "app/api/productService";
 
@@ -23,7 +23,7 @@ function ListProducts() {
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
   const [deleteProduct] = useDeleteProductMutation();
-  const { data, isError, isLoading } = useGetAllProductsAdminQuery({
+  const { data, isError, isLoading } = useGetAllProductsQuery({
     accessToken: JSON.parse(localStorage.getItem("token")),
   });
 

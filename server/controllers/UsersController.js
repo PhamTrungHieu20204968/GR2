@@ -58,8 +58,6 @@ class UsersController {
 
   // [GET] Google:login success
   async googleLoginSuccess(req, res) {
-    console.log(req.user);
-    console.log(123);
     if (req.user) {
       const [_user, created] = await users.findOrCreate({
         where: { googleId: req.user.id },

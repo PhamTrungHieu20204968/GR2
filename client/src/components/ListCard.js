@@ -3,22 +3,15 @@ import { Button, Col, Row } from "antd";
 
 import ProductCard from "./ProductCard";
 
-function ListCard() {
+function ListCard({ list }) {
   return (
     <div className='list-card w-full'>
       <Row gutter={16}>
-        <Col span={6}>
-          <ProductCard></ProductCard>
-        </Col>
-        <Col span={6}>
-          <ProductCard></ProductCard>
-        </Col>
-        <Col span={6}>
-          <ProductCard></ProductCard>
-        </Col>
-        <Col span={6}>
-          <ProductCard></ProductCard>
-        </Col>
+        {list?.map((item) => (
+          <Col span={6} key={item.id}>
+            <ProductCard product={item}></ProductCard>
+          </Col>
+        ))}
       </Row>
       <div className='mx-auto my-8 w-full flex justify-center'>
         <Button

@@ -16,9 +16,9 @@ export const ProductService = apiService.injectEndpoints({
       providesTags: ["product"],
     }),
 
-    getAllProductsAdmin: builder.query({
+    getAllProducts: builder.query({
       query: () => ({
-        url: `products/admin`,
+        url: `products`,
       }),
       providesTags: ["product"],
     }),
@@ -57,7 +57,7 @@ export const ProductService = apiService.injectEndpoints({
 export const {
   useGetAllCategoriesQuery,
   useCreateProductMutation,
-  useGetAllProductsAdminQuery,
+  useGetAllProductsQuery,
   useDeleteProductMutation,
   useGetProductQuery,
   useUpdateProductMutation,
