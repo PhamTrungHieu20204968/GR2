@@ -5,9 +5,8 @@ import { useNavigate } from "react-router-dom";
 function ProductCard({ product }) {
   const navigate = useNavigate();
   const handleOnclickProduct = () => {
-    navigate("/products/pets/Đàn bulldog anh 4 tháng");
+    navigate(`/products/pets/${product?.name}`);
   };
-  console.log(product);
   return (
     <div
       className='product-card w-full bg-[#eee] text-center rounded-lg border-2 border-dashed shadow-sm'
@@ -31,7 +30,13 @@ function ProductCard({ product }) {
         {product?.name}
       </p>
       <p className='product-price py-4'>
-        <b> {product?.price}đ</b>
+        <b>
+          {" "}
+          {parseInt(product?.price).toLocaleString("vi", {
+            style: "currency",
+            currency: "VND",
+          })}
+        </b>
       </p>
     </div>
   );

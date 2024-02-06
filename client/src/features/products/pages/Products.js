@@ -1,16 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Col, Row, Select, Pagination } from "antd";
+import { Col, Row, Select, Spin } from "antd";
+import { useSelector, useDispatch } from "react-redux";
 
 import Layout from "components/Layout";
 import SideBar from "../components/SideBar";
 import ProductCard from "components/ProductCard";
+import { useGetAllProductsByCategoryQuery } from "app/api/productService";
+import { setOrder, setMaxPrice } from "app/slices/filterSlice";
+
 function Products() {
   const params = useParams();
-  const [priceValue, setPriceValue] = useState([20, 50]);
+  const filter = useSelector((state) => state.filter);
+  const dispatch = useDispatch();
+  const { data, isError, isLoading } = useGetAllProductsByCategoryQuery({
+    name: params.category,
+  });
+  if (isLoading) {
+    <Spin />;
+  }
 
+  const handleChangeOrder = (value) => {
+    switch (value) {
+      case 1:
+        dispatch(setOrder(1));
+        break;
+      case 2:
+        dispatch(setOrder(2));
+        break;
+      default:
+        dispatch(setOrder(0));
+        break;
+    }
+  };
+
+  useEffect(() => {
+    if (data) {
+      const _maxPrice = data.reduce((max, item) => {
+        return parseFloat(item.price) > parseFloat(max) ? item.price : max;
+      }, "0");
+      dispatch(setMaxPrice(parseFloat(_maxPrice)));
+    }
+  }, [data]);
   return (
-    <Layout>
+    <Layout page={["products", params.category]}>
       <div className='container mx-auto pt-3 h-full'>
         <div className='flex justify-between'>
           <div className='uppercase text-xl'>
@@ -29,13 +62,12 @@ function Products() {
             )}
           </div>
           <div className='options'>
-            <span className='mr-4'>Xem tất cả 9 kết quả</span>
             <Select
-              defaultValue='Thứ tự mặc định'
+              value={filter.order}
               style={{
                 width: 240,
               }}
-              //   onChange={handleChange}
+              onChange={handleChangeOrder}
               options={[
                 {
                   value: 0,
@@ -43,11 +75,11 @@ function Products() {
                 },
                 {
                   value: 1,
-                  label: "Thứ tự theo giá: từ cao đến thấp",
+                  label: "Thứ tự theo giá: Giảm dần",
                 },
                 {
                   value: 2,
-                  label: "Thứ tự theo giá: từ thấp đến cao",
+                  label: "Thứ tự theo giá: Tăng dần",
                 },
               ]}
             />
@@ -56,25 +88,68 @@ function Products() {
         <Row className='mt-4' gutter={16}>
           <Col span={6} className='sidebar'>
             <SideBar
-              priceValue={priceValue}
-              setPriceValue={setPriceValue}
+              filter={filter}
             ></SideBar>
           </Col>
           <Col span={18} className='content'>
-            <Row gutter={[16, 24]}>
-              <Col span={8}>
-                <ProductCard></ProductCard>
-              </Col>
-              <Col span={8}>
-                <ProductCard></ProductCard>
-              </Col>
-              <Col span={8}>
-                <ProductCard></ProductCard>
-              </Col>
-              <Col span={24} className='w-full flex justify-end'>
-                <Pagination defaultCurrent={1} total={50} />
-              </Col>
-            </Row>
+            {data ? (
+              <Row gutter={[16, 24]}>
+                {filter.order === 0
+                  ? data?.map((item) => {
+                      if (
+                        filter.category &&
+                        item.category.name !== filter.category.toUpperCase()
+                      ) {
+                        return <></>;
+                      }
+                      if (
+                        (parseFloat(item.price) * 100) / filter.maxPrice <
+                          filter.price[0] ||
+                        (parseFloat(item.price) * 100) / filter.maxPrice >
+                          filter.price[1]
+                      ) {
+                        return <></>;
+                      }
+                      return (
+                        <Col span={8} key={item.id}>
+                          <ProductCard product={item}></ProductCard>
+                        </Col>
+                      );
+                    })
+                  : data
+                      ?.slice()
+                      .sort((a, b) =>
+                        filter.order === 2
+                          ? parseFloat(a.price) - parseFloat(b.price)
+                          : parseFloat(b.price) - parseFloat(a.price)
+                      )
+                      .map((item) => {
+                        if (
+                          filter.category &&
+                          item.category.name !== filter.category.toUpperCase()
+                        ) {
+                          return <></>;
+                        }
+                        if (
+                          (parseFloat(item.price) * 100) / filter.maxPrice <
+                            filter.price[0] ||
+                          (parseFloat(item.price) * 100) / filter.maxPrice >
+                            filter.price[1]
+                        ) {
+                          return <></>;
+                        }
+                        return (
+                          <Col span={8} key={item.id}>
+                            <ProductCard product={item}></ProductCard>
+                          </Col>
+                        );
+                      })}
+              </Row>
+            ) : (
+              <Row>
+                <span>Không tìm thấy sản phẩm nào</span>
+              </Row>
+            )}
           </Col>
         </Row>
       </div>

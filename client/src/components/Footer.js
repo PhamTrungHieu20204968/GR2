@@ -2,22 +2,35 @@ import React from "react";
 import { PhoneOutlined, MailOutlined, GlobalOutlined } from "@ant-design/icons";
 
 import logo from "assets/imgs/footer-logo.png";
+import { Link } from "react-router-dom";
 
-function Footer() {
+function Footer({ page = ["home"] }) {
   return (
     <div className='footer w-screen text-white mt-8'>
       <div className='flex container mx-auto w-full justify-between py-10'>
         <div className='nav flex-1'>
           <h2 className='text-xl font-bold'>ĐIỀU HƯỚNG</h2>
           <ul className='text-[#ccc]'>
-            <li className='my-2 text-cyan-300 hover:text-yellow-300 cursor-pointer list-pink-dot'>
-              Trang chủ
+            <li
+              className={
+                page[0] === "home"
+                  ? "my-2 text-cyan-300 hover:text-yellow-300 cursor-pointer list-pink-dot"
+                  : "my-2 hover:text-yellow-300 cursor-pointer list-pink-dot"
+              }
+            >
+              <Link to='/'>Trang chủ</Link>
             </li>
             <li className='my-2 hover:text-yellow-300 cursor-pointer list-pink-dot'>
               Về chúng tôi
             </li>
-            <li className='my-2 hover:text-yellow-300 cursor-pointer list-pink-dot'>
-              Sản phẩm
+            <li
+              className={
+                page[0] === "products"
+                  ? "my-2 text-cyan-300 hover:text-yellow-300 cursor-pointer list-pink-dot"
+                  : "my-2 hover:text-yellow-300 cursor-pointer list-pink-dot"
+              }
+            >
+              <Link to='/products/pets'>Sản phẩm</Link>
             </li>
             <li className='my-2 hover:text-yellow-300 cursor-pointer list-pink-dot'>
               Điểm tin hữu ích

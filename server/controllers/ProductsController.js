@@ -1,5 +1,5 @@
+const { Op } = require("sequelize");
 const { products, categories, descriptions, images } = require("../models");
-
 class ProductsController {
   // [POST] /create
   async createProduct(req, res) {
@@ -89,11 +89,68 @@ class ProductsController {
     }
   }
 
+  // [GET] /category/:name
+  async getAllProductsByCategory(req, res) {
+    const name = req.params.name;
+    try {
+      if (name === "accessories") {
+        const list = await products.findAll({
+          include: [
+            images,
+            {
+              model: categories,
+              where: {
+                id: 2,
+              },
+            },
+          ],
+          order: [["createdAt", "DESC"]],
+        });
+        return res.json(list);
+      } else if (name === "foods") {
+        const list = await products.findAll({
+          include: [
+            images,
+            {
+              model: categories,
+              where: {
+                id: 1,
+              },
+            },
+          ],
+          order: [["createdAt", "DESC"]],
+        });
+        return res.json(list);
+      } else {
+        console.log(222);
+        const list = await products.findAll({
+          include: [
+            images,
+            {
+              model: categories,
+              where: {
+                id: {
+                  [Op.gt]: 2,
+                },
+              },
+            },
+          ],
+          order: [["createdAt", "DESC"]],
+        });
+        return res.json(list);
+      }
+    } catch (error) {
+      console.log(error);
+      return res.json({ error: "Lỗi kết nối server!" });
+    }
+  }
+
   //  [GET] /
   async getAllProducts(req, res) {
     try {
       const list = await products.findAll({
         include: [images, categories],
+        order: [["createdAt", "DESC"]],
       });
       return res.json(list);
     } catch (error) {

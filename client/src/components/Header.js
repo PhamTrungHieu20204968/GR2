@@ -7,7 +7,7 @@ import {
 
 import logo from "assets/imgs/logo.png";
 import { Link } from "react-router-dom";
-function Header() {
+function Header({ page }) {
   return (
     <div className='w-screen fixed top-0 left-0 right-0 z-50 text-white bg-[#333]'>
       <div className='container mx-auto flex justify-between items-center'>
@@ -27,19 +27,31 @@ function Header() {
           </Link>
           <Link
             to='/products/pets'
-            className='h-full px-4 hover:bg-primary flex items-center'
+            className={
+              page[0] === "products" && page[1] === "pets"
+                ? "h-full px-4 bg-primary flex items-center"
+                : "h-full px-4 hover:bg-primary flex items-center"
+            }
           >
             Thú cưng
           </Link>
           <Link
             to='/products/foods'
-            className='h-full px-4 hover:bg-primary flex items-center'
+            className={
+              page[0] === "products" && page[1] === "foods"
+                ? "h-full px-4 bg-primary flex items-center"
+                : "h-full px-4 hover:bg-primary flex items-center"
+            }
           >
             Đồ ăn
           </Link>
           <Link
             to='/products/accessories'
-            className='h-full px-4 hover:bg-primary flex items-center'
+            className={
+              page[0] === "products" && page[1] === "accessories"
+                ? "h-full px-4 bg-primary flex items-center"
+                : "h-full px-4 hover:bg-primary flex items-center"
+            }
           >
             Phụ kiện
           </Link>

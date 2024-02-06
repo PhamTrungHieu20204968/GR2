@@ -134,3 +134,10 @@ body {
   overflow: hidden;
   display: -webkit-box;
 }
+
+.product-name {
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  display: -webkit-box;
+}

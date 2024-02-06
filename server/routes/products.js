@@ -5,6 +5,7 @@ const { validateToken } = require("../middlewares/AuthMiddleware");
 
 router.post("/create", validateToken, productsController.createProduct);
 router.get("/categories", productsController.getAllCategories);
+router.get("/category/:name", productsController.getAllProductsByCategory);
 router.get("/", productsController.getAllProducts);
 router.put("/update/:id", validateToken, productsController.updateProduct);
 router.get("/:id", productsController.getProduct);
