@@ -4,9 +4,11 @@ import {
   UserOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
+import { Popover } from "antd";
 
 import logo from "assets/imgs/logo.png";
 import { Link } from "react-router-dom";
+import SearchProduct from "./SearchProduct";
 function Header({ page }) {
   return (
     <div className='w-screen fixed top-0 left-0 right-0 z-50 text-white bg-[#333]'>
@@ -69,7 +71,9 @@ function Header({ page }) {
           </Link>
         </ul>
         <div>
-          <SearchOutlined className='text-2xl mr-5 font-bold cursor-pointer hover:text-primary' />
+          <Popover content={<SearchProduct />}>
+            <SearchOutlined className='text-2xl mr-5 font-bold cursor-pointer hover:text-primary' />
+          </Popover>
           <UserOutlined className='text-2xl mr-5 font-bold cursor-pointer hover:text-primary' />
           <ShoppingCartOutlined className='text-2xl font-bold cursor-pointer hover:text-primary' />
         </div>

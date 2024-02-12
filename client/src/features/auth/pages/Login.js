@@ -28,7 +28,8 @@ function Login() {
       })
       .catch((err) => {
         message.error("Đăng nhập thất bại");
-        console.log(err)});
+        console.log(err);
+      });
   };
 
   const loginWithGoogleHandler = () => {

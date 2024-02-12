@@ -1,15 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Col, Row, Rate, Input, Button, Tabs } from "antd";
+import { Col, Row, Rate, Button, Tabs, Spin, InputNumber } from "antd";
 
 import Layout from "components/Layout";
 import ProductDescription from "../components/ProductDescription";
 import ProductRates from "../components/ProductRates";
 import ProductCard from "components/ProductCard";
+import { useGetProductByNameQuery } from "app/api/productService";
 
 function ProductDetail() {
   const params = useParams();
-  console.log(params.name);
+  const [quantity, setQuantity] = useState(1);
+  const { data, isError, isLoading } = useGetProductByNameQuery({
+    name: params.name,
+  });
+  const [preview, setPreview] = useState(data?.images[0].url);
+  if (isLoading) {
+    <Spin />;
+  }
+  console.log(data);
   return (
     <Layout>
       <div className='container mx-auto pt-3 h-full'>
@@ -49,21 +58,25 @@ function ProductDetail() {
           <Col span={8}>
             <img
               className='product-img rounded-lg shadow-lg'
-              src='https://mauweb.monamedia.net/dogcatshop/wp-content/uploads/2018/04/8-300x300.jpg'
+              src={preview?.url || data?.images[0].url}
               alt='img'
             />
 
             <div className='w-full flex mt-4'>
-              <img
-                className='w-16 duration-300 last:mr-0 mr-4 h-auto rounded-sm contrast-50 hover:contrast-100 cursor-pointer'
-                src='https://mauweb.monamedia.net/dogcatshop/wp-content/uploads/2018/04/8-300x300.jpg'
-                alt='img'
-              />
-              <img
-                className='w-16 duration-300 last:mr-0 mr-4 h-auto rounded-sm contrast-50 hover:contrast-100 cursor-pointer'
-                src='https://mauweb.monamedia.net/dogcatshop/wp-content/uploads/2018/04/8-300x300.jpg'
-                alt='img'
-              />
+              {data?.images.map((item, index) => {
+                if (!preview && index === 0) return <></>;
+                return (
+                  item.url !== preview?.url && (
+                    <img
+                      key={item.id}
+                      className='w-16 duration-300 last:mr-0 mr-4 h-auto rounded-sm contrast-50 hover:contrast-100 cursor-pointer'
+                      src={item.url}
+                      alt='img'
+                      onClick={() => setPreview(item)}
+                    />
+                  )
+                );
+              })}
             </div>
           </Col>
           <Col span={16}>
@@ -71,7 +84,12 @@ function ProductDetail() {
             <div className='w-full flex justify-between text-lg mt-2'>
               <div>
                 <span className='mr-2'>Giá:</span>
-                <b>23456đ</b>
+                <b>
+                  {parseFloat(data?.price).toLocaleString("vi", {
+                    style: "currency",
+                    currency: "VND",
+                  })}
+                </b>
               </div>
               <div>
                 <span className='mr-2'>Đánh giá:</span>
@@ -79,27 +97,43 @@ function ProductDetail() {
               </div>
             </div>
             <div className='description-text text-lg mt-2 border-2 p-2'>
-              75.360 lượt xem 29 thg 11, 2023 #nhaclofi #nhacchill #lofichill ☘️
-              TOP 20 Bản Nhạc Lofi Chill 2023 Nhạc Lofi Chill Buồn Nhẹ Nhàng -
-              Nhạc Lofi Hot TikTok 2023 • Hashtag: nhạc lofi, nhạc lofi chill,
-              lofi chill, nhạc chill, chill, lofi, chill lofi nhac, nhạc, nhac
-              chill, nhạc chill tiktok, nhạc hay, nhac hay, nhạc chill tiktok,
-              nhạc suy, nhạc ballad, nhạc tiktok, nhac tiktok ► Theo dõi fanpage
-              Facebook: https://dini.to/orinnfacebook ✉ Hợp tác, quảng cáo,
-              khiếu nại các vấn đề về bản quyền liên hệ chúng tôi qua mail:
-              contact@orinn.net ✪ More about Mùa Đi Ngang Phố • Facebook:
-              https://fb.com/Muadingangphoofficial ✪ Photo By Le Tin Nghia hill,
-              nhạc chill tiktok, nhạc hay, nhac hay, nhạc chill tiktok, nhạc
-              suy, nhạc ballad, nhạc tiktok, nhac tiktok ► Theo dõi fanpage
-              Facebook: https://dini.to/orinnfacebook ✉ Hợp tác, quảng cáo,
-              khiếu nại các vấn đề về bản quyền liên hệ chúng tôi qua mail:
+              {data?.descriptions[0].description}
             </div>
             <div className='mt-4 text-lg'>
-              <Button size='large' type='default'>
+              <Button
+                size='large'
+                type='default'
+                onClick={() =>
+                  setQuantity((prev) => (prev === 1 ? 1 : prev - 1))
+                }
+              >
                 -
               </Button>
-              <Input defaultValue={1} value={10} className='w-10 h-10 mx-4' />
-              <Button size='large' type='default'>
+              <InputNumber
+                min={1}
+                max={99}
+                value={quantity}
+                controls={false}
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập số số lượng!",
+                  },
+                  {
+                    pattern: /^[0-9]+$/,
+                    message: "Vui lòng nhập đúng số lượng!",
+                  },
+                ]}
+                onChange={(value) => setQuantity(value)}
+                className='w-10 h-10 mx-4'
+              />
+              <Button
+                size='large'
+                type='default'
+                onClick={() =>
+                  setQuantity((prev) => (prev === 99 ? 99 : prev + 1))
+                }
+              >
                 +
               </Button>
 
@@ -120,29 +154,25 @@ function ProductDetail() {
               return {
                 label: i === 0 ? "Mô tả" : "Đánh giá",
                 key: id,
-                children: i === 0 ? <ProductDescription /> : <ProductRates />,
+                children:
+                  i === 0 ? (
+                    <ProductDescription descriptions={data?.descriptions} />
+                  ) : (
+                    <ProductRates />
+                  ),
               };
             })}
           />
         </Row>
 
-        <Row gutter={[16, 24]}>
-        <div className='my-4 w-full text-3xl font-bold'>
+        {/* <Row gutter={[16, 24]}>
+          <div className='my-4 w-full text-3xl font-bold'>
             Sản phẩm tương tự
           </div>
           <Col span={6}>
             <ProductCard></ProductCard>
           </Col>
-          <Col span={6}>
-            <ProductCard></ProductCard>
-          </Col>
-          <Col span={6}>
-            <ProductCard></ProductCard>
-          </Col>
-          <Col span={6}>
-            <ProductCard></ProductCard>
-          </Col>
-        </Row>
+        </Row> */}
       </div>
     </Layout>
   );

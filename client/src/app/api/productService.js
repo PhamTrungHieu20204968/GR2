@@ -16,6 +16,13 @@ export const ProductService = apiService.injectEndpoints({
       providesTags: ["product"],
     }),
 
+    getProductByName: builder.query({
+      query: ({ name }) => ({
+        url: `products/product/${name}`,
+      }),
+      providesTags: ["product"],
+    }),
+
     getProduct: builder.query({
       query: (id) => ({
         url: `products/${id}`,
@@ -66,6 +73,7 @@ export const {
   useGetAllProductsByCategoryQuery,
   useGetAllProductsQuery,
   useGetProductQuery,
+  useGetProductByNameQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,

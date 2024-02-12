@@ -17,7 +17,7 @@ function Home() {
   });
 
   if (isLoading) {
-    <Spin />;
+    return <Spin />;
   }
 
   return (

@@ -1,5 +1,11 @@
 const { Op } = require("sequelize");
-const { products, categories, descriptions, images } = require("../models");
+const {
+  products,
+  categories,
+  descriptions,
+  images,
+  rates,
+} = require("../models");
 class ProductsController {
   // [POST] /create
   async createProduct(req, res) {
@@ -79,12 +85,40 @@ class ProductsController {
   }
 
   // [GET] /categories
-
   async getAllCategories(req, res) {
     try {
       const list = await categories.findAll();
       return res.json(list);
     } catch (error) {
+      return res.json({ error: "Lỗi kết nối server!" });
+    }
+  }
+
+  // [GET] /product/:name
+  async getProductByName(req, res) {
+    const name = req.params.name;
+    try {
+      const _product = await products.findOne({
+        where: { name },
+        include: [
+          { model: images, attributes: ["url", "id"] },
+          {
+            model: descriptions,
+            attributes: ["id", "description"],
+            include: [
+              {
+                model: images,
+                attributes: ["url", "id"],
+              },
+            ],
+          },
+          categories,
+          rates,
+        ],
+      });
+      return res.json(_product);
+    } catch (error) {
+      console.log(error);
       return res.json({ error: "Lỗi kết nối server!" });
     }
   }
