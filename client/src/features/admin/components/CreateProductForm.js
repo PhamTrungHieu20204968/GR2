@@ -33,7 +33,7 @@ function CreateProductForm({ product }) {
         images: values.images,
       },
       headers: {
-        accessToken: JSON.parse(localStorage.getItem("token")),
+        accessToken: JSON.parse(localStorage.getItem("token")).accessToken,
       },
     })
       .then((res) => {
@@ -54,7 +54,7 @@ function CreateProductForm({ product }) {
     update({
       id: product.id,
       headers: {
-        accessToken: JSON.parse(localStorage.getItem("token")),
+        accessToken: JSON.parse(localStorage.getItem("token")).accessToken,
       },
       data: {
         name: values.name,

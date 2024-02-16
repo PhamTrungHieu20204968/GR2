@@ -156,7 +156,6 @@ class ProductsController {
         });
         return res.json(list);
       } else {
-        console.log(222);
         const list = await products.findAll({
           include: [
             images,

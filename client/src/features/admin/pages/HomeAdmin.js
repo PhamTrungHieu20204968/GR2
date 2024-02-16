@@ -68,7 +68,7 @@ const columns = [
 const HomeAdmin = () => {
   const [searchValue, setSearchValue] = useState("");
   const { data, isError, isLoading } = useGetAllUserQuery({
-    accessToken: JSON.parse(localStorage.getItem("token")),
+    accessToken: JSON.parse(localStorage.getItem("token")).accessToken,
   });
 
   if (isLoading) {
@@ -78,7 +78,6 @@ const HomeAdmin = () => {
   const handleSearch = (e) => {
     setSearchValue(e.target.value);
   };
-
   return (
     <div className='w-full h-screen overflow-hidden'>
       <Row gutter={16} className='pr-4'>

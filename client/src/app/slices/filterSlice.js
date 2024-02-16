@@ -29,8 +29,6 @@ const filterSlice = createSlice({
   },
 });
 
-const filterReducer = filterSlice.reducer;
-
-export default filterReducer;
+export const filterSliceReducer = filterSlice.reducer;
 export const { setCategory, setOrder, setPrice, setMaxPrice, clearFilter } =
   filterSlice.actions;

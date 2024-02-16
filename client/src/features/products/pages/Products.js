@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Col, Row, Select, Spin } from "antd";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,7 +13,7 @@ function Products() {
   const params = useParams();
   const filter = useSelector((state) => state.filter);
   const dispatch = useDispatch();
-  const { data, isError, isLoading } = useGetAllProductsByCategoryQuery({
+  const { data, isLoading } = useGetAllProductsByCategoryQuery({
     name: params.category,
   });
   if (isLoading) {
@@ -87,12 +87,10 @@ function Products() {
         </div>
         <Row className='mt-4' gutter={16}>
           <Col span={6} className='sidebar'>
-            <SideBar
-              filter={filter}
-            ></SideBar>
+            <SideBar filter={filter}></SideBar>
           </Col>
           <Col span={18} className='content'>
-            {data ? (
+            {data?.length > 0 ? (
               <Row gutter={[16, 24]}>
                 {filter.order === 0
                   ? data?.map((item) => {

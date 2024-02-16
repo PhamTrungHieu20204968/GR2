@@ -8,7 +8,7 @@ import { useGetAllProductsQuery } from "app/api/productService";
 
 function SearchProduct() {
   const [searchInput, setSearchInput] = useState("");
-  const { data, isError, isLoading } = useGetAllProductsQuery({
+  const { data, isLoading } = useGetAllProductsQuery({
     accessToken: JSON.parse(localStorage.getItem("token")),
   });
 

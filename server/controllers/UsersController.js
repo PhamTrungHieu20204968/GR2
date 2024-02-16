@@ -9,7 +9,6 @@ class UsersController {
   async singUp(req, res) {
     const { account, password, name, telephone } = req.body;
     const _user = await users.findOne({ where: { account } });
-    console.log(_user);
     if (_user) {
       return res.json({ error: "Tài khoản đã tồn tại!" });
     }
@@ -64,7 +63,6 @@ class UsersController {
         defaults: {
           name: req.user.displayName,
           role: 1,
-          account: req.user.emails[0].value,
           email: req.user.emails[0].value,
           avatar: req.user.photos[0].value,
           status: 0,
