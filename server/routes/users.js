@@ -23,11 +23,11 @@ router.get("/login/failed", usersController.googleLoginFailed);
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    successRedirect: process.env.CLIENT_URL,
+    successRedirect: process.env.CLIENT_URL + "google-login-success",
     failureRedirect: "/login/failed",
   })
 );
 
-router.get("/getOne", usersController.getOne);
+router.get("/getOne", validateToken, usersController.getOne);
 router.get("/getAll", validateToken, usersController.getAll);
 module.exports = router;

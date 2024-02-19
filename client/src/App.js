@@ -1,6 +1,6 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { ConfigProvider } from "antd";
-import React, { useEffect } from "react";
+import React from "react";
 import Home from "features/home/Home";
 import Login from "features/auth/pages/Login";
 import Signup from "features/auth/pages/Signup";
@@ -10,35 +10,8 @@ import UpdateProduct from "features/admin/pages/UpdateProduct";
 import ListProducts from "features/admin/pages/ListProducts";
 import Products from "features/products/pages/Products";
 import ProductDetail from "features/products/pages/ProductDetail";
+import GoogleLoginSuccess from "features/auth/pages/GoogleLoginSuccess";
 function App() {
-  useEffect(() => {
-    const getToken = () => {
-      fetch(`${process.env.REACT_APP_BASE_URL}/users/login/success`, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Credentials": true,
-        },
-      })
-        .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          } else throw new Error("Đăng nhập thất bại!");
-        })
-        .then((data) => {
-          localStorage.setItem("token", JSON.stringify(data));
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-    if (!JSON.parse(localStorage.getItem("token"))) {
-      getToken();
-    }
-  }, []);
-
   return (
     <ConfigProvider
       theme={{
@@ -52,6 +25,10 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
+          <Route
+            path='/google-login-success'
+            element={<GoogleLoginSuccess />}
+          />
           <Route path='/products/:category' element={<Products />} />
           <Route path='/products/:category/:name' element={<ProductDetail />} />
 

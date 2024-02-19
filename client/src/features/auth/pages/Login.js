@@ -7,11 +7,15 @@ import {
   FacebookOutlined,
 } from "@ant-design/icons";
 import { Button, Form, Input, Divider, message } from "antd";
+import { useDispatch } from "react-redux";
 
 import { useLoginMutation } from "app/api/authService";
+import { setUser } from "app/slices/authSlice";
+
 function Login() {
   const navigate = useNavigate();
   const [login] = useLoginMutation();
+  const dispatch = useDispatch();
 
   const onFinish = (values) => {
     login(values)
@@ -19,7 +23,7 @@ function Login() {
         if (res.data.error) {
           message.error(res.data.error);
         } else {
-          localStorage.setItem("token", JSON.stringify(res.data.accessToken));
+          dispatch(setUser({ ...res.data, isLoggedIn: true }));
           message.success("Đăng nhập thành công");
           if (res.data.role === 2) {
             navigate("/admin");

@@ -10,6 +10,14 @@ export const UserService = apiService.injectEndpoints({
       providesTags: ["user"],
     }),
 
+    getUser: builder.query({
+      query: (headers) => ({
+        url: `users/getOne`,
+        headers,
+      }),
+      providesTags: ["user"],
+    }),
+
     createUser: builder.mutation({
       query: ({ data, headers }) => ({
         url: `users`,
@@ -32,4 +40,4 @@ export const UserService = apiService.injectEndpoints({
   }),
 });
 
-export const { useGetAllUserQuery } = UserService;
+export const { useGetAllUserQuery, useGetUserQuery } = UserService;

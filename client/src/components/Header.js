@@ -11,6 +11,7 @@ import logo from "assets/imgs/logo.png";
 import { Link } from "react-router-dom";
 import SearchProduct from "./SearchProduct";
 import Cart from "./Cart";
+import UserMenu from "./UserMenu";
 function Header({ page }) {
   const cart = useSelector((state) => state.cart);
   return (
@@ -77,7 +78,9 @@ function Header({ page }) {
           <Popover content={<SearchProduct />}>
             <SearchOutlined className='text-2xl font-bold cursor-pointer hover:text-primary' />
           </Popover>
-          <UserOutlined className='text-2xl mx-7 font-bold cursor-pointer hover:text-primary' />
+          <Popover content={<UserMenu />}>
+            <UserOutlined className='text-2xl mx-7 font-bold cursor-pointer hover:text-primary' />
+          </Popover>
           <Popover content={<Cart cart={cart} />} placement='bottomRight'>
             <Badge count={cart.length}>
               <ShoppingCartOutlined className='text-2xl text-white font-bold cursor-pointer hover:text-primary' />

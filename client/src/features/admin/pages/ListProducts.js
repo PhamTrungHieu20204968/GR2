@@ -13,6 +13,7 @@ import {
 import React, { useState } from "react";
 import Search from "antd/es/input/Search";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import Sidebar from "../components/Sidebar";
 import {
@@ -23,9 +24,10 @@ import {
 function ListProducts() {
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
+  const { accessToken } = useSelector((state) => state.auth);
   const [deleteProduct] = useDeleteProductMutation();
   const { data, isError, isLoading } = useGetAllProductsQuery({
-    accessToken: JSON.parse(localStorage.getItem("token")),
+    accessToken,
   });
 
   if (isLoading) {
@@ -36,7 +38,7 @@ function ListProducts() {
     deleteProduct({
       id,
       headers: {
-        accessToken: JSON.parse(localStorage.getItem("token")),
+        accessToken,
       },
     })
       .then((res) => {

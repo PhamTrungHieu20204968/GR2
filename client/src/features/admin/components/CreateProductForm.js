@@ -2,6 +2,7 @@ import React from "react";
 import { Form, Input, Button, Card, Select, Spin, Result, message } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import {
   useGetAllCategoriesQuery,
@@ -14,6 +15,7 @@ const { Option } = Select;
 function CreateProductForm({ product }) {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const { accessToken } = useSelector((state) => state.auth);
   const categoryValue = Form.useWatch("category", form);
   const [create] = useCreateProductMutation();
   const [update] = useUpdateProductMutation();
@@ -33,7 +35,7 @@ function CreateProductForm({ product }) {
         images: values.images,
       },
       headers: {
-        accessToken: JSON.parse(localStorage.getItem("token")).accessToken,
+        accessToken,
       },
     })
       .then((res) => {
@@ -54,7 +56,7 @@ function CreateProductForm({ product }) {
     update({
       id: product.id,
       headers: {
-        accessToken: JSON.parse(localStorage.getItem("token")).accessToken,
+        accessToken,
       },
       data: {
         name: values.name,

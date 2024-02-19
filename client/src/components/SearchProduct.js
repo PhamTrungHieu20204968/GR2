@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Input, Spin } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
+import { useSelector } from "react-redux";
 
 import ProductItem from "./ProductItem";
 
@@ -8,8 +9,9 @@ import { useGetAllProductsQuery } from "app/api/productService";
 
 function SearchProduct() {
   const [searchInput, setSearchInput] = useState("");
+  const { accessToken } = useSelector((state) => state.auth);
   const { data, isLoading } = useGetAllProductsQuery({
-    accessToken: JSON.parse(localStorage.getItem("token")),
+    accessToken,
   });
 
   if (isLoading) {

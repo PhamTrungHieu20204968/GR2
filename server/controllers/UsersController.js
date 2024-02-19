@@ -24,6 +24,7 @@ class UsersController {
         });
         return res.json("SUCCESS!");
       } catch (error) {
+        console.log(error);
         return res.json({ error });
       }
     });
@@ -98,11 +99,18 @@ class UsersController {
   // [GET] /getOne
   async getOne(req, res) {
     const id = req.user?.id;
-    const _user = await users.findOne({ where: { id } });
-    if (_user) {
-      return res.json(_user);
-    } else {
-      return res.json({ error: "Không tìm thấy người dùng!" });
+    try {
+      const _user = await users.findOne({
+        where: { id },
+        attributes: ["name", "avatar"],
+      });
+      if (_user) {
+        return res.json(_user);
+      } else {
+        return res.json({ error: "Không tìm thấy người dùng!" });
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 

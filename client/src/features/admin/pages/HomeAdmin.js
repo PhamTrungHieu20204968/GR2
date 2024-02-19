@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button, Col, Row } from "antd";
+import { useSelector } from "react-redux";
 
 import Sidebar from "../components/Sidebar";
 import { Space, Table, Tag, Input, Result, Spin } from "antd";
@@ -67,9 +68,10 @@ const columns = [
 ];
 const HomeAdmin = () => {
   const [searchValue, setSearchValue] = useState("");
+  const { accessToken } = useSelector((state) => state.auth);
   const { data, isError, isLoading } = useGetAllUserQuery({
-    accessToken: JSON.parse(localStorage.getItem("token")).accessToken,
-  });
+    accessToken,
+  }); 
 
   if (isLoading) {
     <Spin />;
@@ -85,7 +87,7 @@ const HomeAdmin = () => {
           <Sidebar></Sidebar>
         </Col>
         <Col span={18}>
-          {isError ? (
+          {isError || data?.error ? (
             <Result
               status='500'
               title='500'
