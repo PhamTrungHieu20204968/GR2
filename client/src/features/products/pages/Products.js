@@ -41,7 +41,7 @@ function Products() {
       }, "0");
       dispatch(setMaxPrice(parseFloat(_maxPrice)));
     }
-  }, [data]);
+  }, [data, dispatch]);
   return (
     <Layout page={["products", params.category]}>
       <div className='container mx-auto pt-3 h-full'>

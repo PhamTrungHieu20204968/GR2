@@ -8,11 +8,11 @@ function ProductItem({ product }) {
   };
   return (
     <div
-      className='group flex w-full py-2 border-b-2 cursor-pointer first:pt-0 last:pb-0 last:border-b-0'
+      className='group flex w-full py-2 border-b-2 cursor-pointer first:pt-0 last:pb-0 last:border-b-0 hover:bg-gray-100'
       onClick={handleOnclickProduct}
     >
       <img
-        className='w-16 h-1w-16 mr-1'
+        className='w-16 p-2 rounded-full'
         src={product?.images[0].url}
         alt={product?.name}
       />

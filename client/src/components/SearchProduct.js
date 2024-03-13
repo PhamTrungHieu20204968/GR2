@@ -32,6 +32,7 @@ function SearchProduct() {
               item.name.toUpperCase().includes(searchInput.trim().toUpperCase())
             )
               return <ProductItem product={item} key={item.id}></ProductItem>;
+            return <></>;
           })}
       </div>
     </div>

@@ -1,9 +1,11 @@
 import React from "react";
 import { Button } from "antd";
+import { useNavigate } from "react-router-dom";
 
 import CartItem from "./CartItem";
 
 function Cart({ cart }) {
+  const navigate = useNavigate();
   return (
     <div>
       {cart.length > 0 ? (
@@ -11,7 +13,7 @@ function Cart({ cart }) {
           {cart?.map((item) => (
             <CartItem key={item.id} product={item} />
           ))}
-          <Button className='w-full my-2' type='dashed'>
+          <Button className='w-full my-2' type='dashed' onClick={() => navigate('/cart')}>
             Xem giỏ hàng
           </Button>
           <Button className='w-full ' type='primary'>

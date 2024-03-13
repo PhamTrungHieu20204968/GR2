@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Col, Row, Rate, Button, Tabs, Spin, InputNumber, Image } from "antd";
 import { useDispatch } from "react-redux";
@@ -26,7 +26,7 @@ function ProductDetail() {
     dispatch(
       addToCart({
         ...data,
-        quantity: quantity,
+        orderQuantity: quantity,
       })
     );
   };

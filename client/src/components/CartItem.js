@@ -28,7 +28,7 @@ function CartItem({ product }) {
             {product.name}
           </p>
           <p className='text-xs font-bold text-gray-400'>
-            <span className='mr-1'>{product?.quantity}</span>
+            <span className='mr-1'>{product?.orderQuantity}</span>
             <span className=''>
               {"x " +
                 parseInt(product?.price).toLocaleString("vi", {
