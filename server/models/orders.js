@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
           model: users,
           key: "id",
         },
-        allowNull: false,
+        allowNull: true,
       },
     },
     {

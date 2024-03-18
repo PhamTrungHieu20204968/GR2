@@ -1,21 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { Row, Col, Steps, message, Button } from "antd";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import Layout from "components/Layout";
 import Cart from "../components/Cart";
-function Pay() {
-  const [currentStep, setCurrentStep] = useState(0);
-  const cart = useSelector((state) => state.cart);
+function PayCart() {
+  const cart  = useSelector((state) => state.cart);
   const navigate = useNavigate();
 
   const onChangeStep = (value) => {
-    if (value === 2) {
+    if (value === 1) navigate("/pay");
+    else if (value === 2) {
       message.info("Bạn cần hoàn thành bước 2 trước");
       return;
     }
-    setCurrentStep(value);
   };
   return (
     <Layout>
@@ -24,7 +23,7 @@ function Pay() {
           <Row className='mb-8'>
             <Col span={24}>
               <Steps
-                current={currentStep}
+                current={0}
                 onChange={onChangeStep}
                 className='w-full'
                 items={[
@@ -32,7 +31,7 @@ function Pay() {
                     title: "Xem giỏ hàng",
                   },
                   {
-                    title: "Đặt hàng",
+                    title: "Thanh toán",
                   },
                   {
                     title: "Hoàn tất đặt hàng",
@@ -41,7 +40,7 @@ function Pay() {
               />
             </Col>
           </Row>
-          {currentStep === 0 && <Cart cart={cart}></Cart>}
+          <Cart cart={cart}></Cart>
         </div>
       ) : (
         <div className='flex flex-col justify-center items-center w-full h-full'>
@@ -60,4 +59,4 @@ function Pay() {
   );
 }
 
-export default Pay;
+export default PayCart;

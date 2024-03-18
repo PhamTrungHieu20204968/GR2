@@ -13,10 +13,18 @@ function Cart({ cart }) {
           {cart?.map((item) => (
             <CartItem key={item.id} product={item} />
           ))}
-          <Button className='w-full my-2' type='dashed' onClick={() => navigate('/cart')}>
+          <Button
+            className='w-full my-2'
+            type='dashed'
+            onClick={() => navigate("/cart")}
+          >
             Xem giỏ hàng
           </Button>
-          <Button className='w-full ' type='primary'>
+          <Button
+            className='w-full '
+            type='primary'
+            onClick={() => navigate("/pay")}
+          >
             Thanh toán
           </Button>
         </div>

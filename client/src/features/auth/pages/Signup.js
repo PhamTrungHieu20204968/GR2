@@ -52,7 +52,7 @@ function Signup() {
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhâp họ và tên!",
+                message: "Vui lòng nhập họ và tên!",
               },
             ]}
           >
@@ -67,7 +67,7 @@ function Signup() {
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhâp tài khoản!",
+                message: "Vui lòng nhập tài khoản!",
               },
             ]}
           >
@@ -82,7 +82,7 @@ function Signup() {
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhâp mật khẩu!",
+                message: "Vui lòng nhập mật khẩu!",
               },
             ]}
           >
@@ -99,7 +99,7 @@ function Signup() {
             rules={[
               {
                 required: true,
-                message: "Vui lòng xác nhận lại mật khẩu!",
+                message: "Vui lòng xác nhập lại mật khẩu!",
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {

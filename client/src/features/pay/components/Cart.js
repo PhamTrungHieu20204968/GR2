@@ -27,6 +27,9 @@ function Cart({ cart }) {
   const [deletedItem, setDeletedItem] = useState();
   const [notify, setNotify] = useState();
   const [flag, setFlag] = useState(false);
+  const totalCost = cart.reduce((total, item) => {
+    return total + parseInt(item.price) * item.orderQuantity;
+  }, 0);
 
   const handleChangeQuantity = (value, record) => {
     if (value >= 1 && value <= 99) {
@@ -188,7 +191,12 @@ function Cart({ cart }) {
         </div>
         <div className='mt-4 text-base flex justify-between pb-1 border-b-[1px]'>
           <div className=''>Tổng cộng</div>
-          <b>9,025,800 ₫</b>
+          <b>
+            {totalCost.toLocaleString("vi", {
+              style: "currency",
+              currency: "VND",
+            })}
+          </b>
         </div>
         <div className='py-2 text-base flex justify-between border-b-[1px]'>
           <div className=''>Mã ưu đãi</div>
@@ -196,10 +204,18 @@ function Cart({ cart }) {
         </div>
         <div className='mt-4 text-base flex justify-between pb-1 border-b-[1px]'>
           <div className=''>Tổng cộng</div>
-          <b>9,025,800 ₫</b>
+          <b>
+            {totalCost.toLocaleString("vi", {
+              style: "currency",
+              currency: "VND",
+            })}
+          </b>
         </div>
 
-        <button className='text-white bg-pink-500 w-full h-10 text-lg font-semibold mt-4 hover:text-white hover:bg-pink-600'>
+        <button
+          onClick={() => navigate("/pay")}
+          className='text-white bg-pink-500 w-full h-10 text-lg font-semibold mt-4 hover:text-white hover:bg-pink-600'
+        >
           TIẾN HÀNH THANH TOÁN
         </button>
 
