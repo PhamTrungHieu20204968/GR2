@@ -2,6 +2,24 @@ import { apiService } from "../store/apiService";
 
 export const orderService = apiService.injectEndpoints({
   endpoints: (builder) => ({
+    getAllOrders: builder.query({
+      query: (headers) => ({
+        url: `orders/`,
+        headers,
+      }),
+      providesTags: ["order"],
+    }),
+
+    updateOrder: builder.mutation({
+      query: ({ data, headers, id }) => ({
+        url: `orders/${id}`,
+        method: "PUT",
+        body: data,
+        headers,
+      }),
+      invalidatesTags: ["order"],
+    }),
+
     guestCreateOrder: builder.mutation({
       query: (data) => ({
         url: `orders/`,
@@ -23,5 +41,9 @@ export const orderService = apiService.injectEndpoints({
   }),
 });
 
-export const { useGuestCreateOrderMutation, useUserCreateOrderMutation } =
-  orderService;
+export const {
+  useGuestCreateOrderMutation,
+  useUserCreateOrderMutation,
+  useGetAllOrdersQuery,
+  useUpdateOrderMutation,
+} = orderService;

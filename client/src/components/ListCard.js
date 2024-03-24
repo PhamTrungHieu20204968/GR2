@@ -26,7 +26,7 @@ function ListCard({ category }) {
     <div className='list-card w-full'>
       {data?.length > 0 ? (
         <div>
-          <Row gutter={16}>
+          <Row gutter={[16, 16]}>
             {data?.map(
               (item, i) =>
                 i < 8 && (

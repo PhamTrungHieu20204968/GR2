@@ -5,4 +5,6 @@ const { validateToken } = require("../middlewares/AuthMiddleware");
 
 router.post("/user", validateToken, ordersController.userCreateOrder);
 router.post("/", ordersController.guestCreateOrder);
+router.put("/:id", validateToken, ordersController.updateOrder);
+router.get("/", validateToken, ordersController.getAllOrders);
 module.exports = router;

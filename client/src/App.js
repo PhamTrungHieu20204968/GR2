@@ -8,6 +8,7 @@ import HomeAdmin from "features/admin/pages/HomeAdmin";
 import CreateProduct from "features/admin/pages/CreateProduct";
 import UpdateProduct from "features/admin/pages/UpdateProduct";
 import ListProducts from "features/admin/pages/ListProducts";
+import ListOrders from "features/admin/pages/ListOrders";
 import Products from "features/products/pages/Products";
 import ProductDetail from "features/products/pages/ProductDetail";
 import GoogleLoginSuccess from "features/auth/pages/GoogleLoginSuccess";
@@ -41,6 +42,7 @@ function App() {
             <Route path='update-product/:id' element={<UpdateProduct />} />
             <Route path='create-product' element={<CreateProduct />} />
             <Route path='list-products' element={<ListProducts />} />
+            <Route path='list-orders' element={<ListOrders />} />
           </Route>
         </Routes>
       </BrowserRouter>

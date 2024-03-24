@@ -39,6 +39,7 @@ function PayForm() {
       userCreate({
         data: {
           ...values,
+          type: values.payType,
           fullName: values.name,
           totalMoney: totalCost,
         },
@@ -64,6 +65,7 @@ function PayForm() {
       guestCreate({
         data: {
           ...values,
+          type: values.payType,
           fullName: values.name,
           totalMoney: totalCost,
         },
@@ -396,13 +398,22 @@ function PayForm() {
                       </b>
                     </div>
 
-                    <Form.Item name='payType' initialValue={1}>
+                    <Form.Item
+                      name='payType'
+                      initialValue={"Thanh toán qua ngân hàng"}
+                    >
                       <Radio.Group>
-                        <Radio value={1} className='mb-2'>
+                        <Radio
+                          value={"Thanh toán qua ngân hàng"}
+                          className='mb-2'
+                        >
                           {" "}
                           Thanh toán qua ngân hàng{" "}
                         </Radio>
-                        <Radio value={2}> Thanh toán khi nhận hàng </Radio>
+                        <Radio value={"Thanh toán khi nhận hàng"}>
+                          {" "}
+                          Thanh toán khi nhận hàng{" "}
+                        </Radio>
                       </Radio.Group>
                     </Form.Item>
 

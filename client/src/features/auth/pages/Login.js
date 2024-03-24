@@ -106,23 +106,17 @@ function Login() {
           <Form.Item className='w-3/5'>
             <Divider>Hoặc đăng nhập với</Divider>
             <div className='w-full flex gap-2'>
-              <Button
-                type='default'
-                icon={<GoogleOutlined />}
-                size='large'
-                className='bg-[#ea4235] text-white custom-btn hover:bg-[#ea4235cc] w-full'
+              <button
+                className='bg-[#ea4235] h-10 text-white rounded-lg custom-btn hover:bg-[#ea4235cc] w-full'
                 onClick={loginWithGoogleHandler}
               >
+                <GoogleOutlined className='mr-1' />
                 Gmail
-              </Button>
-              <Button
-                type='default'
-                icon={<FacebookOutlined />}
-                size='large'
-                className='bg-blue-500 text-white custom-btn hover:bg-[#4096ff] w-full'
-              >
+              </button>
+              <button className='bg-blue-500 h-10 rounded-lg text-white custom-btn hover:bg-[#4096ff] w-full'>
+                <FacebookOutlined className='mr-1' />
                 Facebook
-              </Button>
+              </button>
             </div>
           </Form.Item>
         </Form>
