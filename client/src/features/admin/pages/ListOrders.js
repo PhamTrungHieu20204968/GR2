@@ -33,7 +33,7 @@ function ListOrders() {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
-
+  console.log(data);
   if (isLoading) {
     <Spin />;
   }
@@ -176,7 +176,7 @@ function ListOrders() {
       title: "Người đặt",
       dataIndex: "fullName",
       key: "fullName",
-      width: 150,
+      width: 140,
       fixed: "left",
       ...getColumnSearchProps("fullName"),
     },
@@ -194,14 +194,6 @@ function ListOrders() {
       ...getColumnSearchProps("telephone"),
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      width: 300,
-      key: "email",
-      ...getColumnSearchProps("email"),
-    },
-
-    {
       title: "Giá",
       key: "totalMoney",
       render: (_, record) =>
@@ -209,7 +201,7 @@ function ListOrders() {
           style: "currency",
           currency: "VND",
         }),
-      sorter: (a, b) => a - b,
+      sorter: (a, b) => a.totalMoney - b.totalMoney,
       width: 150,
     },
     {
@@ -221,14 +213,24 @@ function ListOrders() {
     {
       title: "Loại",
       key: "type",
-      dataIndex: "type",
-      width: 200,
+      render: (_, record) =>
+        (record.type === 1 && "Thanh toán toàn bộ đơn hàng") ||
+        (record.type === 2 && "Thanh toán 50% đơn hàng") ||
+        (record.type === 3 && "Thanh toán khi nhận hàng"),
+      width: 120,
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      width: 300,
+      key: "email",
+      ...getColumnSearchProps("email"),
     },
     {
       title: "Trạng thái",
       key: "status",
       fixed: "right",
-      width: 200,
+      width: 180,
       render: (_, record) => (
         <Select
           defaultValue={record?.status}
@@ -243,18 +245,14 @@ function ListOrders() {
             },
             {
               value: 1,
-              label: "Thanh toán 1 nửa",
-            },
-            {
-              value: 2,
               label: "Đã thanh toán",
             },
             {
-              value: 3,
+              value: 2,
               label: "Đang giao hàng",
             },
             {
-              value: 4,
+              value: 3,
               label: "Đã hoàn thành",
             },
           ]}
@@ -262,7 +260,7 @@ function ListOrders() {
       ),
     },
   ];
-
+  console.log(data);
   return (
     <div className='w-full h-screen overflow-y-auto overflow-x-hidden'>
       <Row gutter={16} className='pr-4'>

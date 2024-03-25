@@ -19,6 +19,7 @@ import {
   useUserCreateOrderMutation,
 } from "app/api/orderService";
 import { deleteCart } from "app/slices/cartSlice";
+import Paypal from "../components/Paypal";
 
 function PayForm() {
   const [form] = Form.useForm();
@@ -30,61 +31,87 @@ function PayForm() {
   const dispatch = useDispatch();
   const [currentStep, setCurrentStep] = useState(1);
   const [order, setOrder] = useState();
+  const [flag, setFlag] = useState(0);
+  const payType = Form.useWatch("payType", form);
 
-  const totalCost = cart.reduce((total, item) => {
-    return total + parseInt(item.price) * item.orderQuantity;
-  }, 0);
-  const onFinish = (values) => {
-    if (accessToken) {
-      userCreate({
-        data: {
-          ...values,
-          type: values.payType,
-          fullName: values.name,
-          totalMoney: totalCost,
-        },
-        headers: {
-          accessToken,
-        },
+  const [totalCost, setTotalCost] = useState(
+    cart.reduce((total, item) => {
+      return total + parseInt(item.price) * item.orderQuantity;
+    }, 0)
+  );
+
+  const userCreateOrder = (values, status) => {
+    userCreate({
+      data: {
+        ...values,
+        type: values.payType,
+        fullName: values.name,
+        totalMoney: totalCost,
+        status,
+      },
+      headers: {
+        accessToken,
+      },
+    })
+      .then((res) => {
+        if (res.data?.error) {
+          message.error(res.data.error);
+        } else {
+          setCurrentStep(2);
+          setOrder(cart);
+          setFlag(0);
+          dispatch(deleteCart());
+          message.success("Đặt hàng thành công!");
+        }
       })
-        .then((res) => {
-          if (res.data?.error) {
-            message.error(res.data.error);
-          } else {
-            setCurrentStep(2);
-            setOrder(cart);
-            dispatch(deleteCart());
-            message.success("Đặt hàng thành công!");
-          }
-        })
-        .catch((err) => {
-          message.error("Đặt hàng thất bại!");
-          console.log(err);
-        });
-    } else {
-      guestCreate({
-        data: {
-          ...values,
-          type: values.payType,
-          fullName: values.name,
-          totalMoney: totalCost,
-        },
+      .catch((err) => {
+        message.error("Đặt hàng thất bại!");
+        console.log(err);
+      });
+  };
+
+  const guestCreateOrder = (values, status) => {
+    guestCreate({
+      data: {
+        ...values,
+        type: values.payType,
+        fullName: values.name,
+        totalMoney: totalCost,
+        status,
+      },
+    })
+      .then((res) => {
+        if (res.data?.error) {
+          message.error(res.data.error);
+        } else {
+          setCurrentStep(2);
+          setOrder(cart);
+          setFlag(0);
+          dispatch(deleteCart());
+          message.success("Đặt hàng thành công!");
+        }
       })
-        .then((res) => {
-          if (res.data?.error) {
-            message.error(res.data.error);
-          } else {
-            setCurrentStep(2);
-            setOrder(cart);
-            dispatch(deleteCart());
-            message.success("Đặt hàng thành công!");
-          }
-        })
-        .catch((err) => {
-          message.error("Đặt hàng thất bại!");
-          console.log(err);
-        });
+      .catch((err) => {
+        message.error("Đặt hàng thất bại!");
+        console.log(err);
+      });
+  };
+
+  const onFinish = (values, status = 0) => {
+    if (payType < 3) {
+      setFlag(1);
+      return;
     }
+
+    if (accessToken) {
+      userCreateOrder(values, status);
+    } else {
+      guestCreateOrder(values, status);
+    }
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    setFlag(0);
   };
 
   const onChangeStep = (value) => {
@@ -175,9 +202,9 @@ function PayForm() {
                   <div className='flex my-4 pt-2 border-t-2 justify-between text-sm'>
                     <div className=''>Phương thức thanh toán</div>
                     <b className=''>
-                      {form.getFieldValue("payType") === 1
-                        ? "Thanh toán qua ngân hàng"
-                        : "Thanh toán khi nhận hàng"}
+                      {payType === 1 && "Thanh toán toàn bộ đơn hàng"}
+                      {payType === 2 && "Thanh toán 50% đơn hàng"}
+                      {payType === 3 && "Thanh toán khi nhận hàng"}
                     </b>
                   </div>
                   <div className='flex mt-2 justify-between text-sm'>
@@ -197,7 +224,13 @@ function PayForm() {
               </Col>
             </Row>
           ) : (
-            <Form form={form} onFinish={onFinish} layout='vertical'>
+            <Form
+              form={form}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              onChange={onFinishFailed}
+              layout='vertical'
+            >
               <Row gutter={16}>
                 <Col span={14}>
                   <div className='text-xl mb-4 font-bold'>
@@ -391,44 +424,61 @@ function PayForm() {
                     <div className='flex my-4 pt-2 border-t-2 justify-between text-base'>
                       <div className=''>Tổng:</div>
                       <b className=''>
-                        {totalCost.toLocaleString("vi", {
-                          style: "currency",
-                          currency: "VND",
-                        })}
+                        {cart
+                          .reduce((total, item) => {
+                            return (
+                              total + parseInt(item.price) * item.orderQuantity
+                            );
+                          }, 0)
+                          .toLocaleString("vi", {
+                            style: "currency",
+                            currency: "VND",
+                          })}
                       </b>
                     </div>
 
-                    <Form.Item
-                      name='payType'
-                      initialValue={"Thanh toán qua ngân hàng"}
-                    >
+                    <Form.Item name='payType' initialValue={1}>
                       <Radio.Group>
-                        <Radio
-                          value={"Thanh toán qua ngân hàng"}
-                          className='mb-2'
-                        >
-                          {" "}
-                          Thanh toán qua ngân hàng{" "}
+                        <Radio value={1} className='mb-2'>
+                          Thanh toán toàn bộ đơn hàng
                         </Radio>
-                        <Radio value={"Thanh toán khi nhận hàng"}>
-                          {" "}
-                          Thanh toán khi nhận hàng{" "}
+                        <Radio value={2} className='mb-2'>
+                          Thanh toán 50% đơn hàng
                         </Radio>
+                        <Radio value={3}>Thanh toán khi nhận hàng</Radio>
                       </Radio.Group>
                     </Form.Item>
 
-                    <button
-                      type='submit'
-                      className='text-white bg-pink-500 w-full h-10 text-lg font-semibold hover:text-white hover:bg-pink-600'
+                    <div
+                      className={
+                        payType < 3 && flag === 1 ? "w-full" : "w-full hidden"
+                      }
                     >
-                      ĐẶT HÀNG
-                    </button>
-                    <button
-                      type='button'
-                      className='text-black mt-4 bg-gray-100 w-full h-10 text-base hover:text-black hover:bg-gray-300'
-                    >
-                      Quay lại giỏ hàng
-                    </button>
+                      <Paypal
+                        payload={{ form, totalMoney: totalCost, accessToken }}
+                        amount={payType === 1 ? totalCost : totalCost / 2}
+                        accessToken={accessToken}
+                        guestCreateOrder={guestCreateOrder}
+                        userCreateOrder={userCreateOrder}
+                      ></Paypal>
+                    </div>
+
+                    {(flag === 0 || payType === 3) && (
+                      <div>
+                        <button
+                          type='submit'
+                          className='text-white bg-pink-500 w-full h-10 mb-4 text-lg font-semibold hover:text-white hover:bg-pink-600'
+                        >
+                          ĐẶT HÀNG
+                        </button>
+                        <button
+                          type='button'
+                          className='text-black bg-gray-100 w-full h-10 text-base hover:text-black hover:bg-gray-300'
+                        >
+                          Quay lại giỏ hàng
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </Col>
               </Row>

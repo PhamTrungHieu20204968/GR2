@@ -109,11 +109,15 @@ function Login() {
               <button
                 className='bg-[#ea4235] h-10 text-white rounded-lg custom-btn hover:bg-[#ea4235cc] w-full'
                 onClick={loginWithGoogleHandler}
+                type='button'
               >
                 <GoogleOutlined className='mr-1' />
                 Gmail
               </button>
-              <button className='bg-blue-500 h-10 rounded-lg text-white custom-btn hover:bg-[#4096ff] w-full'>
+              <button
+                className='bg-blue-500 h-10 rounded-lg text-white custom-btn hover:bg-[#4096ff] w-full'
+                type='button'
+              >
                 <FacebookOutlined className='mr-1' />
                 Facebook
               </button>

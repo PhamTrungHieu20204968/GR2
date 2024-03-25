@@ -7,7 +7,7 @@ import CartItem from "./CartItem";
 function Cart({ cart }) {
   const navigate = useNavigate();
   return (
-    <div>
+    <div className='max-w-xs'>
       {cart.length > 0 ? (
         <div className=''>
           {cart?.map((item) => (

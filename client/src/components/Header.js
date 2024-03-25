@@ -15,7 +15,7 @@ import UserMenu from "./UserMenu";
 function Header({ page }) {
   const cart = useSelector((state) => state.cart);
   return (
-    <div className='w-screen fixed top-0 left-0 right-0 z-50 text-white bg-[#333]'>
+    <div className='w-screen fixed top-0 left-0 right-0 z-50 text-white bg-[#333] '>
       <div className='container mx-auto flex justify-between items-center'>
         <Link to='/'>
           <img
@@ -75,13 +75,17 @@ function Header({ page }) {
           </Link>
         </ul>
         <div>
-          <Popover trigger="click" content={<SearchProduct />}>
+          <Popover trigger='click' content={<SearchProduct />}>
             <SearchOutlined className='text-2xl font-bold cursor-pointer hover:text-primary' />
           </Popover>
-          <Popover trigger="click" content={<UserMenu />}>
+          <Popover trigger='click' content={<UserMenu />}>
             <UserOutlined className='text-2xl mx-7 font-bold cursor-pointer hover:text-primary' />
           </Popover>
-          <Popover trigger="click" content={<Cart cart={cart} />} placement='bottomRight'>
+          <Popover
+            trigger='click'
+            content={<Cart cart={cart} />}
+            placement='bottomRight'
+          >
             <Badge count={cart.length}>
               <ShoppingCartOutlined className='text-2xl text-white font-bold cursor-pointer hover:text-primary' />
             </Badge>

@@ -54,8 +54,16 @@ class OrdersController {
 
   // [POST] /
   async guestCreateOrder(req, res) {
-    const { address, fullName, city, telephone, email, totalMoney, type } =
-      req.body.data;
+    const {
+      address,
+      fullName,
+      city,
+      telephone,
+      email,
+      totalMoney,
+      type,
+      status,
+    } = req.body.data;
     try {
       await orders.create({
         address,
@@ -65,7 +73,7 @@ class OrdersController {
         email,
         totalMoney,
         type,
-        status: 0,
+        status,
       });
 
       return res.status(200).json("Tạo thành công");
@@ -77,8 +85,16 @@ class OrdersController {
 
   // [POST] /user
   async userCreateOrder(req, res) {
-    const { address, fullName, city, telephone, email, totalMoney, type } =
-      req.body;
+    const {
+      address,
+      fullName,
+      city,
+      telephone,
+      email,
+      totalMoney,
+      type,
+      status,
+    } = req.body;
     const userId = req.user.id;
     try {
       await orders.create({
@@ -90,7 +106,7 @@ class OrdersController {
         totalMoney,
         type,
         userId,
-        status: 0,
+        status,
       });
 
       return res.status(200).json("Tạo thành công");
