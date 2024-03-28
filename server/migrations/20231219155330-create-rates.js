@@ -15,6 +15,9 @@ module.exports = {
       content: {
         type: Sequelize.STRING,
       },
+      status: {
+        type: Sequelize.INTEGER,
+      },
       productId: {
         type: Sequelize.DataTypes.INTEGER,
       },

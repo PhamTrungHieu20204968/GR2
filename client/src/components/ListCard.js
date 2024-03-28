@@ -6,7 +6,7 @@ import ProductCard from "./ProductCard";
 
 import { useGetAllProductsByCategoryQuery } from "app/api/productService";
 
-function ListCard({ category }) {
+function ListCard({ category, quantity = 8, id = 0 }) {
   const navigate = useNavigate();
   const { data, isLoading } = useGetAllProductsByCategoryQuery({
     name: category,
@@ -27,24 +27,28 @@ function ListCard({ category }) {
       {data?.length > 0 ? (
         <div>
           <Row gutter={[16, 16]}>
-            {data?.map(
-              (item, i) =>
-                i < 8 && (
-                  <Col span={6} key={item.id}>
-                    <ProductCard product={item}></ProductCard>
-                  </Col>
-                )
-            )}
+            {data
+              ?.filter((item) => item.id !== id)
+              .map(
+                (item, i) =>
+                  i < quantity && (
+                    <Col span={6} key={item.id}>
+                      <ProductCard product={item} key={item.id}></ProductCard>
+                    </Col>
+                  )
+              )}
           </Row>
           <div className='mx-auto my-8 w-full flex justify-center'>
-            <Button
-              className='uppercase font-bold fly-in hover:drop-shadow-2xl'
-              size='large'
-              type='primary'
-              onClick={handleOnclick}
-            >
-              Xem thêm
-            </Button>
+            {quantity === 8 && (
+              <Button
+                className='uppercase font-bold fly-in hover:drop-shadow-2xl'
+                size='large'
+                type='primary'
+                onClick={handleOnclick}
+              >
+                Xem thêm
+              </Button>
+            )}
           </div>
         </div>
       ) : (

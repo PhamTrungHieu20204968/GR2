@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Col, Row, Rate, Button, Tabs, Spin, InputNumber, Image } from "antd";
+import { Col, Row, Button, Tabs, Spin, InputNumber, Image } from "antd";
+import { StarFilled } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 
 import Layout from "components/Layout";
@@ -9,6 +10,7 @@ import ProductRates from "../components/ProductRates";
 import ListCard from "components/ListCard";
 import { useGetProductByNameQuery } from "app/api/productService";
 import { addToCart } from "app/slices/cartSlice";
+import { useGetProductRatesQuery } from "app/api/rateService";
 
 function ProductDetail() {
   const params = useParams();
@@ -17,6 +19,7 @@ function ProductDetail() {
   const { data, isLoading } = useGetProductByNameQuery({
     name: params.name,
   });
+  const { data: rates } = useGetProductRatesQuery(data?.id);
   const [preview, setPreview] = useState(data?.images[0].url);
   if (isLoading) {
     <Spin />;
@@ -104,8 +107,13 @@ function ProductDetail() {
                 </b>
               </div>
               <div>
-                <span className='mr-2'>Đánh giá:</span>
-                <Rate disabled defaultValue={2} />
+                <span className='mr-2 '>{`Đánh giá(${rates?.length}):`}</span>
+                <span className='text-xl'>
+                  {rates?.reduce((total, item) => {
+                    return total + item.rate;
+                  }, 0) / rates?.length}
+                  <StarFilled className=' text-yellow-300 ml-1' />
+                </span>
               </div>
             </div>
             <div className='description-text text-lg mt-2 border-2 p-2'>
@@ -177,7 +185,7 @@ function ProductDetail() {
                   i === 0 ? (
                     <ProductDescription descriptions={data?.descriptions} />
                   ) : (
-                    <ProductRates />
+                    <ProductRates productId={data?.id} rates={rates} />
                   ),
               };
             })}
@@ -188,7 +196,11 @@ function ProductDetail() {
           <div className='my-4 w-full text-3xl font-bold'>
             Sản phẩm tương tự
           </div>
-          <ListCard category={params.category}></ListCard>
+          <ListCard
+            category={params.category}
+            quantity={4}
+            id={data?.id}
+          ></ListCard>
         </Row>
       </div>
     </Layout>

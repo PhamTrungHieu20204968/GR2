@@ -10,7 +10,11 @@ function ProductCard({ product }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleOnclickProduct = () => {
-    navigate(`/products/pets/${product?.name}`);
+    if (product?.categoryId === 1) {
+      navigate(`/products/foods/${product?.name}`);
+    } else if (product?.categoryId === 2) {
+      navigate(`/products/accessories/${product?.name}`);
+    } else navigate(`/products/pets/${product?.name}`);
   };
 
   const handleAddToCart = (e) => {

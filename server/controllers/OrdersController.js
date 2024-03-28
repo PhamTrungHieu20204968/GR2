@@ -1,4 +1,4 @@
-const { orders } = require("../models");
+const { orders, orderItems, rates, products } = require("../models");
 
 class OrdersController {
   // [GET] /
@@ -7,7 +7,19 @@ class OrdersController {
       return res.json({ error: "Không có quyền truy cập!" });
     }
     try {
-      const List = await orders.findAll();
+      const List = await orders.findAll({
+        include: [
+          {
+            model: orderItems,
+            include: [
+              {
+                model: products,
+                attributes: ["name", "price"],
+              },
+            ],
+          },
+        ],
+      });
       return res.json(List);
     } catch (error) {
       console.log(error);
@@ -29,6 +41,8 @@ class OrdersController {
       totalMoney,
       type,
       status,
+      cart,
+      userId,
     } = req.body;
     const id = parseInt(req.params.id);
     try {
@@ -45,6 +59,21 @@ class OrdersController {
         },
         { where: { id } }
       );
+      if (userId && status === 3) {
+        cart.map(async (item) => {
+          await rates.update(
+            {
+              status: 1,
+            },
+            {
+              where: {
+                userId,
+                productId: item.productId,
+              },
+            }
+          );
+        });
+      }
       return res.status(200).json("Thành công");
     } catch (error) {
       console.log(error);
@@ -76,6 +105,14 @@ class OrdersController {
         status,
       });
 
+      cart.map(async (item) => {
+        await orderItems.create({
+          quantity: item.orderQuantity,
+          productId: item.id,
+          orderId: _order.id,
+        });
+      });
+
       return res.status(200).json("Tạo thành công");
     } catch (error) {
       console.log(error);
@@ -94,10 +131,11 @@ class OrdersController {
       totalMoney,
       type,
       status,
+      cart,
     } = req.body;
     const userId = req.user.id;
     try {
-      await orders.create({
+      const _order = await orders.create({
         address,
         fullName,
         city,
@@ -109,6 +147,20 @@ class OrdersController {
         status,
       });
 
+      cart.map(async (item) => {
+        await orderItems.create({
+          quantity: item.orderQuantity,
+          productId: item.id,
+          orderId: _order.id,
+        });
+        await rates.findOrCreate({
+          where: { productId: item.id, userId },
+          defaults: {
+            rate: 0,
+            status: 0,
+          },
+        });
+      });
       return res.status(200).json("Tạo thành công");
     } catch (error) {
       console.log(error);

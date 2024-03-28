@@ -48,6 +48,7 @@ function PayForm() {
         fullName: values.name,
         totalMoney: totalCost,
         status,
+        cart,
       },
       headers: {
         accessToken,

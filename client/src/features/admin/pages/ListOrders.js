@@ -33,7 +33,6 @@ function ListOrders() {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
-  console.log(data);
   if (isLoading) {
     <Spin />;
   }
@@ -67,6 +66,8 @@ function ListOrders() {
         totalMoney: record.totalMoney,
         type: record.type,
         status: value,
+        userId: record.userId,
+        cart: record.orderItems,
       },
     })
       .then((res) => {
@@ -260,7 +261,39 @@ function ListOrders() {
       ),
     },
   ];
-  console.log(data);
+
+  const expandedRowRender = (row) => {
+    const columns = [
+      {
+        title: "Tên sản phẩm",
+        key: "name",
+        width: "50%",
+        render: (_, record) => record.product.name,
+      },
+      {
+        title: "Giá",
+        key: "price",
+        render: (_, record) =>
+          parseInt(record.product.price).toLocaleString("vi", {
+            style: "currency",
+            currency: "VND",
+          }),
+      },
+      {
+        title: "Số lượng",
+        dataIndex: "quantity",
+        key: "quantity",
+      },
+    ];
+    return (
+      <Table
+        columns={columns}
+        dataSource={row.orderItems.map((item) => ({ ...item, key: item.id }))}
+        pagination={false}
+        size='small'
+      />
+    );
+  };
   return (
     <div className='w-full h-screen overflow-y-auto overflow-x-hidden'>
       <Row gutter={16} className='pr-4'>
@@ -290,14 +323,19 @@ function ListOrders() {
               </Row>
               <Table
                 columns={columns}
-                dataSource={data?.filter(
-                  (item) =>
-                    (tab === 2 && item.status <= 2) ||
-                    (tab === 3 && item.status === 3) ||
-                    (tab === 4 && item.status === 4)
-                )}
+                dataSource={data
+                  ?.map((item) => ({ ...item, key: item.id }))
+                  .filter(
+                    (item) =>
+                      (tab === 2 && item.status < 2) ||
+                      (tab === 3 && item.status === 2) ||
+                      (tab === 4 && item.status === 3)
+                  )}
                 scroll={{
                   x: 1000,
+                }}
+                expandable={{
+                  expandedRowRender,
                 }}
               />
             </div>
