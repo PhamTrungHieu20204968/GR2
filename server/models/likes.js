@@ -22,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
   }
   likes.init(
     {
-      comment: DataTypes.STRING,
       userId: {
         type: DataTypes.INTEGER,
         references: {
@@ -37,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
           model: blogs,
           key: "id",
         },
-        allowNull: false,
+        allowNull: true,
       },
       commentId: {
         type: DataTypes.INTEGER,
@@ -45,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
           model: comments,
           key: "id",
         },
-        allowNull: false,
+        allowNull: true,
       },
     },
     {

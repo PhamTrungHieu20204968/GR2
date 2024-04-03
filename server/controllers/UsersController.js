@@ -52,6 +52,7 @@ class UsersController {
       return res.json({
         role: User.role,
         accessToken,
+        id: User.id,
       });
     });
   }
@@ -76,6 +77,7 @@ class UsersController {
       );
       return res.status(200).json({
         role: _user.role,
+        id: _user.id,
         accessToken,
       });
     } else {

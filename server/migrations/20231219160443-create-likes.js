@@ -14,9 +14,11 @@ module.exports = {
       },
       commentId: {
         type: Sequelize.DataTypes.INTEGER,
+        allowNull: true,
       },
       blogId: {
         type: Sequelize.DataTypes.INTEGER,
+        allowNull: true,
       },
       createdAt: {
         allowNull: false,

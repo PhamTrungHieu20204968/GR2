@@ -108,12 +108,16 @@ function ProductDetail() {
               </div>
               <div>
                 <span className='mr-2 '>{`Đánh giá(${rates?.length}):`}</span>
-                <span className='text-xl'>
-                  {rates?.reduce((total, item) => {
-                    return total + item.rate;
-                  }, 0) / rates?.length}
-                  <StarFilled className=' text-yellow-300 ml-1' />
-                </span>
+                {rates?.length > 0 ? (
+                  <span className='text-xl'>
+                    {rates?.reduce((total, item) => {
+                      return total + item.rate;
+                    }, 0) / rates?.length}
+                    <StarFilled className=' text-yellow-300 ml-1' />
+                  </span>
+                ) : (
+                  "Chưa có đánh giá"
+                )}
               </div>
             </div>
             <div className='description-text text-lg mt-2 border-2 p-2'>

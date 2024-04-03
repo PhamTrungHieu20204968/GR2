@@ -32,8 +32,12 @@ function Footer({ page = ["home"] }) {
             >
               <Link to='/products/pets'>Sản phẩm</Link>
             </li>
-            <li className='my-2 hover:text-yellow-300 cursor-pointer list-pink-dot'>
-              Điểm tin hữu ích
+            <li className={
+                page[0] === "blogs"
+                  ? "my-2 text-cyan-300 hover:text-yellow-300 cursor-pointer list-pink-dot"
+                  : "my-2 hover:text-yellow-300 cursor-pointer list-pink-dot"
+              }>
+              Bài viết
             </li>
             <li className='my-2 hover:text-yellow-300 cursor-pointer list-pink-dot'>
               Liên hệ

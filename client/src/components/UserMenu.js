@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, Spin, message } from "antd";
+import { Avatar, Menu, Spin, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
   UserAddOutlined,
@@ -49,7 +49,7 @@ function UserMenu() {
     accessToken: accessToken,
   });
   if (isLoading) {
-    <Spin />;
+    return <Spin />;
   }
   const onClick = (e) => {
     switch (e.key) {
@@ -72,7 +72,22 @@ function UserMenu() {
       {isLoggedIn ? (
         <div className=''>
           <div className='flex w-full gap-2 pb-2 border-b-2'>
-            <img src={data?.avatar} alt='img' className='w-8 rounded-full' />
+            {data?.avatar ? (
+              <Avatar
+                className='mr-4'
+                size='default'
+                style={{ backgroundColor: "#fde3cf", color: "#f56a00" }}
+                src={data?.avatar}
+              ></Avatar>
+            ) : (
+              <Avatar
+                className='mr-4'
+                size='default'
+                style={{ backgroundColor: "#fde3cf", color: "#f56a00" }}
+              >
+                {data?.name[0]}
+              </Avatar>
+            )}
             <span className='text-lg font-bold'>{data?.name}</span>
           </div>
           <Menu

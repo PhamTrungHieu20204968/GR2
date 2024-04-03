@@ -14,6 +14,7 @@ import ProductDetail from "features/products/pages/ProductDetail";
 import GoogleLoginSuccess from "features/auth/pages/GoogleLoginSuccess";
 import Cart from "features/pay/pages/PayCart";
 import Pay from "features/pay/pages/PayForm";
+import Blogs from "features/blog/pages/Blogs";
 function App() {
   return (
     <ConfigProvider
@@ -30,6 +31,7 @@ function App() {
           <Route path='/signup' element={<Signup />} />
           <Route path='/cart' element={<Cart />} />
           <Route path='/pay' element={<Pay />} />
+          <Route path='/blogs' element={<Blogs />} />
           <Route
             path='/google-login-success'
             element={<GoogleLoginSuccess />}

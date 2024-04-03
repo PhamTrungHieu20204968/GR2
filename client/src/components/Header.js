@@ -62,10 +62,14 @@ function Header({ page }) {
             Phụ kiện
           </Link>
           <Link
-            to='/'
-            className='h-full px-4 hover:bg-primary flex items-center'
+            to='/blogs'
+            className={
+              page[0] === "blogs"
+                ? "h-full px-4 bg-primary flex items-center"
+                : "h-full px-4 hover:bg-primary flex items-center"
+            }
           >
-            Tin tức
+            Bài viết
           </Link>
           <Link
             to='/'
