@@ -12,15 +12,46 @@ export const commentService = apiService.injectEndpoints({
       invalidatesTags: ["blog"],
     }),
 
-    // deleteBlogLike: builder.mutation({
-    //   query: ({ id, headers }) => ({
-    //     url: `comment/blog/${id}`,
-    //     method: "DELETE",
-    //     headers,
-    //   }),
-    //   invalidatesTags: ["blog"],
-    // }),
+    getCommentChild: builder.query({
+      query: ({ id }) => ({
+        url: `comments/${id}`,
+      }),
+      providesTags: ["blog"],
+    }),
+
+    deleteCommentLike: builder.mutation({
+      query: ({ id, headers }) => ({
+        url: `comments/blog/${id}`,
+        method: "DELETE",
+        headers,
+      }),
+      invalidatesTags: ["blog"],
+    }),
+
+    deleteComment: builder.mutation({
+      query: ({ id, headers }) => ({
+        url: `comments/${id}`,
+        method: "DELETE",
+        headers,
+      }),
+      invalidatesTags: ["blog"],
+    }),
+
+    updateComment: builder.mutation({
+      query: ({ data, id, headers }) => ({
+        url: `comments/${id}`,
+        method: "PUT",
+        body: data,
+        headers,
+      }),
+      invalidatesTags: ["blog"],
+    }),
   }),
 });
 
-export const { useCreateCommentMutation } = commentService;
+export const {
+  useCreateCommentMutation,
+  useGetCommentChildQuery,
+  useDeleteCommentMutation,
+  useUpdateCommentMutation,
+} = commentService;

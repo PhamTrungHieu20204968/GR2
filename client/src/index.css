@@ -32,6 +32,12 @@ body {
   transform: translate3d(300px, 0, 0);
 }
 
+.fade-in {
+  animation: fadeInAnimation ease 1s;
+}
+
+
+
 @keyframes fadeInAnimation {
   0% {
     transform: translate3d(300px, 0, 0);
@@ -142,8 +148,8 @@ body {
   display: -webkit-box;
 }
 
-.unreset  {
- /**
+.unreset {
+  /**
  * Unreset CSS
  *
  * Copyright (C) 2016 Kite (ixkaito@gmail.com)
@@ -155,282 +161,374 @@ body {
  * Doctor, or Tim Murtaugh's HTML5 Reset.
  */
 
-html {
-	box-sizing: content-box;
+  html {
+    box-sizing: content-box;
+  }
+
+  body {
+    margin: 8px;
+    line-height: normal;
+  }
+
+  p {
+    margin: 1em 0;
+  }
+
+  blockquote,
+  figure {
+    margin: 1em 40px;
+  }
+
+  q {
+    quotes: "“" "”" "‘" "’";
+
+    &:before {
+      content: open-quote;
+    }
+
+    &:after {
+      content: close-quote;
+    }
+  }
+
+  hr {
+    border: 1px inset;
+    box-sizing: border-box;
+    margin: 0.5em auto;
+  }
+
+  h1 {
+    font-size: 2em;
+    font-weight: bold;
+    margin: 0.67em 0;
+  }
+
+  h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 0.83em 0;
+  }
+
+  h3 {
+    font-size: 1.17em;
+    font-weight: bold;
+    margin: 1em 0;
+  }
+
+  h4 {
+    font-size: 1em;
+    font-weight: bold;
+    margin: 1.33em 0;
+  }
+
+  h5 {
+    font-size: 0.83em;
+    font-weight: bold;
+    margin: 1.67em 0;
+  }
+
+  h6 {
+    font-size: 0.67em;
+    font-weight: bold;
+    margin: 2.33em 0;
+  }
+
+  article,
+  aside,
+  nav,
+  section {
+    h1 {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin: 0.83em 0;
+    }
+
+    article,
+    aside,
+    nav,
+    section {
+      h1 {
+        font-size: 1.17em;
+        font-weight: bold;
+        margin: 1em 0;
+      }
+
+      article,
+      aside,
+      nav,
+      section {
+        h1 {
+          font-size: 1em;
+          font-weight: bold;
+          margin: 1.33em 0;
+        }
+
+        article,
+        aside,
+        nav,
+        section {
+          h1 {
+            font-size: 0.83em;
+            font-weight: bold;
+            margin: 1.67em 0;
+          }
+
+          article,
+          aside,
+          nav,
+          section {
+            h1 {
+              font-size: 0.67em;
+              font-weight: bold;
+              margin: 2.33em 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  table {
+    border-collapse: separate;
+    border-spacing: 2px;
+    border-color: gray;
+  }
+
+  thead,
+  tbody,
+  tfoot,
+  tr {
+    border-color: inherit;
+    vertical-align: middle;
+  }
+
+  td,
+  th {
+    padding: 1px;
+    vertical-align: inherit;
+  }
+
+  th {
+    font-weight: bold;
+  }
+
+  caption {
+    text-align: center;
+  }
+
+  ul,
+  menu {
+    list-style-type: disc;
+    margin: 1em 0;
+    padding: 0 0 0 40px;
+  }
+
+  ol {
+    list-style-type: decimal;
+    margin: 1em 0;
+    padding: 0 0 0 40px;
+  }
+
+  ul,
+  ol {
+    ul {
+      list-style-type: circle;
+    }
+
+    ul,
+    ol {
+      ul {
+        list-style-type: square;
+      }
+    }
+  }
+
+  dd {
+    margin: 0 0 0 40px;
+  }
+
+  dl {
+    margin: 1em 0;
+  }
+
+  ul,
+  ol,
+  menu,
+  dl {
+    ul,
+    ol,
+    menu,
+    dl {
+      margin: 0;
+    }
+  }
+
+  legend {
+    padding: 0 2px;
+  }
+
+  fieldset {
+    border-style: groove;
+    border-width: 2px;
+    border: 2px groove ThreeDFace;
+    margin: 0 2px;
+    padding: 0 2px 3px;
+    -webkit-padding-before: 0.35em;
+    -webkit-padding-start: 0.75em;
+    -webkit-padding-end: 0.75em;
+    -webkit-padding-after: 0.625em;
+  }
+
+  ins {
+    background-color: transparent;
+    font-weight: inherit;
+    text-decoration: underline;
+  }
+
+  b,
+  strong {
+    font-weight: bold;
+  }
+
+  i,
+  cite,
+  em,
+  var,
+  address,
+  dfn {
+    font-style: italic;
+    font-weight: inherit;
+  }
+
+  abbr[title],
+  dfn[title] {
+    border-bottom: 0;
+    cursor: default;
+    font-weight: inherit;
+  }
+
+  tt,
+  code,
+  kbd,
+  samp {
+    font-family: monospace;
+    font-weight: inherit;
+  }
+
+  pre {
+    font-family: monospace;
+    margin: 1em 0;
+    white-space: pre;
+  }
+
+  mark {
+    background-color: yellow;
+    color: black;
+    font-style: normal;
+    font-weight: inherit;
+  }
+
+  big {
+    font-size: larger;
+    font-weight: inherit;
+  }
+
+  small {
+    font-size: smaller;
+    font-weight: inherit;
+  }
+
+  sub,
+  sup {
+    font-weight: inherit;
+    line-height: inherit;
+    position: static;
+  }
+
+  sub {
+    font-size: smaller;
+    bottom: 0;
+    vertical-align: sub;
+  }
+
+  sup {
+    font-size: smaller;
+    top: 0;
+    vertical-align: super;
+  }
+
+  ruby {
+    > rt {
+      font-size: 50%;
+    }
+  }
+
+  iframe {
+    border: 2px inset;
+  }
 }
 
-body {
-	margin: 8px;
-	line-height: normal;
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="14px"]::before {
+  content: "Normal";
+  font-size: 14px !important;
 }
 
-p {
-	margin: 1em 0;
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="16px"]::before {
+  content: "Large";
+  font-size: 16px !important;
 }
 
-blockquote,
-figure {
-	margin: 1em 40px;
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="18px"]::before {
+  content: "Huge";
+  font-size: 18px !important;
 }
 
-q {
-	quotes: "“" "”" "‘" "’";
-
-	&:before {
-		content: open-quote;
-	}
-
-	&:after {
-		content: close-quote;
-	}
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="32px"]::before {
+  content: "Super Huge";
+  font-size: 32px !important;
 }
 
-hr {
-	border: 1px inset;
-	box-sizing: border-box;
-	margin: 0.5em auto;
+.ql-size-14px {
+  font-size: 14px;
 }
 
-h1 {
-	font-size: 2em;
-	font-weight: bold;
-	margin: 0.67em 0;
+.ql-size-16px {
+  font-size: 16px;
 }
 
-h2 {
-	font-size: 1.5em;
-	font-weight: bold;
-	margin: 0.83em 0;
+.ql-size-18px {
+  font-size: 18px;
 }
 
-h3 {
-	font-size: 1.17em;
-	font-weight: bold;
-	margin: 1em 0;
+.ql-size-32px {
+  font-size: 32px;
 }
 
-h4 {
-	font-size: 1.00em;
-	font-weight: bold;
-	margin: 1.33em 0;
+/* custom scrollbar */
+::-webkit-scrollbar {
+  width: 20px;
 }
 
-h5 {
-	font-size: 0.83em;
-	font-weight: bold;
-	margin: 1.67em 0;
+::-webkit-scrollbar-track {
+  background-color: transparent;
 }
 
-h6 {
-	font-size: 0.67em;
-	font-weight: bold;
-	margin: 2.33em 0;
+::-webkit-scrollbar-thumb {
+  background-color: #d6dee1;
 }
 
-article, aside, nav, section {
-
-	h1 {
-		font-size: 1.5em;
-		font-weight: bold;
-		margin: 0.83em 0;
-	}
-
-	article, aside, nav, section {
-
-		h1 {
-			font-size: 1.17em;
-			font-weight: bold;
-			margin: 1em 0;
-		}
-
-		article, aside, nav, section {
-
-			h1 {
-				font-size: 1.00em;
-				font-weight: bold;
-				margin: 1.33em 0;
-			}
-
-			article, aside, nav, section {
-
-				h1 {
-					font-size: 0.83em;
-					font-weight: bold;
-					margin: 1.67em 0;
-				}
-
-				article, aside, nav, section {
-
-					h1 {
-						font-size: 0.67em;
-						font-weight: bold;
-						margin: 2.33em 0;
-					}
-				}
-			}
-		}
-	}
+::-webkit-scrollbar-thumb {
+  background-color: #d6dee1;
+  border-radius: 20px;
 }
 
-table {
-	border-collapse: separate;
-	border-spacing: 2px;
-	border-color: gray;
+::-webkit-scrollbar-thumb {
+  background-color: #d6dee1;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
 }
 
-thead,
-tbody,
-tfoot,
-tr {
-	border-color: inherit;
-	vertical-align: middle;
-}
-
-td, th {
-	padding: 1px;
-	vertical-align: inherit;
-}
-
-th {
-	font-weight: bold
-}
-
-caption {
-	text-align: center;
-}
-
-ul, menu {
-	list-style-type: disc;
-	margin: 1em 0;
-	padding: 0 0 0 40px;
-}
-
-ol {
-	list-style-type: decimal;
-	margin: 1em 0;
-	padding: 0 0 0 40px;
-}
-
-ul, ol {
-
-	ul {
-		list-style-type: circle;
-	}
-
-	ul, ol {
-
-		ul {
-			list-style-type: square;
-		}
-	}
-}
-
-dd {
-	margin: 0 0 0 40px;
-}
-
-dl {
-	margin: 1em 0;
-}
-
-ul, ol, menu, dl {
-
-	ul, ol, menu, dl {
-		margin: 0;
-	}
-}
-
-legend {
-	padding: 0 2px;
-}
-
-fieldset {
-	border-style: groove;
-	border-width: 2px;
-	border: 2px groove ThreeDFace;
-	margin: 0 2px;
-	padding: 0 2px 3px;
-	-webkit-padding-before: 0.35em;
-	-webkit-padding-start: 0.75em;
-	-webkit-padding-end: 0.75em;
-	-webkit-padding-after: 0.625em;
-}
-
-ins {
-	background-color: transparent;
-	font-weight: inherit;
-	text-decoration: underline;
-}
-
-b, strong {
-	font-weight: bold;
-}
-
-i, cite, em, var, address, dfn {
-	font-style: italic;
-	font-weight: inherit;
-}
-
-abbr[title], dfn[title] {
-	border-bottom: 0;
-	cursor: default;
-	font-weight: inherit;
-}
-
-tt, code, kbd, samp {
-	font-family: monospace;
-	font-weight: inherit;
-}
-
-pre {
-	font-family: monospace;
-	margin: 1em 0;
-	white-space: pre;
-}
-
-mark {
-	background-color: yellow;
-	color: black;
-	font-style: normal;
-	font-weight: inherit;
-}
-
-big {
-	font-size: larger;
-	font-weight: inherit;
-}
-
-small {
-	font-size: smaller;
-	font-weight: inherit;
-}
-
-sub, sup {
-	font-weight: inherit;
-	line-height: inherit;
-	position: static;
-}
-
-sub {
-	font-size: smaller;
-	bottom: 0;
-	vertical-align: sub;
-}
-
-sup {
-	font-size: smaller;
-	top: 0;
-	vertical-align: super;
-}
-
-ruby {
-
-	> rt {
-		font-size: 50%;
-	}
-}
-
-iframe {
-	border: 2px inset;
-}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #a8bbbf;
 }

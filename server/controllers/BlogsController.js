@@ -1,5 +1,5 @@
-const { blogs, users, likes, comments } = require("../models");
-const { Op } = require("sequelize");
+const { blogs, users, likes, comments, images } = require("../models");
+const cloudinary = require("cloudinary").v2;
 class BlogsController {
   // [GET] /
   async getAllBlogs(req, res, next) {
@@ -11,11 +11,20 @@ class BlogsController {
             attributes: ["name", "avatar"],
           },
           {
+            model: images,
+            attributes: ["url", "id"],
+          },
+          {
             model: comments,
             include: [
               {
                 model: users,
                 attributes: ["name", "avatar"],
+              },
+              {
+                model: likes,
+                attributes: ["commentId", "userId"],
+                as: "CommentId",
               },
             ],
           },
@@ -25,40 +34,63 @@ class BlogsController {
           },
         ],
         order: [["createdAt", "DESC"]],
-        limit: 10,
       });
-      res.json(list);
+      return res.json(list);
     } catch (error) {
       console.log(error);
-      res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+      return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
     }
   }
 
   //[POST] /
   async createBlog(req, res, next) {
+    const fileData = req.files;
     const blog = req.body;
     const userId = req.user.id;
     try {
-      await blogs.create({
+      const _blog = await blogs.create({
         ...blog,
         userId,
       });
-      res.json("Tạo thành công");
+
+      if (fileData) {
+        fileData.map(async (item) => {
+          await images.create({
+            url: item.path,
+            blogId: _blog.id,
+          });
+        });
+      }
+      return res.json("Tạo thành công");
     } catch (error) {
       console.log(error);
-      res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+      if (fileData) {
+        fileData.map(async (item) => {
+          await cloudinary.uploader.destroy(item.filename);
+        });
+      }
+      return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
     }
   }
+
+  // [PUT] /:id
 
   // [DELETE] /:id
   async deleteBlog(req, res) {
     const id = parseInt(req.params.id);
+    const userId = req.user.id;
     try {
-      await blogs.destroy({ where: { id } });
-      res.json("Xóa thành công");
+      const _blog = await blogs.findOne({ where: { id } });
+      if (req.user.role < 2 && userId !== _blog.userId) {
+        return res.json({
+          error: "Bạn không đủ quyền thực hiện chức năng này!",
+        });
+      }
+      await _blog.destroy();
+      return res.json("Xóa thành công");
     } catch (error) {
       console.log(error);
-      res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+      return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
     }
   }
 }

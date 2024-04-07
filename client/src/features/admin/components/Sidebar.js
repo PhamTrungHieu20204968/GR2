@@ -36,6 +36,9 @@ function Sidebar({ SelectedKey = "1", OpenKeys = ["sub1"] }) {
       case "3":
         navigate("/admin/create-product");
         break;
+      case "4":
+        navigate("/admin/list-blogs");
+        break;
       case "5":
         navigate("/admin/list-orders");
         break;

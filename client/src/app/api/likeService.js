@@ -20,7 +20,20 @@ export const likeService = apiService.injectEndpoints({
       }),
       invalidatesTags: ["blog"],
     }),
+
+    deleteCommentLike: builder.mutation({
+      query: ({ id, headers }) => ({
+        url: `likes/comment/${id}`,
+        method: "DELETE",
+        headers,
+      }),
+      invalidatesTags: ["blog"],
+    }),
   }),
 });
 
-export const { useCreateLikeMutation, useDeleteBlogLikeMutation } = likeService;
+export const {
+  useCreateLikeMutation,
+  useDeleteBlogLikeMutation,
+  useDeleteCommentLikeMutation,
+} = likeService;

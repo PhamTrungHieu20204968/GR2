@@ -1,50 +1,25 @@
 import React, { useState } from "react";
-import { Avatar, Spin, message } from "antd";
-import { CloseOutlined, SendOutlined } from "@ant-design/icons";
+import { Spin, Button } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
-import TextArea from "antd/es/input/TextArea";
 import { Link } from "react-router-dom";
 
 import CommentItem from "./CommentItem";
 import { useGetUserQuery } from "app/api/userService";
-import { useCreateCommentMutation } from "app/api/commentService";
+import UserComment from "../components/UserComment";
+
 function BlogComments({ blogId, comments, handleCancel }) {
-  const { accessToken, userId } = useSelector((state) => state.auth);
-  const [createComment] = useCreateCommentMutation();
-  const [content, setContent] = useState("");
+  const { accessToken } = useSelector((state) => state.auth);
+  const [edit, setEdit] = useState({ status: false, content: "", id: 0 });
   const { data, isLoading } = useGetUserQuery({
     accessToken: accessToken,
   });
   if (isLoading) {
     return <Spin />;
   }
-
-  const handleSubmit = () => {
-    if (content.trim()) {
-      console.log("submit");
-      createComment({
-        data: {
-          content: content.trim(),
-          userId,
-        },
-        blogId,
-        headers: {
-          accessToken,
-        },
-      })
-        .then((res) => {
-          if (res.data?.error) {
-            message.error(res.data.error);
-          } else {
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  };
+  console.log(edit);
   return (
-    <div>
+    <div className='overflow-hidden'>
       <div className='flex items-center'>
         <div className='flex-1 text-center text-2xl font-semibold'>
           Danh sách bình luận
@@ -54,51 +29,25 @@ function BlogComments({ blogId, comments, handleCancel }) {
           onClick={handleCancel}
         />
       </div>
-      <div className='mt-4'>
+      <div className='mt-4 max-h-[60vh] overflow-auto border-b-2'>
         {comments?.length > 0 ? (
-          comments?.map((item) => <CommentItem key={item.id} comment={item} />)
+          comments?.map((item) => (
+            <CommentItem
+              user={data}
+              key={item.id}
+              comment={item}
+              setEdit={setEdit}
+            />
+          ))
         ) : (
-          <div className='text-xl font-semibold text-gray-300 text-center'>
+          <div className='text-xl my-4 font-semibold text-gray-300 text-center'>
             Chưa có bình luận nào
           </div>
         )}
       </div>
 
       {data.name ? (
-        <div className='mt-4 flex items-center relative'>
-          {data?.avatar ? (
-            <Avatar
-              className='mr-4'
-              size='default'
-              style={{ backgroundColor: "#fde3cf", color: "#f56a00" }}
-              src={data?.avatar}
-            ></Avatar>
-          ) : (
-            <Avatar
-              className='mr-4'
-              size='default'
-              style={{ backgroundColor: "#fde3cf", color: "#f56a00" }}
-            >
-              {data?.name[0]}
-            </Avatar>
-          )}
-          <TextArea
-            placeholder='Nhập bình luận của bạn ...'
-            autoSize={{
-              minRows: 1,
-            }}
-            className='flex-1 pr-8'
-            value={content}
-            onChange={(e) => {
-              setContent(e.target.value);
-            }}
-          />
-
-          <SendOutlined
-            className='ml-1 text-lg cursor-pointer text-primary absolute right-2 bottom-0 mb-2 hover:scale-110'
-            onClick={handleSubmit}
-          />
-        </div>
+        !edit.status && <UserComment user={data} blogId={blogId} />
       ) : (
         <div className='text-center mt-4 text-xs'>
           Bạn hãy{" "}
@@ -109,6 +58,27 @@ function BlogComments({ blogId, comments, handleCancel }) {
             đăng nhập
           </Link>{" "}
           để bình luận!
+        </div>
+      )}
+      {edit.status && (
+        <div className='mt-4'>
+          <div className='font-semibold text-base'>Chỉnh sửa bình luận</div>
+          <div className=''>
+            <UserComment
+              user={data}
+              blogId={blogId}
+              edit={edit}
+              setEdit={setEdit}
+            />
+          </div>
+          <div className='flex justify-end'>
+            <Button
+              className='text-red-400 mt-2'
+              onClick={() => setEdit({ status: false, content: "", id: 0 })}
+            >
+              Hủy
+            </Button>
+          </div>
         </div>
       )}
     </div>

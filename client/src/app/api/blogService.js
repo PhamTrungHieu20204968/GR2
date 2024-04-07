@@ -19,14 +19,18 @@ export const blogService = apiService.injectEndpoints({
     }),
 
     deleteBlog: builder.mutation({
-      query: ({ id }) => ({
+      query: ({ id, headers }) => ({
         url: `blogs/${id}`,
         method: "DELETE",
+        headers,
       }),
       invalidatesTags: ["blog"],
     }),
-
   }),
 });
 
-export const { useGetAllBlogsQuery, useCreateBlogMutation ,useDeleteBlogMutation} = blogService;
+export const {
+  useGetAllBlogsQuery,
+  useCreateBlogMutation,
+  useDeleteBlogMutation,
+} = blogService;

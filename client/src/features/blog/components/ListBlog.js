@@ -1,13 +1,25 @@
 import React from "react";
 
 import Blog from "./Blog";
-function ListBlog({ data = [] }) {
+function ListBlog({ data = [], filter }) {
+  const filteredData = data
+    .filter((item) =>
+      item.user.name
+        .toUpperCase()
+        .includes(filter?.userName.trim().toUpperCase())
+    )
+    .filter((item) =>
+      item.title.toUpperCase().includes(filter?.title.trim().toUpperCase())
+    )
+    .filter((item) =>
+      item.tag.toUpperCase().includes(filter?.tag.trim().toUpperCase())
+    );
   return (
     <div>
-      {data?.length > 0 ? (
+      {filteredData?.length > 0 ? (
         <div className='mx-auto'>
-          {data?.map((item) => {
-            return <Blog key={item.id} blog={item}/>;
+          {filteredData?.map((item) => {
+            return <Blog key={item.id} blog={item} />;
           })}
         </div>
       ) : (

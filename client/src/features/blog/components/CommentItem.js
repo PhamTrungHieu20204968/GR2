@@ -1,8 +1,34 @@
-import { Avatar } from "antd";
-import React from "react";
+import { Avatar, message, Spin, Popover, Popconfirm } from "antd";
+import React, { useState } from "react";
+import { LikeTwoTone, EllipsisOutlined } from "@ant-design/icons";
+import { useSelector } from "react-redux";
 
-function CommentItem({ comment }) {
-  console.log(comment);
+import {
+  useCreateLikeMutation,
+  useDeleteCommentLikeMutation,
+} from "app/api/likeService";
+import { useDeleteCommentMutation } from "app/api/commentService";
+import UserComment from "../components/UserComment";
+import { useGetCommentChildQuery } from "app/api/commentService";
+
+function CommentItem({ comment, user, setEdit }) {
+  const [createLike] = useCreateLikeMutation();
+  const [deleteComment] = useDeleteCommentMutation();
+  const [deleteCommentLike] = useDeleteCommentLikeMutation();
+  const { accessToken, userId } = useSelector((state) => state.auth);
+  const [liked, setLiked] = useState(
+    !userId && !comment?.CommentId
+      ? false
+      : comment?.CommentId?.filter(
+          (item) => item.commentId === comment.id && item.userId === userId
+        ).length > 0
+  );
+
+  const { data, isLoading, isError } = useGetCommentChildQuery({
+    id: comment.id,
+  });
+
+  const [reply, setReply] = useState({ status: false, commentId: 0, user: "" });
 
   function getDate(time) {
     const today = new Date(time);
@@ -12,19 +38,102 @@ function CommentItem({ comment }) {
     return `${month}/${date}/${year}`;
   }
 
+  const handleLikeComment = () => {
+    if (!accessToken) {
+      message.info("Bạn chưa đăng nhập!");
+      return;
+    }
+    if (!liked) {
+      createLike({
+        data: {
+          commentId: comment.id,
+        },
+        headers: {
+          accessToken,
+        },
+      })
+        .then((res) => {
+          if (res.data?.error) {
+            message.error(res.data.error);
+          } else {
+            setLiked(true);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      deleteCommentLike({
+        id: comment.id,
+        headers: {
+          accessToken,
+        },
+      })
+        .then((res) => {
+          if (res.data?.error) {
+            message.error(res.data.error);
+          } else {
+            setLiked(false);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  const handleOnReply = () => {
+    setReply({
+      status: true,
+      user: comment.user.name,
+      commentId: comment.id,
+    });
+  };
+
+  if (isLoading) {
+    return <Spin />;
+  }
+
+  if (isError || data.error) {
+    return <div>no data</div>;
+  }
+
+  const onDeleteComment = (e) => {
+    if (!accessToken) {
+      message.info("Bạn chưa đăng nhập!");
+      return;
+    }
+    deleteComment({
+      id: comment.id,
+      headers: {
+        accessToken,
+      },
+    })
+      .then((res) => {
+        if (res.data?.error) {
+          message.error(res.data.error);
+        } else {
+          message.success("Đã xóa");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <div className='flex mb-4'>
-      <div className=''>
+      <div>
         {comment.user.avatar ? (
           <Avatar
-            className='mr-4'
+            className='mr-2'
             size='large'
             style={{ backgroundColor: "#fde3cf", color: "#f56a00" }}
             src={comment.user.avatar}
           ></Avatar>
         ) : (
           <Avatar
-            className='mr-4'
+            className='mr-2'
             size='large'
             style={{ backgroundColor: "#fde3cf", color: "#f56a00" }}
           >
@@ -34,17 +143,94 @@ function CommentItem({ comment }) {
       </div>
       <div className='flex-1'>
         <div className='bg-gray-200 rounded-lg p-2 text-base'>
-          <div className='font-semibold'>{comment.user.name}</div>
-          <div className=''>{comment.content}</div>
+          <div className='font-semibold'>
+            <div className='flex items-center justify-between'>
+              {comment.user.name}
+              {accessToken && (
+                <Popover
+                  content={
+                    <div className='w-fit'>
+                      <div
+                        className='cursor-pointer p-2 rounded-md font-semibold hover:bg-gray-200'
+                        onClick={() =>
+                          setEdit({
+                            status: true,
+                            content: comment.content,
+                            id: comment.id,
+                          })
+                        }
+                      >
+                        Chỉnh sửa
+                      </div>
+                      <Popconfirm
+                        title='Xóa bình luận?'
+                        description='Bạn muốn xóa bình luận này?'
+                        onConfirm={onDeleteComment}
+                        okText='Có'
+                        cancelText='Không'
+                      >
+                        <div className='cursor-pointer p-2 rounded-md font-semibold hover:bg-gray-200'>
+                          Xóa
+                        </div>
+                      </Popconfirm>
+                    </div>
+                  }
+                  trigger='click'
+                  placement='rightTop'
+                >
+                  <EllipsisOutlined className='cursor-pointer rounded-full hover:bg-gray-300' />
+                </Popover>
+              )}
+            </div>
+          </div>
+          <div>{comment.content}</div>
         </div>
-        <div className='text-xs flex gap-2'>
-          <span className=''>{getDate(comment.createdAt)}</span>
-          <span className='font-bold hover:underline cursor-pointer'>
-            Thích
-          </span>
-          <span className='font-bold hover:underline cursor-pointer'>
-            Phản hồi
-          </span>
+
+        <div className='text-xs flex justify-between'>
+          <div className='flex gap-2'>
+            <span>{getDate(comment.createdAt)}</span>
+            <span
+              className={`font-bold hover:underline cursor-pointer ${
+                liked ? "text-blue-400" : ""
+              }`}
+              onClick={handleLikeComment}
+            >
+              {liked ? "Đã thích" : "Thích"}
+            </span>
+            {!comment.parent && (
+              <span
+                className='font-bold hover:underline cursor-pointer'
+                onClick={handleOnReply}
+              >
+                Phản hồi
+              </span>
+            )}
+            <span>{comment.edited ? "Đã chỉnh sửa" : ""}</span>
+          </div>
+          {comment.CommentId && (
+            <div className='flex items-center gap-1'>
+              {comment.CommentId.length}
+              <LikeTwoTone />
+            </div>
+          )}
+        </div>
+
+        <div>
+          {!data.error && data.length > 0 && (
+            <div className='mt-4'>
+              {data.map((item) => (
+                <CommentItem
+                  key={item.id}
+                  comment={item}
+                  user={item.user}
+                  setEdit={setEdit}
+                />
+              ))}
+            </div>
+          )}
+          {reply.status && (
+            <UserComment blogId={comment.blogId} user={user} reply={reply} />
+          )}
         </div>
       </div>
     </div>

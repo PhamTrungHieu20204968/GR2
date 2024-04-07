@@ -28,6 +28,19 @@ class LikesController {
       res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
     }
   }
+
+  // [DELETE] /comment/:id
+  async deleteCommentLike(req, res) {
+    const id = parseInt(req.params.id);
+    const userId = req.user.id;
+    try {
+      await likes.destroy({ where: { commentId: id, userId } });
+      res.json("Xóa thành công");
+    } catch (error) {
+      console.log(error);
+      res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+    }
+  }
 }
 
 module.exports = new LikesController();

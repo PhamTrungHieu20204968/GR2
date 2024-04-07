@@ -12,6 +12,7 @@ function Blogs() {
   const [tab, setTab] = useState(1);
   const { accessToken, userId } = useSelector((state) => state.auth);
   const { data } = useGetAllBlogsQuery();
+  const [filter, setFilter] = useState({ userName: "", title: "", tag: "" });
   return (
     <Layout page={["blogs"]}>
       <div className='container mx-auto mt-8 overflow-hidden'>
@@ -26,14 +27,20 @@ function Blogs() {
         </Row>
         <Row className='mt-4' gutter={16}>
           <Col span={accessToken ? 5 : 0}>
-            <SideBar tab={tab} setTab={setTab} />
+            <SideBar
+              tab={tab}
+              setTab={setTab}
+              setFilter={setFilter}
+              filter={filter}
+            />
           </Col>
           <Col span={accessToken ? 19 : 24}>
-            {tab === 1 && <ListBlog key={1} data={data} />}
+            {tab === 1 && <ListBlog key={1} data={data} filter={filter} />}
             {tab === 2 && (
               <ListBlog
                 key={2}
                 data={data.filter((item) => item.userId === userId)}
+                filter={filter}
               />
             )}
             {tab === 3 && (
@@ -46,6 +53,7 @@ function Blogs() {
                         item.blogId === blog.id && item.userId === userId
                     ).length > 0
                 )}
+                filter={filter}
               />
             )}
             {tab === 4 && <CreateBlog accessToken={accessToken} />}

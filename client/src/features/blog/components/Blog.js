@@ -1,4 +1,4 @@
-import { Avatar, Modal, Popconfirm, message } from "antd";
+import { Avatar, Image, Modal, Popconfirm, message } from "antd";
 import React, { useState } from "react";
 import {
   LikeOutlined,
@@ -20,7 +20,7 @@ function Blog({ blog }) {
   const [createLike] = useCreateLikeMutation();
   const [deleteBlogLike] = useDeleteBlogLikeMutation();
   const [deleteBlog] = useDeleteBlogMutation();
-  const { accessToken, userId } = useSelector((state) => state.auth);
+  const { accessToken, userId, role } = useSelector((state) => state.auth);
   const [liked, setLiked] = useState(
     !userId
       ? false
@@ -39,6 +39,10 @@ function Blog({ blog }) {
   }
 
   const handleLikeBlog = () => {
+    if (!accessToken) {
+      message.info("Bạn chưa đăng nhập!");
+      return;
+    }
     if (!liked) {
       createLike({
         data: {
@@ -81,6 +85,9 @@ function Blog({ blog }) {
   const handleDeleteBlog = () => {
     deleteBlog({
       id: blog.id,
+      headers: {
+        accessToken,
+      },
     })
       .then((res) => {
         if (res.data?.error) {
@@ -132,7 +139,7 @@ function Blog({ blog }) {
             </div>
           </div>
         </div>
-        {userId === blog.userId ? (
+        {userId === blog.userId || role > 1 ? (
           <Popconfirm
             title='Xóa bài viết'
             description='Bạn muốn xóa bài viết này?'
@@ -151,10 +158,30 @@ function Blog({ blog }) {
       </div>
       <div className='mt-4 text-2xl font-bold'>{blog.title}</div>
       <div
-        className='unreset mt-4'
+        className='unreset my-4'
         dangerouslySetInnerHTML={{ __html: blog.content }}
       ></div>
-      <div className='footersss'>
+      {blog.images && (
+        <Image.PreviewGroup>
+          <div className='flex flex-wrap items-center'>
+            {blog.images.map((item) => (
+              <Image
+                src={item.url}
+                width={blog.images.length > 1 ? "50%" : "100%"}
+                height={"100%"}
+              />
+            ))}
+          </div>
+        </Image.PreviewGroup>
+      )}
+
+      {blog.tag && (
+        <div className='italic underline text-blue-500 cursor-pointer mt-2'>
+          #{blog.tag}
+        </div>
+      )}
+
+      <div className='mt-2'>
         <div className='flex justify-between'>
           <div className=''>{blog.likes.length + " lượt thích"}</div>
           <div className=''>{blog.comments.length + " bình luận"}</div>
@@ -191,7 +218,7 @@ function Blog({ blog }) {
       >
         <BLogComments
           blogId={blog.id}
-          comments={blog.comments}
+          comments={blog.comments.filter((item) => item.parent === 0)}
           handleCancel={handleCancel}
         />
       </Modal>

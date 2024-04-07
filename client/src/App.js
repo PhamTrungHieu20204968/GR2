@@ -15,6 +15,7 @@ import GoogleLoginSuccess from "features/auth/pages/GoogleLoginSuccess";
 import Cart from "features/pay/pages/PayCart";
 import Pay from "features/pay/pages/PayForm";
 import Blogs from "features/blog/pages/Blogs";
+import ListBlogs from 'features/admin/pages/ListBlogs';
 function App() {
   return (
     <ConfigProvider
@@ -45,6 +46,7 @@ function App() {
             <Route path='create-product' element={<CreateProduct />} />
             <Route path='list-products' element={<ListProducts />} />
             <Route path='list-orders' element={<ListOrders />} />
+            <Route path='list-blogs' element={<ListBlogs />} />
           </Route>
         </Routes>
       </BrowserRouter>
