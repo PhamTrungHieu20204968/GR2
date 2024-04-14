@@ -28,7 +28,7 @@ function Cart({ cart }) {
   const [notify, setNotify] = useState();
   const [flag, setFlag] = useState(false);
   const totalCost = cart.reduce((total, item) => {
-    return total + parseInt(item.price) * item.orderQuantity;
+    return total + parseInt( item.salePrice ? item.salePrice : item.peice) * item.orderQuantity;
   }, 0);
 
   const handleChangeQuantity = (value, record) => {
@@ -105,10 +105,11 @@ function Cart({ cart }) {
     {
       title: "GIÁ",
       dataIndex: "price",
-      key: "price",
-      render: (text) => (
+      render: (_, record) => (
         <b>
-          {parseInt(text).toLocaleString("vi", {
+          {parseInt(
+            record.salePrice ? record.salePrice : record.peice
+          ).toLocaleString("vi", {
             style: "currency",
             currency: "VND",
           })}
@@ -135,7 +136,10 @@ function Cart({ cart }) {
       key: "total",
       render: (_, record) => (
         <b className=''>
-          {(parseInt(record.price) * record.quantity).toLocaleString("vi", {
+          {(
+            parseInt(record.salePrice ? record.salePrice : record.peice) *
+            record.orderQuantity
+          ).toLocaleString("vi", {
             style: "currency",
             currency: "VND",
           })}

@@ -26,6 +26,7 @@ class ProductsController {
         price: req.body.price,
         quantity: req.body.quantity,
         categoryId: _category.id,
+        salePrice: req.body.salePrice,
       });
 
       req.body.descriptions?.map(async (item) => {
@@ -213,6 +214,7 @@ class ProductsController {
           price: req.body.price,
           quantity: req.body.quantity,
           categoryId: _category.id,
+          salePrice: req.body.salePrice,
         },
         { where: { id } }
       );

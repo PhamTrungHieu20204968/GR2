@@ -40,7 +40,11 @@ function PayForm() {
   });
   const [totalCost, setTotalCost] = useState(
     cart.reduce((total, item) => {
-      return total + parseInt(item.price) * item.orderQuantity;
+      return (
+        total +
+        parseInt(item.salePrice ? item.salePrice : item.price) *
+          item.orderQuantity
+      );
     }, 0)
   );
 
@@ -193,15 +197,14 @@ function PayForm() {
                     <div className=''>Tổng cộng</div>
                   </div>
                   {order?.map((item) => (
-                    <div
-                      key={item.id}
-                      className='flex mt-2 justify-between text-sm'
-                    >
-                      <div className=''>
+                    <div key={item.id} className='flex mt-2 text-sm gap-4'>
+                      <div className='flex-1'>
                         {item.name} <b>x {item.orderQuantity}</b>
                       </div>
-                      <b className=''>
-                        {parseInt(item?.price).toLocaleString("vi", {
+                      <b>
+                        {parseInt(
+                          item?.salePrice ? item?.salePrice : item?.price
+                        ).toLocaleString("vi", {
                           style: "currency",
                           currency: "VND",
                         })}
@@ -418,13 +421,15 @@ function PayForm() {
                     {cart?.map((item) => (
                       <div
                         key={item.id}
-                        className='flex mt-2 justify-between text-sm'
+                        className='flex mt-2 gap-4 text-sm'
                       >
-                        <div className=''>
+                        <div className='flex-1'>
                           {item.name} <b>x {item.orderQuantity}</b>
                         </div>
                         <b className=''>
-                          {parseInt(item?.price).toLocaleString("vi", {
+                          {parseInt(
+                            item?.salePrice ? item?.salePrice : item?.price
+                          ).toLocaleString("vi", {
                             style: "currency",
                             currency: "VND",
                           })}
@@ -437,7 +442,11 @@ function PayForm() {
                         {cart
                           .reduce((total, item) => {
                             return (
-                              total + parseInt(item.price) * item.orderQuantity
+                              total +
+                              parseInt(
+                                item?.salePrice ? item?.salePrice : item?.price
+                              ) *
+                                item.orderQuantity
                             );
                           }, 0)
                           .toLocaleString("vi", {
@@ -459,7 +468,7 @@ function PayForm() {
                       </Radio.Group>
                     </Form.Item>
 
-                    <div
+                    {/* <div
                       className={
                         payType < 3 && flag === 1 ? "w-full" : "w-full hidden"
                       }
@@ -476,7 +485,7 @@ function PayForm() {
                         guestCreateOrder={guestCreateOrder}
                         userCreateOrder={userCreateOrder}
                       ></Paypal>
-                    </div>
+                    </div> */}
 
                     {(flag === 0 || payType === 3) && (
                       <div>

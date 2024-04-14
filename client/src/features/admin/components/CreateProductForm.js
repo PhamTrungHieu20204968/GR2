@@ -33,6 +33,7 @@ function CreateProductForm({ product }) {
         quantity: values.quantity,
         descriptions: values.descriptions,
         images: values.images,
+        salePrice: values.salePrice,
       },
       headers: {
         accessToken,
@@ -66,6 +67,7 @@ function CreateProductForm({ product }) {
         quantity: values.quantity,
         descriptions: values.descriptions,
         images: values.images,
+        salePrice: values.salePrice,
       },
     })
       .then((res) => {
@@ -174,6 +176,24 @@ function CreateProductForm({ product }) {
               ]}
             >
               <Input placeholder='Giá sản phẩm' />
+            </Form.Item>
+
+            <Form.Item
+              name='salePrice'
+              label='Giá giảm giá sản phẩm'
+              initialValue={product?.salePrice}
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhâp giá giảm giá!",
+                },
+                {
+                  pattern: /^[0-9.]+$/,
+                  message: "Vui lòng nhập lại giá giảm giá!",
+                },
+              ]}
+            >
+              <Input placeholder='Giá giảm giá sản phẩm' />
             </Form.Item>
 
             <Form.Item

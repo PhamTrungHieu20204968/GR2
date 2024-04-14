@@ -301,7 +301,7 @@ function ListOrders() {
           <Sidebar SelectedKey='5' OpenKeys={["sub4"]}></Sidebar>
         </Col>
         <Col span={18}>
-          {isError ? (
+          {isError || data?.error ? (
             <Result
               status='500'
               title='500'

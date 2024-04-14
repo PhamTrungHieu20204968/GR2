@@ -53,13 +53,24 @@ function ProductCard({ product }) {
         {product?.name}
       </p>
       <p className='product-price py-4'>
-        <b>
-          {" "}
+        <b
+          className={
+            product?.salePrice ? "text-sm text-gray-500 line-through" : ""
+          }
+        >
           {parseInt(product?.price).toLocaleString("vi", {
             style: "currency",
             currency: "VND",
           })}
         </b>
+        {product?.salePrice && (
+          <b className="ml-2">
+            {parseInt(product?.salePrice).toLocaleString("vi", {
+              style: "currency",
+              currency: "VND",
+            })}
+          </b>
+        )}
       </p>
     </div>
   );

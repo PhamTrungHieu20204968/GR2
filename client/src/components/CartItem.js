@@ -31,7 +31,9 @@ function CartItem({ product }) {
             <span className='mr-1'>{product?.orderQuantity}</span>
             <span className=''>
               {"x " +
-                parseInt(product?.price).toLocaleString("vi", {
+                parseInt(
+                  product?.salePrice ? product?.salePrice : product?.price
+                ).toLocaleString("vi", {
                   style: "currency",
                   currency: "VND",
                 })}
