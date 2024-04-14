@@ -21,7 +21,7 @@ class CommentsController {
     }
   }
 
-  // /:id
+  // [GET] /:id
   async getCommentChild(req, res, next) {
     const id = parseInt(req.params.id);
     try {

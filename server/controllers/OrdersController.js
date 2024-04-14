@@ -1,4 +1,4 @@
-const { orders, orderItems, rates, products } = require("../models");
+const { orders, orderItems, rates, products, users } = require("../models");
 
 class OrdersController {
   // [GET] /
@@ -161,6 +161,11 @@ class OrdersController {
           },
         });
       });
+
+      await users.update(
+        { address, city, telephone, email, name: fullName },
+        { where: { id: userId } }
+      );
       return res.status(200).json("Tạo thành công");
     } catch (error) {
       console.log(error);

@@ -15,7 +15,7 @@ export const UserService = apiService.injectEndpoints({
         url: `users/getOne`,
         headers,
       }),
-      providesTags: ["user"],
+      providesTags: ["user","order"],
     }),
 
     createUser: builder.mutation({
@@ -37,7 +37,22 @@ export const UserService = apiService.injectEndpoints({
       }),
       invalidatesTags: ["user"],
     }),
+
+    updateUserPassword: builder.mutation({
+      query: ({ data, id, headers }) => ({
+        url: `users/password/${id}`,
+        method: "PUT",
+        body: data,
+        headers,
+      }),
+      invalidatesTags: ["user"],
+    }),
   }),
 });
 
-export const { useGetAllUserQuery, useGetUserQuery } = UserService;
+export const {
+  useGetAllUserQuery,
+  useGetUserQuery,
+  useUpdateUserMutation,
+  useUpdateUserPasswordMutation,
+} = UserService;

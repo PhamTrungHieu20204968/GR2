@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const usersController = require("../controllers/UsersController");
+const uploadCloud = require("../middlewares/Uploader");
 require("dotenv").config();
 const { validateToken } = require("../middlewares/AuthMiddleware");
 
@@ -30,4 +31,11 @@ router.get(
 
 router.get("/getOne", validateToken, usersController.getOne);
 router.get("/getAll", validateToken, usersController.getAll);
+router.put("/password/:id", validateToken, usersController.updatePassword);
+router.put(
+  "/:id",
+  uploadCloud.single("avatar"),
+  validateToken,
+  usersController.updateUser
+);
 module.exports = router;

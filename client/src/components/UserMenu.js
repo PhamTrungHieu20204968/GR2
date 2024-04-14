@@ -61,6 +61,10 @@ function UserMenu() {
         break;
       case "logout":
         dispatch(logout());
+        navigate("/");
+        break;
+      case "info":
+        navigate("/user");
         break;
       default:
         message.info("Tính năng chưa khả dụng!");

@@ -1,4 +1,5 @@
 const { users } = require("../models");
+const cloudinary = require("cloudinary").v2;
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 
@@ -104,7 +105,15 @@ class UsersController {
     try {
       const _user = await users.findOne({
         where: { id },
-        attributes: ["name", "avatar"],
+        attributes: [
+          "name",
+          "avatar",
+          "telephone",
+          "email",
+          "city",
+          "address",
+          "point",
+        ],
       });
       if (_user) {
         return res.json(_user);
@@ -123,6 +132,77 @@ class UsersController {
     }
     const List = await users.findAll({ where: { role: 1 } });
     return res.json(List);
+  }
+
+  // [PUT] /:id
+  async updateUser(req, res) {
+    const id = parseInt(req.params.id);
+    const fileData = req.file;
+    const user = req.body;
+    if (req.user.role < 2 && req.user.id !== id) {
+      return res.json({
+        error: "Bạn không đủ quyền thực hiện chức năng này!",
+      });
+    }
+    try {
+      if (fileData) {
+        await users.update(
+          {
+            ...user,
+            avatar: fileData.path,
+          },
+          { where: { id } }
+        );
+      } else {
+        await users.update(
+          {
+            ...user,
+          },
+          { where: { id } }
+        );
+      }
+      return res.json("Cập nhật thành công");
+    } catch (error) {
+      console.log(error);
+      if (fileData) {
+        await cloudinary.uploader.destroy(fileData.filename);
+      }
+      return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+    }
+  }
+
+  // [PUT] /password/:id
+  async updatePassword(req, res) {
+    const id = parseInt(req.params.id);
+    if (req.user.role < 2 && req.user.id !== id) {
+      return res.json({
+        error: "Bạn không đủ quyền thực hiện chức năng này!",
+      });
+    }
+    const _user = await users.findOne({ where: { id } });
+    if (!_user.account) {
+      return res.json({
+        error: "Bạn không thể cập nhật mật khẩu cho tài khoản này!",
+      });
+    }
+    const { password } = req.body;
+    bcrypt.hash(password, 10).then(async (hash) => {
+      try {
+        await _user.update(
+          {
+            password: hash,
+          },
+          { where: { id } }
+        );
+        return res.json("Cập nhật thành công");
+      } catch (error) {
+        console.log(error);
+        if (fileData) {
+          await cloudinary.uploader.destroy(fileData.filename);
+        }
+        return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+      }
+    });
   }
 }
 

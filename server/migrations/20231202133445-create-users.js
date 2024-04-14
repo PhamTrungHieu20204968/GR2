@@ -31,6 +31,15 @@ module.exports = {
       email: {
         type: Sequelize.STRING,
       },
+      city: {
+        type: Sequelize.STRING,
+      },
+      address: {
+        type: Sequelize.TEXT,
+      },
+      point: {
+        type: Sequelize.INTEGER,
+      },
       avatar: {
         type: Sequelize.STRING,
       },

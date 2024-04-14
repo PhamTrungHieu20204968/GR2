@@ -59,7 +59,7 @@ function ListBlogs() {
             <ListBlog
               key={1}
               data={data
-                .filter((item) =>
+                ?.filter((item) =>
                   item.user.name
                     .toUpperCase()
                     .includes(filter?.userName.trim().toUpperCase())

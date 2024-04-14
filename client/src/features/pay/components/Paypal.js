@@ -41,7 +41,12 @@ const ButtonWrapper = ({
           actions.order
             .create({
               purchase_units: [
-                { amount: { currency_code: currency, value: amount } },
+                {
+                  amount: {
+                    currency_code: currency,
+                    value: amount / payload.payType,
+                  },
+                },
               ],
             })
             .then((orderId) => orderId)

@@ -8,6 +8,7 @@ import {
   Select,
   Steps,
   message,
+  Spin,
 } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +20,7 @@ import {
   useUserCreateOrderMutation,
 } from "app/api/orderService";
 import { deleteCart } from "app/slices/cartSlice";
+import { useGetUserQuery } from "app/api/userService";
 import Paypal from "../components/Paypal";
 
 function PayForm() {
@@ -33,12 +35,18 @@ function PayForm() {
   const [order, setOrder] = useState();
   const [flag, setFlag] = useState(0);
   const payType = Form.useWatch("payType", form);
-
+  const { data } = useGetUserQuery({
+    accessToken,
+  });
   const [totalCost, setTotalCost] = useState(
     cart.reduce((total, item) => {
       return total + parseInt(item.price) * item.orderQuantity;
     }, 0)
   );
+
+  if (!data || data.error) {
+    return <Spin />;
+  }
 
   const userCreateOrder = (values, status) => {
     userCreate({
@@ -231,6 +239,7 @@ function PayForm() {
               onFinishFailed={onFinishFailed}
               onChange={onFinishFailed}
               layout='vertical'
+              initialValues={{ ...data }}
             >
               <Row gutter={16}>
                 <Col span={14}>
@@ -456,8 +465,13 @@ function PayForm() {
                       }
                     >
                       <Paypal
-                        payload={{ form, totalMoney: totalCost, accessToken }}
-                        amount={payType === 1 ? totalCost : totalCost / 2}
+                        payload={{
+                          form,
+                          totalMoney: totalCost,
+                          accessToken,
+                          payType,
+                        }}
+                        amount={totalCost}
                         accessToken={accessToken}
                         guestCreateOrder={guestCreateOrder}
                         userCreateOrder={userCreateOrder}
@@ -475,6 +489,7 @@ function PayForm() {
                         <button
                           type='button'
                           className='text-black bg-gray-100 w-full h-10 text-base hover:text-black hover:bg-gray-300'
+                          onClick={() => navigate("/cart")}
                         >
                           Quay lại giỏ hàng
                         </button>
