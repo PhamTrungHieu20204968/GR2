@@ -10,6 +10,13 @@ router.post(
   validateToken,
   blogsController.createBlog
 );
+router.put(
+  "/:id",
+  uploadCloud.array("image"),
+  validateToken,
+  blogsController.updateBlog
+);
+router.get("/:id", blogsController.getBlog);
 router.get("/", blogsController.getAllBlogs);
 router.delete("/:id", validateToken, blogsController.deleteBlog);
 module.exports = router;

@@ -15,6 +15,7 @@ import GoogleLoginSuccess from "features/auth/pages/GoogleLoginSuccess";
 import Cart from "features/pay/pages/PayCart";
 import Pay from "features/pay/pages/PayForm";
 import Blogs from "features/blog/pages/Blogs";
+import UpdateBlog from "features/blog/pages/UpdateBlog";
 import ListBlogs from "features/admin/pages/ListBlogs";
 import UserInfor from "features/user/pages/UserInfor";
 function App() {
@@ -34,6 +35,7 @@ function App() {
           <Route path='/cart' element={<Cart />} />
           <Route path='/pay' element={<Pay />} />
           <Route path='/blogs' element={<Blogs />} />
+          <Route path='/blogs/:id' element={<UpdateBlog />} />
           <Route path='/user' element={<UserInfor />} />
           <Route
             path='/google-login-success'

@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       title: DataTypes.STRING,
       content: DataTypes.TEXT,
       tag: DataTypes.STRING,
+      status: DataTypes.INTEGER,
       userId: {
         type: DataTypes.INTEGER,
         references: {

@@ -1,11 +1,11 @@
-import { Avatar, Image, Modal, Popconfirm, message } from "antd";
+import { Avatar, Image, Modal, Popconfirm, message, Popover } from "antd";
 import React, { useState } from "react";
 import {
   LikeOutlined,
   LikeFilled,
   ShareAltOutlined,
   CommentOutlined,
-  CloseOutlined,
+  MoreOutlined,
 } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 
@@ -13,13 +13,12 @@ import {
   useCreateLikeMutation,
   useDeleteBlogLikeMutation,
 } from "app/api/likeService";
-import { useDeleteBlogMutation } from "app/api/blogService";
 import BLogComments from "./BlogComments";
+import BlogMenu from "./BlogMenu";
 
 function Blog({ blog }) {
   const [createLike] = useCreateLikeMutation();
   const [deleteBlogLike] = useDeleteBlogLikeMutation();
-  const [deleteBlog] = useDeleteBlogMutation();
   const { accessToken, userId, role } = useSelector((state) => state.auth);
   const [liked, setLiked] = useState(
     !userId
@@ -82,25 +81,6 @@ function Blog({ blog }) {
     }
   };
 
-  const handleDeleteBlog = () => {
-    deleteBlog({
-      id: blog.id,
-      headers: {
-        accessToken,
-      },
-    })
-      .then((res) => {
-        if (res.data?.error) {
-          message.error(res.data.error);
-        } else {
-          message.success("Xóa thành công");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -140,18 +120,13 @@ function Blog({ blog }) {
           </div>
         </div>
         {userId === blog.userId || role > 1 ? (
-          <Popconfirm
-            title='Xóa bài viết'
-            description='Bạn muốn xóa bài viết này?'
-            okText='Có'
-            cancelText='Không'
-            onConfirm={handleDeleteBlog}
+          <Popover
+            content={<BlogMenu blog={blog} />}
+            trigger='click'
+            placement='leftTop'
           >
-            <CloseOutlined
-              className='text-base text-gray-500 p-2 rounded-full cursor-pointer hover:bg-gray-200 hover:text-black'
-              onClick={handleCancel}
-            />
-          </Popconfirm>
+            <MoreOutlined className='text-base text-gray-500 p-2 rounded-full cursor-pointer rotate-90 hover:bg-gray-200 hover:text-black' />
+          </Popover>
         ) : (
           <></>
         )}

@@ -4,54 +4,84 @@ import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import EditorToolbar, { modules, formats } from "./EditorToolbar";
+import { useNavigate } from "react-router-dom";
 
-import { useCreateBlogMutation } from "app/api/blogService";
+import {
+  useCreateBlogMutation,
+  useUpdateBlogMutation,
+} from "app/api/blogService";
 
-function CreateBlog({ accessToken }) {
+function CreateBlog({ accessToken, blog, edit = false }) {
   const [form] = Form.useForm();
   const [create] = useCreateBlogMutation();
+  const [update] = useUpdateBlogMutation();
   const contentValue = Form.useWatch("content", form);
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   const onFinish = (values) => {
     setLoading(true);
-
     const formData = new FormData();
     if (values.image) {
       [...values.image].forEach((file, i) => {
-        formData.append("image", file.originFileObj, file.name);
+        if (file?.originFileObj) {
+          formData.append("image", file.originFileObj, file.name);
+        } else formData.append("uploadedImage", file.id);
       });
     }
     formData.append("title", values.title);
     formData.append("content", values.content);
     formData.append("tag", values.tag);
 
-    create({
-      data: formData,
-      headers: {
-        accessToken,
-      },
-    })
-      .then((res) => {
-        if (res.data?.error) {
-          message.error(res.data.error);
-        } else {
-          message.success("Tạo thành công!");
-          form.resetFields();
-        }
-        setLoading(false);
+    if (!edit) {
+      create({
+        data: formData,
+        headers: {
+          accessToken,
+        },
       })
-      .catch((err) => {
-        message.error("Tạo thất bại!");
-        console.log(err);
-        setLoading(false);
-      });
+        .then((res) => {
+          if (res.data?.error) {
+            message.error(res.data.error);
+          } else {
+            message.success("Tạo thành công!");
+            form.resetFields();
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          message.error("Tạo thất bại!");
+          console.log(err);
+          setLoading(false);
+        });
+    } else {
+      update({
+        data: formData,
+        id: blog?.id,
+        headers: {
+          accessToken,
+        },
+      })
+        .then((res) => {
+          if (res.data?.error) {
+            message.error(res.data.error);
+          } else {
+            message.success("Cập nhật thành công!");
+            form.resetFields();
+            navigate("/blogs");
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          message.error("Cập nhật thất bại!");
+          console.log(err);
+          setLoading(false);
+        });
+    }
   };
-
   return (
     <div>
       <div className='text-4xl font-bold'>Tạo bài viết</div>
-      <Form form={form} onFinish={onFinish}>
+      <Form form={form} onFinish={onFinish} initialValues={blog}>
         <div className='mt-6'>
           <div className='font-bold text-xl mb-4 last:mb-0'>
             <div className='mb-2'>Tiêu đề:</div>
@@ -101,7 +131,7 @@ function CreateBlog({ accessToken }) {
             </Form.Item>
           </div>
 
-          <Form.Item name='image'>
+          <Form.Item name='image' initialValue={blog?.images}>
             <Upload
               onChange={({ fileList }) => {
                 form.setFieldValue("image", fileList);
@@ -110,6 +140,10 @@ function CreateBlog({ accessToken }) {
               listType='picture-card'
               beforeUpload={() => false}
               multiple
+              defaultFileList={blog?.images.map((item) => ({
+                ...item,
+                uid: item.id.toString(),
+              }))}
             >
               <button style={{ border: 0, background: "none" }} type='button'>
                 <PlusOutlined />
@@ -124,8 +158,18 @@ function CreateBlog({ accessToken }) {
             size='large'
             loading={loading}
           >
-            Tạo bài viết
+            {edit ? "Sửa bài viết" : "Tạo bài viết"}
           </Button>
+          {edit && (
+            <Button
+              size='large'
+              htmlType='button'
+              className='ml-4'
+              onClick={() => navigate("/blogs")}
+            >
+              Hủy
+            </Button>
+          )}
         </div>
       </Form>
     </div>

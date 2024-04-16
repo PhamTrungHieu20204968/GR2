@@ -36,7 +36,9 @@ body {
   animation: fadeInAnimation ease 1s;
 }
 
-
+.ant-popover{
+  z-index: 40 !important;
+}
 
 @keyframes fadeInAnimation {
   0% {

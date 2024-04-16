@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { blogs, users, likes, comments, images } = require("../models");
 const cloudinary = require("cloudinary").v2;
 class BlogsController {
@@ -73,7 +74,73 @@ class BlogsController {
     }
   }
 
+  // [GET] /:id
+  async getBlog(req, res) {
+    const id = parseInt(req.params.id);
+    try {
+      const blog = await blogs.findOne({
+        where: { id },
+        include: [
+          {
+            model: images,
+            attributes: ["url", "id"],
+          },
+        ],
+      });
+      return res.json(blog);
+    } catch (error) {
+      console.log(error);
+      return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+    }
+  }
+
   // [PUT] /:id
+  async updateBlog(req, res) {
+    const id = parseInt(req.params.id);
+    const fileData = req.files;
+    const userId = req.user.id;
+    const values = req.body;
+    try {
+      const _blog = await blogs.findOne({ where: { id } });
+      if (req.user.role < 2 && userId !== _blog.userId) {
+        return res.json({
+          error: "Bạn không đủ quyền thực hiện chức năng này!",
+        });
+      }
+      const uploadedImage = values.uploadedImage
+        .toString()
+        .split(",")
+        .map((item) => parseInt(item));
+      console.log(values, uploadedImage);
+
+      await _blog.update({ ...values });
+      await images.destroy({
+        where: {
+          id: {
+            [Op.notIn]: uploadedImage,
+          },
+          blogId: id,
+        },
+      });
+      if (fileData) {
+        fileData.map(async (item) => {
+          await images.create({
+            url: item.path,
+            blogId: _blog.id,
+          });
+        });
+      }
+      return res.json("Tạo thành công");
+    } catch (error) {
+      console.log(error);
+      if (fileData) {
+        fileData.map(async (item) => {
+          await cloudinary.uploader.destroy(item.filename);
+        });
+      }
+      return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+    }
+  }
 
   // [DELETE] /:id
   async deleteBlog(req, res) {
