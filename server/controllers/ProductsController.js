@@ -1,11 +1,15 @@
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 const {
   products,
   categories,
   descriptions,
   images,
   rates,
+  orderItems,
+  orders,
 } = require("../models");
+const ContentBasedRecommender = require("content-based-recommender");
+
 class ProductsController {
   // [POST] /create
   async createProduct(req, res) {
@@ -268,6 +272,55 @@ class ProductsController {
     try {
       await products.destroy({ where: { id: id } });
       return res.json("Xóa thành công!");
+    } catch (error) {
+      console.log(error);
+      return res.json({ error: "Lỗi kết nối server!" });
+    }
+  }
+
+  // [GET] similar-products
+  async getSimilarProduct(req, res) {
+    try {
+      const list = await orderItems.findAll({
+        include: [
+          {
+            model: orders,
+            where: { userId: req.user.id },
+          },
+        ],
+        group: ["productId", "id"],
+        limit: 4,
+        order: [["createdAt", "DESC"]],
+      });
+      if (!list) {
+        return res.json({ error: "Không có sản phẩm nào!" });
+      }
+      const model = require("../model.json");
+      const recommender = new ContentBasedRecommender();
+      recommender.import(model);
+      const reCommentItems = [];
+      list.forEach((element) => {
+        const similarDocuments = recommender.getSimilarDocuments(
+          element.productId + "",
+          0,
+          8
+        );
+        let count = 0;
+        similarDocuments.forEach((e) => {
+          if (!reCommentItems.includes(+e.id) && count < 8 / list.length) {
+            reCommentItems.push(+e.id);
+            count++;
+          }
+        });
+      });
+
+      const reCommentProducts = await products.findAll({
+        where: {
+          id: reCommentItems,
+        },
+        include: [images, categories],
+      });
+      return res.json(reCommentProducts);
     } catch (error) {
       console.log(error);
       return res.json({ error: "Lỗi kết nối server!" });

@@ -37,6 +37,14 @@ export const ProductService = apiService.injectEndpoints({
       providesTags: ["product"],
     }),
 
+    getSimilarProducts: builder.query({
+      query: ({ headers }) => ({
+        url: `products/similar-products`,
+        headers,
+      }),
+      providesTags: ["product"],
+    }),
+
     createProduct: builder.mutation({
       query: ({ data, headers }) => ({
         url: `products/create`,
@@ -74,6 +82,7 @@ export const {
   useGetAllProductsQuery,
   useGetProductQuery,
   useGetProductByNameQuery,
+  useGetSimilarProductsQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,

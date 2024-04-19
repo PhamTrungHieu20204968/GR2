@@ -8,6 +8,7 @@ import slider2 from "assets/imgs/slider-222.jpg";
 import slider3 from "assets/imgs/slider-333.jpg";
 import banner1 from "assets/imgs/banner1.jpg";
 import banner2 from "assets/imgs/banner2.jpg";
+import ReCommentProducts from "./components/ReCommentProducts";
 
 function Home() {
   return (
@@ -24,6 +25,7 @@ function Home() {
             <img src={slider3} alt='slider3' />
           </div>
         </Carousel>
+        <ReCommentProducts />
         <section className='container mx-auto mt-8 overflow-hidden'>
           <div className='home__title fly-in'>Thú cưng</div>
           <ListCard category='pets'></ListCard>
