@@ -79,7 +79,7 @@ function Header({ page }) {
           </Link>
         </ul>
         <div>
-          <Popover trigger='click' content={<SearchProduct />}>
+          <Popover trigger='click' className='test' content={<SearchProduct />}>
             <SearchOutlined className='text-2xl font-bold cursor-pointer hover:text-primary' />
           </Popover>
           <Popover trigger='click' content={<UserMenu />}>
@@ -88,7 +88,6 @@ function Header({ page }) {
           <Popover
             trigger='click'
             content={<Cart cart={cart} />}
-            placement='bottomRight'
           >
             <Badge count={cart.length}>
               <ShoppingCartOutlined className='text-2xl text-white font-bold cursor-pointer hover:text-primary' />

@@ -5,11 +5,13 @@ const ratesRouter = require("./rates");
 const blogsRouter = require("./blogs");
 const likesRouter = require("./likes");
 const commentsRouter = require("./comments");
+const salesRouter = require("./sales");
 
 function route(app) {
   app.use("/users", usersRouter);
   app.use("/products", productsRouter);
   app.use("/orders", ordersRouter);
+  app.use("/sales", salesRouter);
   app.use("/comments", commentsRouter);
   app.use("/likes", likesRouter);
   app.use("/blogs", blogsRouter);

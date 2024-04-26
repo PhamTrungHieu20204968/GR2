@@ -1,5 +1,4 @@
 const { likes } = require("../models");
-const { Op } = require("sequelize");
 class LikesController {
   //[POST] /
   async createLike(req, res, next) {
@@ -10,10 +9,10 @@ class LikesController {
         ...id,
         userId,
       });
-      res.json("Tạo thành công");
+      return res.json("Tạo thành công");
     } catch (error) {
       console.log(error);
-      res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+      return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
     }
   }
   // [DELETE] /blog/:id
@@ -22,10 +21,10 @@ class LikesController {
     const userId = req.user.id;
     try {
       await likes.destroy({ where: { blogId: id, userId } });
-      res.json("Xóa thành công");
+      return res.json("Xóa thành công");
     } catch (error) {
       console.log(error);
-      res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+      return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
     }
   }
 
@@ -35,10 +34,10 @@ class LikesController {
     const userId = req.user.id;
     try {
       await likes.destroy({ where: { commentId: id, userId } });
-      res.json("Xóa thành công");
+      return res.json("Xóa thành công");
     } catch (error) {
       console.log(error);
-      res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+      return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
     }
   }
 }

@@ -1,4 +1,11 @@
-const { orders, orderItems, rates, products, users } = require("../models");
+const {
+  orders,
+  orderItems,
+  rates,
+  products,
+  users,
+  sales,
+} = require("../models");
 
 class OrdersController {
   // [GET] /
@@ -132,6 +139,8 @@ class OrdersController {
       type,
       status,
       cart,
+      point,
+      voucher,
     } = req.body;
     const userId = req.user.id;
     try {
@@ -147,23 +156,35 @@ class OrdersController {
         status,
       });
 
-      cart.map(async (item) => {
-        await orderItems.create({
-          quantity: item.orderQuantity,
-          productId: item.id,
-          orderId: _order.id,
+      if (cart) {
+        cart.map(async (item) => {
+          await orderItems.create({
+            quantity: item.orderQuantity,
+            productId: item.id,
+            orderId: _order.id,
+          });
+          await rates.findOrCreate({
+            where: { productId: item.id, userId },
+            defaults: {
+              rate: 0,
+              status: 0,
+            },
+          });
         });
-        await rates.findOrCreate({
-          where: { productId: item.id, userId },
-          defaults: {
-            rate: 0,
-            status: 0,
-          },
+      }
+
+      if (voucher) {
+        const _voucher = await sales.findOne({
+          where: { userId, percent: voucher },
         });
-      });
+
+        if (_voucher.quantity === 1) {
+          _voucher.destroy();
+        } else _voucher.update({ quantity: _voucher.quantity - 1 });
+      }
 
       await users.update(
-        { address, city, telephone, email, name: fullName },
+        { address, city, telephone, email, name: fullName, point },
         { where: { id: userId } }
       );
       return res.status(200).json("Tạo thành công");

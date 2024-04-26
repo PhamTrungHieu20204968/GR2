@@ -1,14 +1,21 @@
 import React from "react";
-import { Row, Col, Steps, message, Button } from "antd";
+import { Row, Col, Steps, message, Button, Spin } from "antd";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import Layout from "components/Layout";
 import Cart from "../components/Cart";
+import { useGetUserSaleQuery } from "app/api/saleService";
 function PayCart() {
-  const cart  = useSelector((state) => state.cart);
+  const cart = useSelector((state) => state.cart);
+  const { accessToken } = useSelector((state) => state.auth);
+  const { data } = useGetUserSaleQuery({
+    accessToken,
+  });
   const navigate = useNavigate();
-
+  if (!data) {
+    return <Spin />;
+  }
   const onChangeStep = (value) => {
     if (value === 1) navigate("/pay");
     else if (value === 2) {
@@ -40,7 +47,10 @@ function PayCart() {
               />
             </Col>
           </Row>
-          <Cart cart={cart}></Cart>
+          <Cart
+            cart={cart}
+            voucherList={data && !data.error ? data : []}
+          ></Cart>
         </div>
       ) : (
         <div className='flex flex-col justify-center items-center w-full h-full'>

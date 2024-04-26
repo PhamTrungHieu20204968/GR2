@@ -11,6 +11,7 @@ export const apiService = createApi({
     "blog",
     "like",
     "comment",
+    "sale",
   ],
   endpoints: (builder) => ({}),
 });

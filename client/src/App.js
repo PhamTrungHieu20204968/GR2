@@ -18,6 +18,7 @@ import Blogs from "features/blog/pages/Blogs";
 import UpdateBlog from "features/blog/pages/UpdateBlog";
 import ListBlogs from "features/admin/pages/ListBlogs";
 import UserInfor from "features/user/pages/UserInfor";
+import Exchange from "features/user/pages/Exchange";
 function App() {
   return (
     <ConfigProvider
@@ -37,6 +38,7 @@ function App() {
           <Route path='/blogs' element={<Blogs />} />
           <Route path='/blogs/:id' element={<UpdateBlog />} />
           <Route path='/user' element={<UserInfor />} />
+          <Route path='/user/exchange' element={<Exchange />} />
           <Route
             path='/google-login-success'
             element={<GoogleLoginSuccess />}

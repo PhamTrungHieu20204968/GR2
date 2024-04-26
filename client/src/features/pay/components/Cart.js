@@ -7,9 +7,9 @@ import {
   InputNumber,
   message,
   Button,
-  Input,
+  Select,
 } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   CloseCircleOutlined,
   ArrowLeftOutlined,
@@ -19,18 +19,26 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 
 import { updateCart, deleteItem, addToCart } from "app/slices/cartSlice";
+import { updateVoucher } from "app/slices/voucherSlice";
 
-function Cart({ cart }) {
+function Cart({ cart, voucherList = [] }) {
   const [cartData, setCartData] = useState(cart);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const voucher = useSelector((state) => state.voucher);
   const [deletedItem, setDeletedItem] = useState();
   const [notify, setNotify] = useState();
   const [flag, setFlag] = useState(false);
-  const totalCost = cart.reduce((total, item) => {
-    return total + parseInt( item.salePrice ? item.salePrice : item.peice) * item.orderQuantity;
-  }, 0);
-
+  const totalCost = Math.ceil(
+    cart.reduce((total, item) => {
+      return (
+        total +
+        parseInt(item.salePrice ? item.salePrice : item.price) *
+          item.orderQuantity
+      );
+    }, 0) *
+      ((100 - voucher) / 100)
+  );
   const handleChangeQuantity = (value, record) => {
     if (value >= 1 && value <= 99) {
       const newData = cartData.map((item) => {
@@ -108,7 +116,7 @@ function Cart({ cart }) {
       render: (_, record) => (
         <b>
           {parseInt(
-            record.salePrice ? record.salePrice : record.peice
+            record.salePrice ? record.salePrice : record.price
           ).toLocaleString("vi", {
             style: "currency",
             currency: "VND",
@@ -137,7 +145,7 @@ function Cart({ cart }) {
       render: (_, record) => (
         <b className=''>
           {(
-            parseInt(record.salePrice ? record.salePrice : record.peice) *
+            parseInt(record.salePrice ? record.salePrice : record.price) *
             record.orderQuantity
           ).toLocaleString("vi", {
             style: "currency",
@@ -147,7 +155,6 @@ function Cart({ cart }) {
       ),
     },
   ];
-
   return (
     <Row gutter={16}>
       <Col span={14} className='border-r-2'>
@@ -204,7 +211,11 @@ function Cart({ cart }) {
         </div>
         <div className='py-2 text-base flex justify-between border-b-[1px]'>
           <div className=''>Mã ưu đãi</div>
-          <span>Không</span>
+          {voucher === 0 ? (
+            <span>Không</span>
+          ) : (
+            <span>Mã giảm giá {voucher}%</span>
+          )}
         </div>
         <div className='mt-4 text-base flex justify-between pb-1 border-b-[1px]'>
           <div className=''>Tổng cộng</div>
@@ -227,15 +238,33 @@ function Cart({ cart }) {
           <TagFilled />
           Mã ưu đãi
         </div>
-        <Input
-          size='middle'
-          placeholder='Mã ưu đãi'
-          className='my-4 rounded-none text-base'
-        ></Input>
-
-        <button className='text-black bg-gray-100 w-full h-10 text-base hover:text-black hover:bg-gray-300'>
-          Áp dụng
-        </button>
+        {voucherList.length > 0 ? (
+          <Select
+            size='large'
+            className='w-full my-4'
+            showSearch
+            defaultValue={voucher}
+            options={[
+              ...voucherList.map((item) => ({
+                value: item.percent,
+                label: `Mã giảm giá ${item.percent}%`,
+              })),
+              { value: 0, label: "Không áp dụng" },
+            ]}
+            onChange={(value) => dispatch(updateVoucher(value))}
+          ></Select>
+        ) : (
+          <div className='w-full my-4'>
+            Bạn chưa có phiếu giảm giá nào!
+            <Link
+              to='/signup'
+              className='text-blue-600 mx-1 underline hover:underline'
+            >
+              Đăng ký
+            </Link>
+            để nhận thêm ưu đãi
+          </div>
+        )}
       </Col>
     </Row>
   );

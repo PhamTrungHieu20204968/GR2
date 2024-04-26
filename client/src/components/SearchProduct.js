@@ -17,7 +17,6 @@ function SearchProduct() {
   if (isLoading) {
     return <Spin />;
   }
-
   return (
     <div className='w-80 max-h-[500px] overflow-y-auto'>
       <Input
@@ -29,7 +28,10 @@ function SearchProduct() {
         {searchInput.trim() &&
           data?.map((item) => {
             if (
-              item.name.toUpperCase().includes(searchInput.trim().toUpperCase())
+              item.name
+                .toUpperCase()
+                .includes(searchInput.trim().toUpperCase()) &&
+              item.category.name !== "QUÀ TẶNG"
             )
               return <ProductItem product={item} key={item.id}></ProductItem>;
             return <></>;

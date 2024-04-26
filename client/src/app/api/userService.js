@@ -15,7 +15,7 @@ export const UserService = apiService.injectEndpoints({
         url: `users/getOne`,
         headers,
       }),
-      providesTags: ["user","order"],
+      providesTags: ["user", "order", "sale"],
     }),
 
     createUser: builder.mutation({

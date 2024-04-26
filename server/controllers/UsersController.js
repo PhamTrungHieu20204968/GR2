@@ -113,6 +113,8 @@ class UsersController {
           "city",
           "address",
           "point",
+          "rank",
+          "title",
         ],
       });
       if (_user) {

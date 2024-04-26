@@ -13,7 +13,12 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      productId: {
+      quantity: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 1,
+      },
+      userId: {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: false,
       },

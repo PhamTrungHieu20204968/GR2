@@ -41,10 +41,10 @@ module.exports = {
         "sales",
         {
           type: "foreign key",
-          name: "fk_sales_products_id",
-          fields: ["productId"],
+          name: "fk_sales_users_id",
+          fields: ["userId"],
           references: {
-            table: "products",
+            table: "users",
             field: "id",
           },
           onDelete: "cascade",
@@ -313,7 +313,7 @@ module.exports = {
         { transaction }
       );
 
-      await queryInterface.removeConstraint("sales", "fk_sales_products_id", {
+      await queryInterface.removeConstraint("sales", "fk_sales_users_id", {
         transaction,
       });
 

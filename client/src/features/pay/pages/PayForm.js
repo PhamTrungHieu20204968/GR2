@@ -22,6 +22,7 @@ import {
 import { deleteCart } from "app/slices/cartSlice";
 import { useGetUserQuery } from "app/api/userService";
 import Paypal from "../components/Paypal";
+import { updateVoucher } from "app/slices/voucherSlice";
 
 function PayForm() {
   const [form] = Form.useForm();
@@ -32,26 +33,29 @@ function PayForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [currentStep, setCurrentStep] = useState(1);
+  const voucher = useSelector((state) => state.voucher);
   const [order, setOrder] = useState();
   const [flag, setFlag] = useState(0);
-  const payType = Form.useWatch("payType", form);
+  const payType = Form.useWatch("payType", form) || 1;
   const { data } = useGetUserQuery({
     accessToken,
   });
   const [totalCost, setTotalCost] = useState(
-    cart.reduce((total, item) => {
-      return (
-        total +
-        parseInt(item.salePrice ? item.salePrice : item.price) *
-          item.orderQuantity
-      );
-    }, 0)
+    Math.ceil(
+      cart.reduce((total, item) => {
+        return (
+          total +
+          parseInt(item.salePrice ? item.salePrice : item.price) *
+            item.orderQuantity
+        );
+      }, 0)
+    ) *
+      ((100 - voucher) / 100)
   );
 
-  if (!data || data.error) {
+  if (!data) {
     return <Spin />;
   }
-
   const userCreateOrder = (values, status) => {
     userCreate({
       data: {
@@ -61,6 +65,8 @@ function PayForm() {
         totalMoney: totalCost,
         status,
         cart,
+        voucher,
+        point: data.point + Math.floor(totalCost / 100000),
       },
       headers: {
         accessToken,
@@ -74,6 +80,7 @@ function PayForm() {
           setOrder(cart);
           setFlag(0);
           dispatch(deleteCart());
+          dispatch(updateVoucher(0));
           message.success("Đặt hàng thành công!");
         }
       })
@@ -419,10 +426,7 @@ function PayForm() {
                       <div className=''>Tạm tính</div>
                     </div>
                     {cart?.map((item) => (
-                      <div
-                        key={item.id}
-                        className='flex mt-2 gap-4 text-sm'
-                      >
+                      <div key={item.id} className='flex mt-2 gap-4 text-sm'>
                         <div className='flex-1'>
                           {item.name} <b>x {item.orderQuantity}</b>
                         </div>
@@ -436,11 +440,19 @@ function PayForm() {
                         </b>
                       </div>
                     ))}
+                    <div className='flex mt-4 justify-between text-base'>
+                      <div className='font-bold'>Mã ưu đãi</div>
+                      {voucher === 0 ? (
+                        <span>Không</span>
+                      ) : (
+                        <span>Mã giảm giá {voucher}%</span>
+                      )}
+                    </div>
                     <div className='flex my-4 pt-2 border-t-2 justify-between text-base'>
                       <div className=''>Tổng:</div>
                       <b className=''>
-                        {cart
-                          .reduce((total, item) => {
+                        {Math.ceil(
+                          cart.reduce((total, item) => {
                             return (
                               total +
                               parseInt(
@@ -448,11 +460,12 @@ function PayForm() {
                               ) *
                                 item.orderQuantity
                             );
-                          }, 0)
-                          .toLocaleString("vi", {
-                            style: "currency",
-                            currency: "VND",
-                          })}
+                          }, 0) *
+                            ((100 - voucher) / 100)
+                        ).toLocaleString("vi", {
+                          style: "currency",
+                          currency: "VND",
+                        })}
                       </b>
                     </div>
 
@@ -468,7 +481,7 @@ function PayForm() {
                       </Radio.Group>
                     </Form.Item>
 
-                    {/* <div
+                    <div
                       className={
                         payType < 3 && flag === 1 ? "w-full" : "w-full hidden"
                       }
@@ -485,7 +498,7 @@ function PayForm() {
                         guestCreateOrder={guestCreateOrder}
                         userCreateOrder={userCreateOrder}
                       ></Paypal>
-                    </div> */}
+                    </div>
 
                     {(flag === 0 || payType === 3) && (
                       <div>

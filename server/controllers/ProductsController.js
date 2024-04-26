@@ -168,7 +168,7 @@ class ProductsController {
               model: categories,
               where: {
                 id: {
-                  [Op.gt]: 2,
+                  [Op.gt]: 3,
                 },
               },
             },
@@ -307,7 +307,7 @@ class ProductsController {
         );
         let count = 0;
         similarDocuments.forEach((e) => {
-          if (!reCommentItems.includes(+e.id) && count < 8 / list.length) {
+          if (!reCommentItems.includes(+e.id) && count <= 8 / list.length) {
             reCommentItems.push(+e.id);
             count++;
           }

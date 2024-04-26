@@ -39,6 +39,15 @@ module.exports = {
       },
       point: {
         type: Sequelize.INTEGER,
+        defaultValue: 100,
+      },
+      rank: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+      },
+      title: {
+        type: Sequelize.STRING,
+        defaultValue: "Tập sự",
       },
       avatar: {
         type: Sequelize.STRING,

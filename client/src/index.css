@@ -40,6 +40,10 @@ body {
   z-index: 40 !important;
 }
 
+.ant-popover-placement-bottom{
+  z-index: 50 !important;
+}
+
 @keyframes fadeInAnimation {
   0% {
     transform: translate3d(300px, 0, 0);

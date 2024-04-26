@@ -184,10 +184,6 @@ function CreateProductForm({ product }) {
               initialValue={product?.salePrice}
               rules={[
                 {
-                  required: true,
-                  message: "Vui lòng nhâp giá giảm giá!",
-                },
-                {
                   pattern: /^[0-9.]+$/,
                   message: "Vui lòng nhập lại giá giảm giá!",
                 },

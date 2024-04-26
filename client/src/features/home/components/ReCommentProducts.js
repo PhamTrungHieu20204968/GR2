@@ -13,7 +13,6 @@ function ReCommentProducts() {
     },
   });
 
-  console.log(data);
   return (
     <div>
       {!data || data.error ? (
@@ -22,11 +21,14 @@ function ReCommentProducts() {
         <section className='container mx-auto mt-8 overflow-hidden'>
           <div className='home__title fly-in'>Sản phẩm gợi ý</div>
           <Row gutter={[16, 16]}>
-            {data.map((item, i) => (
-              <Col span={6} key={item.id}>
-                <ProductCard product={item} key={item.id}></ProductCard>
-              </Col>
-            ))}
+            {data.map(
+              (item, i) =>
+                i < 8 && (
+                  <Col span={6} key={item.id}>
+                    <ProductCard product={item} key={item.id}></ProductCard>
+                  </Col>
+                )
+            )}
           </Row>
         </section>
       )}

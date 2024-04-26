@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.likes, { foreignKey: "userId" });
       this.hasMany(models.rates, { foreignKey: "userId" });
       this.hasMany(models.orders, { foreignKey: "userId" });
+      this.hasMany(models.sales, { foreignKey: "userId" });
     }
   }
   users.init(
@@ -25,6 +26,9 @@ module.exports = (sequelize, DataTypes) => {
       role: DataTypes.INTEGER,
       telephone: DataTypes.STRING,
       email: DataTypes.STRING,
+      point: DataTypes.INTEGER,
+      rank: DataTypes.INTEGER,
+      title: DataTypes.STRING,
       avatar: DataTypes.STRING,
       status: DataTypes.INTEGER,
       googleId: DataTypes.STRING,
