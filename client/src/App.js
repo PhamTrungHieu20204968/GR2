@@ -1,6 +1,9 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { ConfigProvider } from "antd";
-import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateSocket } from "app/slices/socketSlice";
+import { io } from "socket.io-client";
+import React, { useEffect } from "react";
 import Home from "features/home/Home";
 import Login from "features/auth/pages/Login";
 import Signup from "features/auth/pages/Signup";
@@ -19,7 +22,18 @@ import UpdateBlog from "features/blog/pages/UpdateBlog";
 import ListBlogs from "features/admin/pages/ListBlogs";
 import UserInfor from "features/user/pages/UserInfor";
 import Exchange from "features/user/pages/Exchange";
+
 function App() {
+  const dispatch = useDispatch();
+  const { userId } = useSelector((state) => state.auth);
+
+  // useEffect(() => {
+  //   const _socket = io(process.env.REACT_APP_BASE_URL);
+  //   dispatch(updateSocket(_socket));
+  //   if (userId && !socket) {
+  //     socket.emit("add-user", userId);
+  //   }
+  // }, []);
   return (
     <ConfigProvider
       theme={{

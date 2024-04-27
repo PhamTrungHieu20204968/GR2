@@ -3,9 +3,8 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const passport = require("passport");
-const passportSetup = require("./passport");
-
 const route = require("./routes");
+const { connectSocket } = require("./socketIo");
 
 app.use(
   cookieSession({
@@ -33,7 +32,8 @@ const db = require("./models");
 route(app);
 
 db.sequelize.sync().then(() => {
-  app.listen("3001", () => {
+  const server = app.listen("3001", () => {
     console.log("Server running on port 3001!");
   });
+  connectSocket(server);
 });
