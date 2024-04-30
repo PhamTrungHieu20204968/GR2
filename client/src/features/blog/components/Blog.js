@@ -1,5 +1,5 @@
-import { Avatar, Image, Modal, Popconfirm, message, Popover } from "antd";
-import React, { useState } from "react";
+import { Avatar, Image, Modal, message, Popover } from "antd";
+import React, { useContext, useState } from "react";
 import {
   LikeOutlined,
   LikeFilled,
@@ -15,11 +15,15 @@ import {
 } from "app/api/likeService";
 import BLogComments from "./BlogComments";
 import BlogMenu from "./BlogMenu";
+import { socketContext } from "components/SocketProvider";
 
 function Blog({ blog }) {
   const [createLike] = useCreateLikeMutation();
   const [deleteBlogLike] = useDeleteBlogLikeMutation();
-  const { accessToken, userId, role } = useSelector((state) => state.auth);
+  const socket = useContext(socketContext);
+  const { accessToken, userId, role, name } = useSelector(
+    (state) => state.auth
+  );
   const [liked, setLiked] = useState(
     !userId
       ? false
@@ -36,7 +40,6 @@ function Blog({ blog }) {
     const date = today.getDate();
     return `${month}/${date}/${year}`;
   }
-
   const handleLikeBlog = () => {
     if (!accessToken) {
       message.info("Bạn chưa đăng nhập!");
@@ -56,6 +59,13 @@ function Blog({ blog }) {
             message.error(res.data.error);
           } else {
             setLiked(true);
+            socket.emit("new-notification", {
+              receiverId: blog.userId,
+              content: `${name} đã thích bài viết của bạn`,
+              blogId: blog.id,
+              senderId: userId,
+              type:1,
+            });
           }
         })
         .catch((err) => {
@@ -192,7 +202,7 @@ function Blog({ blog }) {
         footer={null}
       >
         <BLogComments
-          blogId={blog.id}
+          blog={blog}
           comments={blog.comments.filter((item) => item.parent === 0)}
           handleCancel={handleCancel}
         />

@@ -40,8 +40,8 @@ body {
   z-index: 40 !important;
 }
 
-.ant-popover-placement-bottom{
-  z-index: 50 !important;
+.ant-popover-placement-bottom,.ant-popover-placement-top{
+  z-index: 1001 !important;
 }
 
 @keyframes fadeInAnimation {

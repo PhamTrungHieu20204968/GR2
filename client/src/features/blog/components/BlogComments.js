@@ -8,7 +8,7 @@ import CommentItem from "./CommentItem";
 import { useGetUserQuery } from "app/api/userService";
 import UserComment from "../components/UserComment";
 
-function BlogComments({ blogId, comments, handleCancel }) {
+function BlogComments({ blog, comments, handleCancel }) {
   const { accessToken } = useSelector((state) => state.auth);
   const [edit, setEdit] = useState({ status: false, content: "", id: 0 });
   const { data, isLoading } = useGetUserQuery({
@@ -17,7 +17,6 @@ function BlogComments({ blogId, comments, handleCancel }) {
   if (isLoading) {
     return <Spin />;
   }
-  console.log(edit);
   return (
     <div className='overflow-hidden'>
       <div className='flex items-center'>
@@ -37,6 +36,7 @@ function BlogComments({ blogId, comments, handleCancel }) {
               key={item.id}
               comment={item}
               setEdit={setEdit}
+              blogId={blog.id}
             />
           ))
         ) : (
@@ -47,7 +47,9 @@ function BlogComments({ blogId, comments, handleCancel }) {
       </div>
 
       {data.name ? (
-        !edit.status && <UserComment user={data} blogId={blogId} />
+        !edit.status && (
+          <UserComment user={data} blogId={blog.id} receiverId={blog.userId} />
+        )
       ) : (
         <div className='text-center mt-4 text-xs'>
           Bạn hãy{" "}
@@ -66,7 +68,8 @@ function BlogComments({ blogId, comments, handleCancel }) {
           <div className=''>
             <UserComment
               user={data}
-              blogId={blogId}
+              blogId={blog.id}
+              receiverId={blog.userId}
               edit={edit}
               setEdit={setEdit}
             />

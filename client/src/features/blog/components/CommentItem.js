@@ -1,5 +1,5 @@
 import { Avatar, message, Spin, Popover, Popconfirm } from "antd";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { LikeTwoTone, EllipsisOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 
@@ -10,12 +10,14 @@ import {
 import { useDeleteCommentMutation } from "app/api/commentService";
 import UserComment from "../components/UserComment";
 import { useGetCommentChildQuery } from "app/api/commentService";
+import { socketContext } from "components/SocketProvider";
 
-function CommentItem({ comment, user, setEdit }) {
+function CommentItem({ comment, user, setEdit, blogId }) {
   const [createLike] = useCreateLikeMutation();
   const [deleteComment] = useDeleteCommentMutation();
   const [deleteCommentLike] = useDeleteCommentLikeMutation();
-  const { accessToken, userId } = useSelector((state) => state.auth);
+  const { accessToken, userId, name } = useSelector((state) => state.auth);
+  const socket = useContext(socketContext);
   const [liked, setLiked] = useState(
     !userId && !comment?.CommentId
       ? false
@@ -28,7 +30,12 @@ function CommentItem({ comment, user, setEdit }) {
     id: comment.id,
   });
 
-  const [reply, setReply] = useState({ status: false, commentId: 0, user: "" });
+  const [reply, setReply] = useState({
+    status: false,
+    commentId: 0,
+    userName: "",
+    userId: 0,
+  });
 
   function getDate(time) {
     const today = new Date(time);
@@ -37,7 +44,6 @@ function CommentItem({ comment, user, setEdit }) {
     const date = today.getDate();
     return `${month}/${date}/${year}`;
   }
-
   const handleLikeComment = () => {
     if (!accessToken) {
       message.info("Bạn chưa đăng nhập!");
@@ -56,6 +62,13 @@ function CommentItem({ comment, user, setEdit }) {
           if (res.data?.error) {
             message.error(res.data.error);
           } else {
+            socket.emit("new-notification", {
+              receiverId: comment.userId,
+              content: `${name} đã thích bình luận của bạn`,
+              blogId,
+              senderId: userId,
+              type: 1,
+            });
             setLiked(true);
           }
         })
@@ -85,8 +98,9 @@ function CommentItem({ comment, user, setEdit }) {
   const handleOnReply = () => {
     setReply({
       status: true,
-      user: comment.user.name,
+      userName: comment.user.name,
       commentId: comment.id,
+      userId: comment.userId,
     });
   };
 
@@ -176,7 +190,6 @@ function CommentItem({ comment, user, setEdit }) {
                     </div>
                   }
                   trigger='click'
-                  placement='rightTop'
                 >
                   <EllipsisOutlined className='cursor-pointer rounded-full hover:bg-gray-300' />
                 </Popover>
@@ -229,7 +242,12 @@ function CommentItem({ comment, user, setEdit }) {
             </div>
           )}
           {reply.status && (
-            <UserComment blogId={comment.blogId} user={user} reply={reply} />
+            <UserComment
+              blogId={comment.blogId}
+              user={user}
+              reply={reply}
+              receiverId={comment.userId}
+            />
           )}
         </div>
       </div>

@@ -56,6 +56,11 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
+      notificationSetting: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
       googleId: {
         type: Sequelize.STRING,
       },

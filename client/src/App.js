@@ -15,10 +15,12 @@ import GoogleLoginSuccess from "features/auth/pages/GoogleLoginSuccess";
 import Cart from "features/pay/pages/PayCart";
 import Pay from "features/pay/pages/PayForm";
 import Blogs from "features/blog/pages/Blogs";
+import BlogDetail from "features/blog/pages/BlogDetail";
 import UpdateBlog from "features/blog/pages/UpdateBlog";
 import ListBlogs from "features/admin/pages/ListBlogs";
 import UserInfor from "features/user/pages/UserInfor";
 import Exchange from "features/user/pages/Exchange";
+
 function App() {
   return (
     <ConfigProvider
@@ -36,6 +38,7 @@ function App() {
           <Route path='/cart' element={<Cart />} />
           <Route path='/pay' element={<Pay />} />
           <Route path='/blogs' element={<Blogs />} />
+          <Route path='/blogs/detail/:id' element={<BlogDetail />} />
           <Route path='/blogs/:id' element={<UpdateBlog />} />
           <Route path='/user' element={<UserInfor />} />
           <Route path='/user/exchange' element={<Exchange />} />

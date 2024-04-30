@@ -292,6 +292,86 @@ module.exports = {
         },
         transaction
       );
+
+      await queryInterface.addConstraint(
+        "notifications",
+        {
+          type: "foreign key",
+          name: "fk_notifications_sender_id",
+          fields: ["senderId"],
+          references: {
+            table: "users",
+            field: "id",
+          },
+          onDelete: "cascade",
+          onUpdate: "cascade",
+        },
+        transaction
+      );
+
+      await queryInterface.addConstraint(
+        "notifications",
+        {
+          type: "foreign key",
+          name: "fk_notifications_receiver_id",
+          fields: ["receiverId"],
+          references: {
+            table: "users",
+            field: "id",
+          },
+          onDelete: "cascade",
+          onUpdate: "cascade",
+        },
+        transaction
+      );
+
+      await queryInterface.addConstraint(
+        "notifications",
+        {
+          type: "foreign key",
+          name: "fk_notifications_blogs_id",
+          fields: ["blogId"],
+          references: {
+            table: "blogs",
+            field: "id",
+          },
+          onDelete: "cascade",
+          onUpdate: "cascade",
+        },
+        transaction
+      );
+
+      await queryInterface.addConstraint(
+        "notifications",
+        {
+          type: "foreign key",
+          name: "fk_notifications_comments_id",
+          fields: ["commentId"],
+          references: {
+            table: "comments",
+            field: "id",
+          },
+          onDelete: "cascade",
+          onUpdate: "cascade",
+        },
+        transaction
+      );
+
+      await queryInterface.addConstraint(
+        "notifications",
+        {
+          type: "foreign key",
+          name: "fk_notifications_orders_id",
+          fields: ["orderId"],
+          references: {
+            table: "orders",
+            field: "id",
+          },
+          onDelete: "cascade",
+          onUpdate: "cascade",
+        },
+        transaction
+      );
     } catch (error) {
       await transaction.rollback();
       console.log(error);
@@ -343,7 +423,7 @@ module.exports = {
         transaction,
       });
 
-      await queryInterface.removeConstraint("orders", "fk_rates_users_id", {
+      await queryInterface.removeConstraint("orders", "fk_orders_users_id", {
         transaction,
       });
 
@@ -394,6 +474,46 @@ module.exports = {
       await queryInterface.removeConstraint("likes", "fk_likes_users_id", {
         transaction,
       });
+
+      await queryInterface.removeConstraint(
+        "notifications",
+        "fk_notifications_sender_id",
+        {
+          transaction,
+        }
+      );
+
+      await queryInterface.removeConstraint(
+        "notifications",
+        "fk_notifications_receiver_id",
+        {
+          transaction,
+        }
+      );
+
+      await queryInterface.removeConstraint(
+        "notifications",
+        "fk_notifications_blogs_id",
+        {
+          transaction,
+        }
+      );
+
+      await queryInterface.removeConstraint(
+        "notifications",
+        "fk_notifications_comments_id",
+        {
+          transaction,
+        }
+      );
+
+      await queryInterface.removeConstraint(
+        "notifications",
+        "fk_notifications_orders_id",
+        {
+          transaction,
+        }
+      );
 
       return transaction.commit();
     } catch (error) {

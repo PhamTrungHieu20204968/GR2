@@ -2,18 +2,20 @@ import TextArea from "antd/es/input/TextArea";
 import { Avatar, message } from "antd";
 import { SendOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import {
   useCreateCommentMutation,
   useUpdateCommentMutation,
 } from "app/api/commentService";
+import { socketContext } from "components/SocketProvider";
 
-function UserComment({ user, blogId, reply, edit, setEdit }) {
+function UserComment({ user, blogId, reply, edit, setEdit, receiverId }) {
   const [createComment] = useCreateCommentMutation();
   const [updateComment] = useUpdateCommentMutation();
-  const { userId, accessToken } = useSelector((state) => state.auth);
+  const { userId, accessToken, name } = useSelector((state) => state.auth);
   const [content, setContent] = useState(edit?.status ? edit?.content : "");
+  const socket = useContext(socketContext);
   const handleSubmit = () => {
     const parent = reply?.commentId || 0;
     if (content.trim()) {
@@ -33,6 +35,18 @@ function UserComment({ user, blogId, reply, edit, setEdit }) {
             message.error(res.data.error);
           } else {
             setContent("");
+            if (userId !== receiverId) {
+              socket.emit("new-notification", {
+                receiverId,
+                content: reply?.status
+                  ? `${name} đã phản hồi 1 bình luận của bạn`
+                  : `${name} đã bình luận bài viết của bạn`,
+                blogId,
+                senderId: userId,
+                commentId: res.data,
+                type: 2,
+              });
+            }
           }
         })
         .catch((err) => {
@@ -87,7 +101,9 @@ function UserComment({ user, blogId, reply, edit, setEdit }) {
       )}
       <TextArea
         placeholder={
-          reply?.user ? `Phản hồi ${reply?.user}` : "Nhập bình luận của bạn ..."
+          reply?.userName
+            ? `Phản hồi ${reply?.userName}`
+            : "Nhập bình luận của bạn ..."
         }
         autoSize={{
           minRows: 1,

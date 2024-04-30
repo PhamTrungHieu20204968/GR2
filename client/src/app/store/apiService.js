@@ -12,6 +12,7 @@ export const apiService = createApi({
     "like",
     "comment",
     "sale",
+    "notification",
   ],
   endpoints: (builder) => ({}),
 });
