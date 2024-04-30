@@ -28,6 +28,7 @@ class BlogsController {
                 as: "CommentId",
               },
             ],
+            order: [["createdAt", "DESC"]],
           },
           {
             model: likes,
@@ -82,8 +83,31 @@ class BlogsController {
         where: { id },
         include: [
           {
+            model: users,
+            attributes: ["name", "avatar"],
+          },
+          {
             model: images,
             attributes: ["url", "id"],
+          },
+          {
+            model: comments,
+            include: [
+              {
+                model: users,
+                attributes: ["name", "avatar"],
+              },
+              {
+                model: likes,
+                attributes: ["commentId", "userId"],
+                as: "CommentId",
+              },
+            ],
+            order: [["createdAt", "DESC"]],
+          },
+          {
+            model: likes,
+            attributes: ["blogId", "userId"],
           },
         ],
       });

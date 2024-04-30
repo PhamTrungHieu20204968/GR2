@@ -13,19 +13,19 @@ exports.connectSocket = (server) => {
 
   io.on("connection", (socket) => {
     console.log("Someone connected");
-
-    socket.on("add-user", (user) => {
-      onlineUsers.push({ information: user, socketId: socket.id });
+    socket.on("add-user", (id) => {
+      onlineUsers.push({ id, socketId: socket.id });
     });
 
-    socket.on("new-notifications", ({ notifications }) => {
-      onlineUsers
-        .filter((user) => user.information.id === notifications.receiver_id)
-        .forEach((followed) => {
+    socket.on("new-notification", (notification) => {
+      console.log(notification);
+      onlineUsers.forEach((user) => {
+        if (user.id === notification.receiverId) {
           socket
-            .to(followed.socketId)
-            .emit("send-notifications", { notifications });
-        });
+            .to(user.socketId)
+            .emit("receive-notification", { ...notification });
+        }
+      });
     });
 
     socket.on("disconnect", () => {

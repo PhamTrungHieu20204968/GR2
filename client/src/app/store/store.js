@@ -7,8 +7,6 @@ import { filterSliceReducer } from "../slices/filterSlice";
 import { cartSliceReducer } from "../slices/cartSlice";
 import { voucherSliceReducer } from "../slices/voucherSlice";
 import { socketSliceReducer } from "../slices/socketSlice";
-import createTransform from "redux-persist/es/createTransform";
-import { parse, stringify } from "flatted";
 const rootReducer = combineReducers({
   [apiService.reducerPath]: apiService.reducer,
   auth: authSliceReducer,
@@ -18,15 +16,10 @@ const rootReducer = combineReducers({
   socket: socketSliceReducer,
 });
 
-const transformCircular = createTransform(
-  (inboundState, key) => stringify(inboundState),
-  (outboundState, key) => parse(outboundState)
-);
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["cart", "auth", "voucher", "socket"],
-  // transforms: [transformCircular],
+  whitelist: ["cart", "auth", "voucher"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

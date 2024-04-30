@@ -1,15 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  socket: null,
-};
+const initialState = {};
 
 export const socketSlice = createSlice({
   name: "socket",
   initialState,
   reducers: {
     updateSocket: (state, action) => {
-      state.socket = action.payload;
+      console.log(action.payload);
+      return action.payload;
     },
   },
 });

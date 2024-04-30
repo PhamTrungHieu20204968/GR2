@@ -1,9 +1,6 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { ConfigProvider } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { updateSocket } from "app/slices/socketSlice";
-import { io } from "socket.io-client";
-import React, { useEffect } from "react";
+import React from "react";
 import Home from "features/home/Home";
 import Login from "features/auth/pages/Login";
 import Signup from "features/auth/pages/Signup";
@@ -18,22 +15,13 @@ import GoogleLoginSuccess from "features/auth/pages/GoogleLoginSuccess";
 import Cart from "features/pay/pages/PayCart";
 import Pay from "features/pay/pages/PayForm";
 import Blogs from "features/blog/pages/Blogs";
+import BlogDetail from "features/blog/pages/BlogDetail";
 import UpdateBlog from "features/blog/pages/UpdateBlog";
 import ListBlogs from "features/admin/pages/ListBlogs";
 import UserInfor from "features/user/pages/UserInfor";
 import Exchange from "features/user/pages/Exchange";
 
 function App() {
-  const dispatch = useDispatch();
-  const { userId } = useSelector((state) => state.auth);
-
-  // useEffect(() => {
-  //   const _socket = io(process.env.REACT_APP_BASE_URL);
-  //   dispatch(updateSocket(_socket));
-  //   if (userId && !socket) {
-  //     socket.emit("add-user", userId);
-  //   }
-  // }, []);
   return (
     <ConfigProvider
       theme={{
@@ -50,6 +38,7 @@ function App() {
           <Route path='/cart' element={<Cart />} />
           <Route path='/pay' element={<Pay />} />
           <Route path='/blogs' element={<Blogs />} />
+          <Route path='/blogs/detail/:id' element={<BlogDetail />} />
           <Route path='/blogs/:id' element={<UpdateBlog />} />
           <Route path='/user' element={<UserInfor />} />
           <Route path='/user/exchange' element={<Exchange />} />

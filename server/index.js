@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const passport = require("passport");
+require("./passport");
 const route = require("./routes");
 const { connectSocket } = require("./socketIo");
 

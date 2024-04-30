@@ -4,7 +4,7 @@ import {
   UserOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
-import { Badge, Popover } from "antd";
+import { Badge, Popover, Tooltip } from "antd";
 import { useSelector } from "react-redux";
 
 import logo from "assets/imgs/logo.png";
@@ -12,8 +12,11 @@ import { Link } from "react-router-dom";
 import SearchProduct from "./SearchProduct";
 import Cart from "./Cart";
 import UserMenu from "./UserMenu";
+import Notifications from "./Notifications";
 function Header({ page }) {
   const cart = useSelector((state) => state.cart);
+  const { isLoggedIn } = useSelector((state) => state.auth);
+
   return (
     <div className='w-screen fixed top-0 left-0 right-0 z-50 text-white bg-[#333] '>
       <div className='container mx-auto flex justify-between items-center'>
@@ -78,19 +81,31 @@ function Header({ page }) {
             Liên hệ
           </Link>
         </ul>
-        <div>
+        <div className='flex items-center gap-4'>
           <Popover trigger='click' className='test' content={<SearchProduct />}>
-            <SearchOutlined className='text-2xl font-bold cursor-pointer hover:text-primary' />
+            <Tooltip
+              title='Tìm kiếm'
+              placement='bottom'
+              color='#666'
+              zIndex={60}
+            >
+              <SearchOutlined className='text-2xl font-bold cursor-pointer hover:text-primary' />
+            </Tooltip>
           </Popover>
           <Popover trigger='click' content={<UserMenu />}>
-            <UserOutlined className='text-2xl mx-7 font-bold cursor-pointer hover:text-primary' />
+            <UserOutlined className='text-2xl font-bold cursor-pointer hover:text-primary' />
           </Popover>
-          <Popover
-            trigger='click'
-            content={<Cart cart={cart} />}
-          >
+          {isLoggedIn && <Notifications />}
+          <Popover trigger='click' content={<Cart cart={cart} />}>
             <Badge count={cart.length}>
-              <ShoppingCartOutlined className='text-2xl text-white font-bold cursor-pointer hover:text-primary' />
+              <Tooltip
+                title='Giỏ hàng'
+                placement='bottom'
+                color='#666'
+                zIndex={60}
+              >
+                <ShoppingCartOutlined className='text-2xl text-white font-bold cursor-pointer hover:text-primary' />
+              </Tooltip>
             </Badge>
           </Popover>
         </div>

@@ -7,14 +7,14 @@ class CommentsController {
     const blogId = parseInt(req.params.blogId);
     const { content, parent = 0, edited = 0 } = req.body;
     try {
-      await comments.create({
+      const comment = await comments.create({
         content,
         parent,
         edited,
         userId,
         blogId,
       });
-      return res.json("Tạo thành công");
+      return res.json(comment.id);
     } catch (error) {
       console.log(error);
       return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });

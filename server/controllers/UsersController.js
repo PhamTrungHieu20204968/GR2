@@ -53,6 +53,8 @@ class UsersController {
       return res.json({
         role: User.role,
         accessToken,
+        name: User.name,
+        notificationSetting: User.notificationSetting,
         id: User.id,
       });
     });
@@ -79,6 +81,8 @@ class UsersController {
       return res.status(200).json({
         role: _user.role,
         id: _user.id,
+        name: _user.name,
+        notificationSetting: _user.notificationSetting,
         accessToken,
       });
     } else {

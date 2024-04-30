@@ -43,6 +43,7 @@ module.exports = (sequelize, DataTypes) => {
       city: DataTypes.STRING,
       address: DataTypes.STRING,
       point: DataTypes.INTEGER,
+      notificationSetting: DataTypes.INTEGER,
     },
     {
       sequelize,

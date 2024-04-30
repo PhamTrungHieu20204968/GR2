@@ -45,7 +45,8 @@ module.exports = (sequelize, DataTypes) => {
         },
         allowNull: false,
       },
-      content: DataTypes.INTEGER,
+      content: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       blogId: {
         type: DataTypes.INTEGER,
         references: {
@@ -68,11 +69,9 @@ module.exports = (sequelize, DataTypes) => {
           model: orders,
           key: "id",
         },
-        allowNull: false,
+        allowNull: true,
       },
       status: DataTypes.INTEGER,
-      createdAt: DataTypes.INTEGER,
-      updatedAt: DataTypes.INTEGER,
     },
     {
       sequelize,
