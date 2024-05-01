@@ -19,6 +19,14 @@ function Sidebar({ tab, setTab }) {
       >
         Đổi mật khẩu
       </div>
+      <div
+        className={`font-bold relative uppercase py-4 border-b-2 before:bottom-0 cursor-pointer hover:text-pink-400 ${
+          tab === 3 && "text-primary"
+        }`}
+        onClick={() => setTab(3)}
+      >
+        Thông tin đơn hàng
+      </div>
     </div>
   );
 }

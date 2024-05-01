@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { Spin } from "antd";
 
 import { useGetUserQuery } from "app/api/userService";
-
+import ListOrder from "../components/ListOrder";
 function UserInfor() {
   const [tab, setTab] = useState(1);
   const { accessToken } = useSelector((state) => state.auth);
@@ -29,6 +29,7 @@ function UserInfor() {
           <Col span={19}>
             {tab === 1 && <InforForm data={data} />}
             {tab === 2 && <PasswordForm />}
+            {tab === 3 && <ListOrder />}
           </Col>
         </Row>
       </div>

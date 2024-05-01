@@ -10,6 +10,14 @@ export const orderService = apiService.injectEndpoints({
       providesTags: ["order"],
     }),
 
+    getUserOrders: builder.query({
+      query: (headers) => ({
+        url: `orders/user`,
+        headers,
+      }),
+      providesTags: ["order"],
+    }),
+
     updateOrder: builder.mutation({
       query: ({ data, headers, id }) => ({
         url: `orders/${id}`,
@@ -46,4 +54,5 @@ export const {
   useUserCreateOrderMutation,
   useGetAllOrdersQuery,
   useUpdateOrderMutation,
+  useGetUserOrdersQuery,
 } = orderService;

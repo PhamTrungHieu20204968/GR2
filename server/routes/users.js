@@ -38,4 +38,5 @@ router.put(
   validateToken,
   usersController.updateUser
 );
+router.delete("/:id", validateToken, usersController.deleteUser);
 module.exports = router;

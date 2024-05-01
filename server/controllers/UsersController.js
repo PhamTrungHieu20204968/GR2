@@ -210,6 +210,24 @@ class UsersController {
       }
     });
   }
+
+  // [DELETE] /:id
+  async deleteUser(req, res) {
+    const id = parseInt(req.params.id);
+    if (req.user.role < 2 && req.user.id !== id) {
+      return res.json({
+        error: "Bạn không đủ quyền thực hiện chức năng này!",
+      });
+    }
+    try {
+      await users.destroy({
+        where: { id },
+      });
+      return res.json("Xóa thành công!")
+    } catch (error) {
+      return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+    }
+  }
 }
 
 module.exports = new UsersController();

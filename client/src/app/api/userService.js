@@ -47,6 +47,15 @@ export const UserService = apiService.injectEndpoints({
       }),
       invalidatesTags: ["user"],
     }),
+
+    deleteUser: builder.mutation({
+      query: ({ headers, id }) => ({
+        url: `users/${id}`,
+        method: "DELETE",
+        headers,
+      }),
+      invalidatesTags: ["user"],
+    }),
   }),
 });
 
@@ -55,4 +64,5 @@ export const {
   useGetUserQuery,
   useUpdateUserMutation,
   useUpdateUserPasswordMutation,
+  useDeleteUserMutation,
 } = UserService;

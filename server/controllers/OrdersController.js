@@ -34,6 +34,30 @@ class OrdersController {
     }
   }
 
+  // [GET] /user
+  async getUserOrder(req, res) {
+    try {
+      const List = await orders.findAll({
+        where: { userId: req.user.id },
+        include: [
+          {
+            model: orderItems,
+            include: [
+              {
+                model: products,
+                attributes: ["name", "price"],
+              },
+            ],
+          },
+        ],
+      });
+      return res.json(List);
+    } catch (error) {
+      console.log(error);
+      return res.status(403).json({ error });
+    }
+  }
+
   // [PUT] /:id
   async updateOrder(req, res) {
     if (req.user.role < 2) {
