@@ -85,6 +85,7 @@ export default function Paypal({
     >
       <PayPalScriptProvider
         options={{ clientId: "test", components: "buttons", currency: "USD" }}
+        deferLoading={true}
       >
         <ButtonWrapper
           currency={"USD"}

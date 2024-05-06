@@ -5,8 +5,9 @@ const {
   products,
   users,
   sales,
+  notifications,
 } = require("../models");
-
+const { Op } = require("sequelize");
 class OrdersController {
   // [GET] /
   async getAllOrders(req, res) {
@@ -15,6 +16,7 @@ class OrdersController {
     }
     try {
       const List = await orders.findAll({
+        where: { type: { [Op.gt]: 0 } },
         include: [
           {
             model: orderItems,
@@ -38,7 +40,7 @@ class OrdersController {
   async getUserOrder(req, res) {
     try {
       const List = await orders.findAll({
-        where: { userId: req.user.id },
+        where: { userId: req.user.id, type: { [Op.gt]: 0 } },
         include: [
           {
             model: orderItems,
@@ -165,6 +167,7 @@ class OrdersController {
       cart,
       point,
       voucher,
+      sendTime,
     } = req.body;
     const userId = req.user.id;
     try {
@@ -206,12 +209,29 @@ class OrdersController {
           _voucher.destroy();
         } else _voucher.update({ quantity: _voucher.quantity - 1 });
       }
-
-      await users.update(
-        { address, city, telephone, email, name: fullName, point },
-        { where: { id: userId } }
-      );
-      return res.status(200).json("Tạo thành công");
+      if (type > 0) {
+        await users.update(
+          { address, city, telephone, email, name: fullName, point },
+          { where: { id: userId } }
+        );
+      }
+      let notification;
+      if (sendTime) {
+        notification = await notifications.create({
+          sendTime,
+          repeatTime: sendTime,
+          type: 0,
+          status: 0,
+          orderId: _order.id,
+          receiverId: userId,
+          content: "Bạn có lời nhắc đặt hàng",
+        });
+      }
+      return res
+        .status(200)
+        .json(
+          notification ? { notification, order: _order } : "Tạo thành công"
+        );
     } catch (error) {
       console.log(error);
       return res.status(403).json({ error });

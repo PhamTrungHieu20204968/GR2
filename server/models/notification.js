@@ -47,6 +47,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       content: DataTypes.STRING,
       type: DataTypes.INTEGER,
+      sendTime: DataTypes.STRING,
+      repeatTime: DataTypes.STRING,
       blogId: {
         type: DataTypes.INTEGER,
         references: {

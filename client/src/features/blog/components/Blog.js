@@ -59,7 +59,7 @@ function Blog({ blog }) {
             message.error(res.data.error);
           } else {
             setLiked(true);
-            socket.emit("new-notification", {
+            socket?.emit("new-notification", {
               receiverId: blog.userId,
               content: `${name} đã thích bài viết của bạn`,
               blogId: blog.id,

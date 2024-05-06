@@ -36,7 +36,7 @@ function UserComment({ user, blogId, reply, edit, setEdit, receiverId }) {
           } else {
             setContent("");
             if (userId !== receiverId) {
-              socket.emit("new-notification", {
+              socket?.emit("new-notification", {
                 receiverId,
                 content: reply?.status
                   ? `${name} đã phản hồi 1 bình luận của bạn`

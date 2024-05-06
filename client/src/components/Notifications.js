@@ -8,6 +8,8 @@ import {
   useCreateNotificationMutation,
   useGetUserNotificationsQuery,
   useUpdateSeenNotificationMutation,
+  useUpdateNotificationMutation,
+  useUpdateScheduleNotificationsMutation,
 } from "app/api/notificationService";
 import { socketContext } from "./SocketProvider";
 
@@ -15,20 +17,22 @@ function Notifications() {
   const { accessToken, notificationSetting } = useSelector(
     (state) => state.auth
   );
-  const [list, setList] = useState([]);
   const socket = useContext(socketContext);
   const [create] = useCreateNotificationMutation();
-  const [update] = useUpdateSeenNotificationMutation();
+  const [updateSeen] = useUpdateSeenNotificationMutation();
+  const [updateNotification] = useUpdateNotificationMutation();
+  const [updateScheduleNotifications] =
+    useUpdateScheduleNotificationsMutation();
   const { data } = useGetUserNotificationsQuery({
     headers: {
       accessToken,
     },
   });
+  const [filteredData, setFilteredData] = useState([]);
 
   const handleSeenNotifications = () => {
-    setList(data?.map((item) => ({ ...item, status: 1 })));
     if (data?.filter((item) => item.status === 0)?.length > 0) {
-      update({
+      updateSeen({
         headers: {
           accessToken,
         },
@@ -36,8 +40,6 @@ function Notifications() {
         .then((res) => {
           if (res.data?.error) {
             console.log(res.data?.error);
-          } else {
-            console.log("updated");
           }
         })
         .catch((err) => {
@@ -65,21 +67,96 @@ function Notifications() {
           });
       }
     });
+
+    socket?.on("one-time-notification", (notification) => {
+      updateNotification({
+        data: { type: notification.type },
+        id: notification.notificationId,
+        headers: {
+          accessToken,
+        },
+      })
+        .then((res) => {
+          if (res.data?.error) {
+            console.log(res.data?.error);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+
+    socket?.on("repeat-notification", (notification) => {
+      const currentDate = new Date(notification.sendTime);
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+      const day = String(currentDate.getDate()).padStart(2, "0");
+
+      const formattedDate = `${year}-${month}-${day}`;
+      updateNotification({
+        data: {
+          sendTime: formattedDate,
+        },
+        id: notification.notificationId,
+        headers: {
+          accessToken,
+        },
+      })
+        .then((res) => {
+          if (res.data?.error) {
+            console.log(res.data?.error);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
   }, [socket]);
+
+  useEffect(() => {
+    if (data?.length > 0) {
+      const currentDate = new Date(Date.now());
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+      const day = String(currentDate.getDate()).padStart(2, "0");
+
+      const formattedDate = `${year}-${month}-${day}`;
+      const notificationIds = [];
+      const newData = data?.filter((item) => {
+        if (item.type === 0) {
+          if (item.sendTime <= formattedDate) notificationIds.push(item.id);
+          return false;
+        } else return true;
+      });
+      setFilteredData(newData);
+      if (notificationIds.length > 0) {
+        updateScheduleNotifications({
+          data: notificationIds,
+          headers: {
+            accessToken,
+          },
+        })
+          .then((res) => {
+            if (res.data?.error) {
+              console.log(res.data?.error);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    }
+  }, [data, socket]);
 
   if (!data || data.error) {
     return <></>;
   }
-
   return (
-    <Popover trigger='click' content={<ListNotifications data={data} />}>
-      <Badge
-        count={
-          list.length < 1
-            ? data?.filter((item) => item.status === 0)?.length
-            : data.length - list.length
-        }
-      >
+    <Popover
+      trigger='click'
+      content={<ListNotifications data={filteredData} />}
+    >
+      <Badge count={filteredData?.filter((item) => item.status === 0)?.length}>
         <Tooltip title='Thông báo' placement='bottom' color='#666' zIndex={60}>
           <BellOutlined
             className='text-2xl text-white font-bold cursor-pointer hover:text-primary'

@@ -1,4 +1,6 @@
 const { notifications, users } = require("../models");
+const { Op } = require("sequelize");
+
 class NotificationsController {
   //[GET] /
   async getUserNotifications(req, res) {
@@ -30,6 +32,41 @@ class NotificationsController {
         { status: 1 },
         { where: { receiverId: userId } }
       );
+      return res.json("Thành công!");
+    } catch (error) {
+      console.log(error);
+      return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+    }
+  }
+
+  // [PUT] /:id
+  async updateNotification(req, res) {
+    const id = parseInt(req.params.id);
+    const userId = req.user.id;
+    if (req.user.role < 2 && req.user.id !== userId) {
+      return res.json({
+        error: "Bạn không đủ quyền thực hiện chức năng này!",
+      });
+    }
+    const values = req.body;
+    try {
+      await notifications.update({ ...values }, { where: { id } });
+      return res.json("Thành công!");
+    } catch (error) {
+      console.log(error);
+      return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+    }
+  }
+
+  async updateScheduleNotifications(req, res) {
+    const userId = req.user.id;
+    const ids = req.body;
+    try {
+      await notifications.update(
+        { type: 3 },
+        { where: { receiverId: userId } }
+      );
+      return res.json("Thành công!");
     } catch (error) {
       console.log(error);
       return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });

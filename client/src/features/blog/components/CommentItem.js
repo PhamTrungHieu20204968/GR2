@@ -62,7 +62,7 @@ function CommentItem({ comment, user, setEdit, blogId }) {
           if (res.data?.error) {
             message.error(res.data.error);
           } else {
-            socket.emit("new-notification", {
+            socket?.emit("new-notification", {
               receiverId: comment.userId,
               content: `${name} đã thích bình luận của bạn`,
               blogId,

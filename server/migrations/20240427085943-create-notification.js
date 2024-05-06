@@ -41,6 +41,16 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 0,
       },
+      sendTime: {
+        allowNull: true,
+        type: Sequelize.STRING,
+        defaultValue: "",
+      },
+      repeatTime: {
+        allowNull: true,
+        type: Sequelize.STRING,
+        defaultValue: "",
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
