@@ -52,10 +52,11 @@ function NotifiItem({ notification }) {
       return "Vừa xong";
     }
   }
-
   const hanldeClickNotification = () => {
     if (notification?.blogId) {
       navigate(`/blogs/detail/${notification.blogId}`);
+    } else if (notification?.orderId) {
+      navigate(`/user-pay/${notification.orderId}`);
     }
   };
   return (

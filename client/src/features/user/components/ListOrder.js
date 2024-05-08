@@ -55,7 +55,6 @@ function ListOrder() {
     });
     setIsModalOpen(true);
   };
-
   const handleCancel = () => {
     setIsModalOpen(false);
     setCurrentCart(null);
@@ -75,7 +74,7 @@ function ListOrder() {
       data: {
         ...userInfo,
         totalMoney: totalCost,
-        cart: currentCart,
+        cart: currentCart.map((item) => ({ ...item, id: item.productId })),
         sendTime,
         point: 0,
       },
@@ -343,6 +342,7 @@ function ListOrder() {
               value={sendTime ? dayjs(sendTime, "YYYY-MM-DD") : null}
               size='small'
               minDate={dayjs(dayjs(Date.now()).add(1, "day"), "YYYY-MM-DD")}
+              inputReadOnly
               className='ml-4'
               placeholder='Chọn ngày ...'
             />

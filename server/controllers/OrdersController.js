@@ -60,6 +60,36 @@ class OrdersController {
     }
   }
 
+  // [GET] /:id
+  async getOneOrder(req, res) {
+    const id = parseInt(req.params.id);
+    try {
+      const order = await orders.findOne({
+        where: { id },
+        include: [
+          {
+            model: orderItems,
+            include: [
+              {
+                model: products,
+                attributes: ["name", "price", "salePrice"],
+              },
+            ],
+          },
+          { model: notifications, where: { type: 3 } },
+          {
+            model: users,
+            attributes: ["name", "point"],
+          },
+        ],
+      });
+      return res.status(200).json(order);
+    } catch (error) {
+      console.log(error);
+      return res.status(403).json({ error });
+    }
+  }
+
   // [PUT] /:id
   async updateOrder(req, res) {
     if (req.user.role < 2) {
@@ -76,6 +106,7 @@ class OrdersController {
       status,
       cart,
       userId,
+      point,
     } = req.body;
     const id = parseInt(req.params.id);
     try {
@@ -106,6 +137,9 @@ class OrdersController {
             }
           );
         });
+      }
+      if (point) {
+        await users.update({ point }, { where: { id: userId } });
       }
       return res.status(200).json("Thành công");
     } catch (error) {

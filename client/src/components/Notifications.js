@@ -1,4 +1,4 @@
-import { Badge, Popover, Tooltip } from "antd";
+import { Badge, Popover, Tooltip, notification } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { BellOutlined } from "@ant-design/icons";
@@ -10,6 +10,7 @@ import {
   useUpdateSeenNotificationMutation,
   useUpdateNotificationMutation,
   useUpdateScheduleNotificationsMutation,
+  useDeleteNotificationMutation,
 } from "app/api/notificationService";
 import { socketContext } from "./SocketProvider";
 
@@ -21,6 +22,7 @@ function Notifications() {
   const [create] = useCreateNotificationMutation();
   const [updateSeen] = useUpdateSeenNotificationMutation();
   const [updateNotification] = useUpdateNotificationMutation();
+  const [deleteNotification] = useDeleteNotificationMutation();
   const [updateScheduleNotifications] =
     useUpdateScheduleNotificationsMutation();
   const { data } = useGetUserNotificationsQuery({
@@ -106,6 +108,23 @@ function Notifications() {
           if (res.data?.error) {
             console.log(res.data?.error);
           }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+
+    socket?.on("delete-notificationId", (notification) => {
+      deleteNotification({
+        id: notification.id,
+      })
+        .then((res) => {
+          if (res.data?.error) {
+            console.log(res.data?.error);
+          } else
+            setFilteredData((prev) =>
+              prev?.filter((item) => item.id !== notification.id)
+            );
         })
         .catch((err) => {
           console.log(err);

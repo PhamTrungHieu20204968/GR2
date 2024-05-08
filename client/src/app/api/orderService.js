@@ -18,6 +18,14 @@ export const orderService = apiService.injectEndpoints({
       providesTags: ["order"],
     }),
 
+    getOneOrder: builder.query({
+      query: ({ headers, id }) => ({
+        url: `orders/${id}`,
+        headers,
+      }),
+      providesTags: ["order"],
+    }),
+
     updateOrder: builder.mutation({
       query: ({ data, headers, id }) => ({
         url: `orders/${id}`,
@@ -55,4 +63,5 @@ export const {
   useGetAllOrdersQuery,
   useUpdateOrderMutation,
   useGetUserOrdersQuery,
+  useGetOneOrderQuery,
 } = orderService;

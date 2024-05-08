@@ -48,6 +48,14 @@ export const notificationService = apiService.injectEndpoints({
       }),
       invalidatesTags: ["notification"],
     }),
+
+    deleteNotification: builder.mutation({
+      query: ({ id }) => ({
+        url: `notifications/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["notification"],
+    }),
   }),
 });
 
@@ -57,4 +65,5 @@ export const {
   useUpdateSeenNotificationMutation,
   useUpdateNotificationMutation,
   useUpdateScheduleNotificationsMutation,
+  useDeleteNotificationMutation,
 } = notificationService;

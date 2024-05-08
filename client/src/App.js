@@ -14,6 +14,7 @@ import ProductDetail from "features/products/pages/ProductDetail";
 import GoogleLoginSuccess from "features/auth/pages/GoogleLoginSuccess";
 import Cart from "features/pay/pages/PayCart";
 import Pay from "features/pay/pages/PayForm";
+import UserPay from "features/pay/pages/UserPay";
 import Blogs from "features/blog/pages/Blogs";
 import BlogDetail from "features/blog/pages/BlogDetail";
 import UpdateBlog from "features/blog/pages/UpdateBlog";
@@ -37,6 +38,7 @@ function App() {
           <Route path='/signup' element={<Signup />} />
           <Route path='/cart' element={<Cart />} />
           <Route path='/pay' element={<Pay />} />
+          <Route path='/user-pay/:id' element={<UserPay />} />
           <Route path='/blogs' element={<Blogs />} />
           <Route path='/blogs/detail/:id' element={<BlogDetail />} />
           <Route path='/blogs/:id' element={<UpdateBlog />} />

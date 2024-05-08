@@ -92,6 +92,18 @@ class NotificationsController {
       return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
     }
   }
+
+  // [DELETE] /:id
+  async deleteNotification(req, res) {
+    const id = parseInt(req.params.id);
+    try {
+      await notifications.destroy({ where: { id } });
+      return res.json("Thành công!");
+    } catch (error) {
+      console.log(error);
+      return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+    }
+  }
 }
 
 module.exports = new NotificationsController();

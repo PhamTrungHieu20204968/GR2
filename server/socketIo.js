@@ -59,13 +59,22 @@ exports.connectSocket = (server) => {
           0,
           0
         );
-        console.log(receiver);
         const job = schedule.scheduleJob(date, function () {
           io.sockets
             .to(receiver)
             .emit("one-time-notification", { ...notification });
         });
       }
+    });
+
+    socket.on("delete-notification", (notification) => {
+      onlineUsers.forEach((user) => {
+        if (user.id === notification.receiverId) {
+          io.sockets
+            .to(user.socketId)
+            .emit("delete-notificationId", { ...notification });
+        }
+      });
     });
 
     socket.on("disconnect", () => {

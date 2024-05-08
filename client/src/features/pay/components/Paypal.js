@@ -3,7 +3,7 @@ import {
   PayPalButtons,
   usePayPalScriptReducer,
 } from "@paypal/react-paypal-js";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 // This value is from the props in the UI
 const style = { layout: "vertical" };
@@ -17,8 +17,10 @@ const ButtonWrapper = ({
   accessToken,
   userCreateOrder,
   guestCreateOrder,
+  updateOrder,
 }) => {
   const [{ isPending, options }, dispatch] = usePayPalScriptReducer();
+  const [amountValue, setAmountValue] = useState(amount / payload.payType);
 
   useEffect(() => {
     dispatch({
@@ -28,7 +30,8 @@ const ButtonWrapper = ({
         currency,
       },
     });
-  }, [currency, showSpinner]);
+    setAmountValue(amount / payload.payType);
+  }, [currency, showSpinner, payload]);
   return (
     <>
       {showSpinner && isPending && <div className='spinner' />}
@@ -44,7 +47,7 @@ const ButtonWrapper = ({
                 {
                   amount: {
                     currency_code: currency,
-                    value: amount / payload.payType,
+                    value: amountValue,
                   },
                 },
               ],
@@ -56,7 +59,8 @@ const ButtonWrapper = ({
             if (response.status === "COMPLETED") {
               const values = payload.form.getFieldsValue(true);
               if (accessToken) {
-                userCreateOrder(values, 1);
+                if (updateOrder) updateOrder(values, 1);
+                else userCreateOrder(values, 1);
               } else {
                 guestCreateOrder(values, 1);
               }
@@ -74,6 +78,7 @@ export default function Paypal({
   accessToken,
   userCreateOrder,
   guestCreateOrder,
+  updateOrder = null,
 }) {
   return (
     <div
@@ -95,6 +100,7 @@ export default function Paypal({
           accessToken={accessToken}
           guestCreateOrder={guestCreateOrder}
           userCreateOrder={userCreateOrder}
+          updateOrder={updateOrder}
         />
       </PayPalScriptProvider>
     </div>
