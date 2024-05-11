@@ -85,7 +85,11 @@ function NotifiItem({ notification }) {
       <div className='flex-1'>
         <div className=''>{notification?.content}</div>
         <div className='text-gray-400 text-xs'>
-          {timeAgoOrDateTime(notification?.createdAt)}
+          {timeAgoOrDateTime(
+            notification?.sendTime
+              ? notification?.sendTime
+              : notification?.createdAt
+          )}
         </div>
       </div>
     </div>

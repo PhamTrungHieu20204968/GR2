@@ -68,6 +68,7 @@ exports.connectSocket = (server) => {
     });
 
     socket.on("delete-notification", (notification) => {
+      console.log(notification);
       onlineUsers.forEach((user) => {
         if (user.id === notification.receiverId) {
           io.sockets

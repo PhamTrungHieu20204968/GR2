@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { Row, Col } from "antd";
+import { Spin } from "antd";
+import { useSelector } from "react-redux";
 
 import Layout from "components/Layout";
 import SideBar from "../components/Sidebar";
 import InforForm from "../components/InforForm";
 import PasswordForm from "../components/PasswordForm";
-import { useSelector } from "react-redux";
-import { Spin } from "antd";
+import ListOrder from "../components/ListOrder";
+import Remind from "../components/Remind";
 
 import { useGetUserQuery } from "app/api/userService";
-import ListOrder from "../components/ListOrder";
 function UserInfor() {
   const [tab, setTab] = useState(1);
   const { accessToken } = useSelector((state) => state.auth);
@@ -30,6 +31,7 @@ function UserInfor() {
             {tab === 1 && <InforForm data={data} />}
             {tab === 2 && <PasswordForm />}
             {tab === 3 && <ListOrder />}
+            {tab === 4 && <Remind />}
           </Col>
         </Row>
       </div>

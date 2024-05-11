@@ -34,9 +34,7 @@ function UserPay() {
     if (payType < 3) {
       setFlag(1);
       return;
-    }
-
-    if (accessToken) {
+    } else if (accessToken) {
       update({
         id: params.id,
         headers: {
@@ -44,6 +42,7 @@ function UserPay() {
         },
         data: {
           ...values,
+          fullName: values.name,
           totalMoney: data?.totalMoney,
           userId: data?.userId,
           cart: data?.orderItems,

@@ -27,6 +27,14 @@ function Sidebar({ tab, setTab }) {
       >
         Thông tin đơn hàng
       </div>
+      <div
+        className={`font-bold relative uppercase py-4 border-b-2 before:bottom-0 cursor-pointer hover:text-pink-400 ${
+          tab === 4 && "text-primary"
+        }`}
+        onClick={() => setTab(4)}
+      >
+        Danh sách lời nhắc
+      </div>
     </div>
   );
 }

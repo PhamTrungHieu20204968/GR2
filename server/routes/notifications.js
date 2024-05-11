@@ -11,6 +11,8 @@ router.put(
 router.put("/:id", validateToken, notificationsController.updateNotification);
 router.put("/", validateToken, notificationsController.updateSeenNotification);
 router.post("/", validateToken, notificationsController.createNotification);
+router.get("/remind", validateToken, notificationsController.getUserRemind);
 router.get("/", validateToken, notificationsController.getUserNotifications);
+router.delete("/remind/:orderId", notificationsController.deleteRemind);
 router.delete("/:id", notificationsController.deleteNotification);
 module.exports = router;

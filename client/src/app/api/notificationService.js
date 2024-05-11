@@ -10,6 +10,14 @@ export const notificationService = apiService.injectEndpoints({
       providesTags: ["notification"],
     }),
 
+    getUserRemind: builder.query({
+      query: ({ headers }) => ({
+        url: `notifications/remind`,
+        headers,
+      }),
+      providesTags: ["notification", "order"],
+    }),
+
     createNotification: builder.mutation({
       query: ({ data, headers }) => ({
         url: `notifications/`,
@@ -56,14 +64,24 @@ export const notificationService = apiService.injectEndpoints({
       }),
       invalidatesTags: ["notification"],
     }),
+
+    deleteRemind: builder.mutation({
+      query: ({ id }) => ({
+        url: `notifications/remind/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["notification"],
+    }),
   }),
 });
 
 export const {
   useCreateNotificationMutation,
   useGetUserNotificationsQuery,
+  useGetUserRemindQuery,
   useUpdateSeenNotificationMutation,
   useUpdateNotificationMutation,
   useUpdateScheduleNotificationsMutation,
   useDeleteNotificationMutation,
+  useDeleteRemindMutation,
 } = notificationService;

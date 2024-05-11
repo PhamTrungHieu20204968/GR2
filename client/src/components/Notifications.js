@@ -22,7 +22,6 @@ function Notifications() {
   const [create] = useCreateNotificationMutation();
   const [updateSeen] = useUpdateSeenNotificationMutation();
   const [updateNotification] = useUpdateNotificationMutation();
-  const [deleteNotification] = useDeleteNotificationMutation();
   const [updateScheduleNotifications] =
     useUpdateScheduleNotificationsMutation();
   const { data } = useGetUserNotificationsQuery({
@@ -114,22 +113,6 @@ function Notifications() {
         });
     });
 
-    socket?.on("delete-notificationId", (notification) => {
-      deleteNotification({
-        id: notification.id,
-      })
-        .then((res) => {
-          if (res.data?.error) {
-            console.log(res.data?.error);
-          } else
-            setFilteredData((prev) =>
-              prev?.filter((item) => item.id !== notification.id)
-            );
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    });
   }, [socket]);
 
   useEffect(() => {
@@ -142,7 +125,7 @@ function Notifications() {
       const formattedDate = `${year}-${month}-${day}`;
       const notificationIds = [];
       const newData = data?.filter((item) => {
-        if (item.type === 0) {
+        if (item.type === 0 && !item.sendTime.includes("*")) {
           if (item.sendTime <= formattedDate) notificationIds.push(item.id);
           return false;
         } else return true;

@@ -5,36 +5,57 @@ import {
   Modal,
   Segmented,
   Select,
-  Spin,
   Table,
   message,
 } from "antd";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import dayjs from "dayjs";
+import { Link } from "react-router-dom";
 
 import {
-  useGetUserOrdersQuery,
-  useUserCreateOrderMutation,
-} from "app/api/orderService";
-import { socketContext } from "components/SocketProvider";
-function ListOrder() {
-  const { accessToken, userId } = useSelector((state) => state.auth);
-  const { data, isLoading } = useGetUserOrdersQuery({
-    accessToken,
-  });
-  const socket = useContext(socketContext);
+  useDeleteRemindMutation,
+  useGetUserRemindQuery,
+} from "app/api/notificationService";
+function Remind() {
+  const { accessToken, notificationSetting } = useSelector(
+    (state) => state.auth
+  );
   const [currentCart, setCurrentCart] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
-  const [userCreate] = useUserCreateOrderMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tab, setTab] = useState(1);
   const [sendTime, setSendTime] = useState("");
-  if (isLoading) {
-    return <Spin />;
-  }
-  const handleReOrder = (row) => {
+  const [deleteRemind] = useDeleteRemindMutation();
+  const { data } = useGetUserRemindQuery({
+    headers: {
+      accessToken,
+    },
+  });
+
+  const handleDeleteRemind = (id) => {
+    deleteRemind({
+      id,
+    })
+      .then((res) => {
+        if (res.data?.error) {
+          console.log(res.data?.error);
+        } else message.success("Thành công");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    setCurrentCart(null);
+    setUserInfo(null);
+    setTab(1);
+    setSendTime("");
+  };
+
+  const handleUpdateRemind = (row) => {
     setCurrentCart(
       row?.orderItems.map((item) => ({
         ...item,
@@ -55,13 +76,7 @@ function ListOrder() {
     });
     setIsModalOpen(true);
   };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    setCurrentCart(null);
-    setUserInfo(null);
-    setTab(1);
-    setSendTime("");
-  };
+
   const handleOk = () => {
     if (!sendTime) {
       message.error("Vui lòng chọn thời gian!");
@@ -70,98 +85,43 @@ function ListOrder() {
     const totalCost = currentCart.reduce((total, item) => {
       return total + parseInt(item.price) * item.orderQuantity;
     }, 0);
-    userCreate({
-      data: {
-        ...userInfo,
-        totalMoney: totalCost,
-        cart: currentCart.map((item) => ({ ...item, id: item.productId })),
-        sendTime,
-        point: 0,
-      },
-      headers: {
-        accessToken,
-      },
-    })
-      .then((res) => {
-        if (res.data?.error) {
-          message.error(res.data.error);
-        } else {
-          message.success("Tạo thành công!");
-          socket?.emit("schedule-notification", {
-            receiverId: userId,
-            notificationId: res.data.notification.id,
-            orderId: res.data.order.id,
-            type: 3,
-            sendTime,
-            repeatTime: sendTime,
-          });
-          handleCancel();
-        }
-      })
-      .catch((err) => {
-        message.error("Tạo thất bại!");
-        console.log(err);
-      });
   };
+
+  const decodeCronString = (cronString) => {
+    const arr = cronString.split(" ") || [];
+    if (arr[2].includes("*")) {
+      const res = arr[4]
+        .split(",")
+        .sort()
+        .reduce((str, item, i) => {
+          if (item === "0") {
+            return i === 0 ? str + "Chủ nhật" : str + ",Chủ nhật";
+          } else
+            return i === 0
+              ? str + "Thứ " + (parseInt(item) + 1)
+              : str + ",Thứ " + (parseInt(item) + 1);
+        }, "");
+
+      return res + " hàng tuần";
+    } else {
+      return `Ngày ${arr[2]} hàng tháng`;
+    }
+  };
+
   const columns = [
     {
-      title: "Địa chỉ",
-      width: 200,
-      key: "address",
-      render: (_, record) => `${record?.address} - ${record?.city}`,
+      title: "Thời gian nhận",
+      key: "sendTime",
+      dataIndex: "sendTime",
     },
     {
-      title: "Giá",
-      key: "totalMoney",
-      render: (_, record) =>
-        parseInt(record?.totalMoney).toLocaleString("vi", {
-          style: "currency",
-          currency: "VND",
-        }),
-      sorter: (a, b) => a.totalMoney - b.totalMoney,
-      width: 150,
-    },
-    {
-      title: "Ghi chú",
-      key: "note",
-      render: (_, record) => record?.note || "Không có",
-      width: 200,
-    },
-    {
-      title: "Trạng thái",
-      key: "status",
-      width: 120,
-      filters: [
-        {
-          text: "Đang xử lý",
-          value: 1,
-        },
-        {
-          text: "Đang giao hàng",
-          value: 2,
-        },
-        {
-          text: "Đã hoàn thành",
-          value: 3,
-        },
-      ],
-      onFilter: (value, record) => record?.status === value,
+      title: "Thời gian lặp",
+      key: "repeatTime",
       render: (_, record) => {
-        if (record?.status < 2) {
-          return "Đang xử lý";
-        } else if (record?.status < 3) {
-          return "Đang giao hàng";
-        } else return "Đã hoàn thành";
+        if (record.repeatTime.includes("*")) {
+          return decodeCronString(record.repeatTime);
+        } else return "1 lần";
       },
-    },
-    {
-      title: "Loại",
-      key: "type",
-      render: (_, record) =>
-        (record.type === 1 && "Thanh toán toàn bộ đơn hàng") ||
-        (record.type === 2 && "Thanh toán 50% đơn hàng") ||
-        (record.type === 3 && "Thanh toán khi nhận hàng"),
-      width: 120,
     },
 
     {
@@ -171,45 +131,25 @@ function ListOrder() {
       width: 120,
       render: (_, record) => {
         return (
-          <Button type='primary' onClick={() => handleReOrder(record)}>
-            Tạo lời nhắc
-          </Button>
+          <div className='flex gap-4'>
+            <Button
+              type='primary'
+              onClick={() => handleUpdateRemind(record?.order)}
+            >
+              Sửa
+            </Button>
+            <Button
+              type='primary'
+              danger
+              onClick={() => handleDeleteRemind(record.order.id)}
+            >
+              Xóa
+            </Button>
+          </div>
         );
       },
     },
   ];
-  const expandedRowRender = (row) => {
-    const columns = [
-      {
-        title: "Tên sản phẩm",
-        key: "name",
-        width: "50%",
-        render: (_, record) => record.product.name,
-      },
-      {
-        title: "Giá",
-        key: "price",
-        render: (_, record) =>
-          parseInt(record.product.price).toLocaleString("vi", {
-            style: "currency",
-            currency: "VND",
-          }),
-      },
-      {
-        title: "Số lượng",
-        dataIndex: "quantity",
-        key: "quantity",
-      },
-    ];
-    return (
-      <Table
-        columns={columns}
-        dataSource={row.orderItems.map((item) => ({ ...item, key: item.id }))}
-        pagination={false}
-        size='small'
-      />
-    );
-  };
 
   const cartColumns = [
     {
@@ -286,16 +226,53 @@ function ListOrder() {
       },
     },
   ];
+
+  const expandedRowRender = (row) => {
+    const columns = [
+      {
+        title: "Tên sản phẩm",
+        key: "name",
+        width: "50%",
+        render: (_, record) => record.product.name,
+      },
+      {
+        title: "Giá",
+        key: "price",
+        render: (_, record) =>
+          parseInt(record.product.price).toLocaleString("vi", {
+            style: "currency",
+            currency: "VND",
+          }),
+      },
+      {
+        title: "Số lượng",
+        dataIndex: "quantity",
+        key: "quantity",
+      },
+    ];
+    return (
+      <Table
+        columns={columns}
+        dataSource={row?.order?.orderItems?.map((item) => ({
+          ...item,
+          key: item.id,
+        }))}
+        pagination={false}
+        size='small'
+      />
+    );
+  };
+
+  if (!data || data.error) {
+    return <></>;
+  }
   return (
-    <div className=''>
-      <div className='text-2xl font-bold mb-4'>Danh sách đơn hàng</div>
+    <div>
+      <div className='text-2xl font-bold mb-4'>Danh sách lời nhắc</div>
 
       <Table
         columns={columns}
         dataSource={data?.map((item) => ({ ...item, key: item.id }))}
-        scroll={{
-          x: 1000,
-        }}
         expandable={{
           expandedRowRender,
         }}
@@ -545,4 +522,4 @@ function ListOrder() {
   );
 }
 
-export default ListOrder;
+export default Remind;
