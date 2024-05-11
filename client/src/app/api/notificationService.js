@@ -47,6 +47,16 @@ export const notificationService = apiService.injectEndpoints({
       invalidatesTags: ["notification"],
     }),
 
+    updateRemind: builder.mutation({
+      query: ({ data, headers, id }) => ({
+        url: `notifications/update-remind/${id}`,
+        method: "PUT",
+        body: data,
+        headers,
+      }),
+      invalidatesTags: ["notification"],
+    }),
+
     updateScheduleNotifications: builder.mutation({
       query: ({ data, headers }) => ({
         url: `notifications/schedule-notifications`,
@@ -81,6 +91,7 @@ export const {
   useGetUserRemindQuery,
   useUpdateSeenNotificationMutation,
   useUpdateNotificationMutation,
+  useUpdateRemindMutation,
   useUpdateScheduleNotificationsMutation,
   useDeleteNotificationMutation,
   useDeleteRemindMutation,

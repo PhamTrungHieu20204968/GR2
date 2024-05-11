@@ -87,7 +87,7 @@ function NotifiItem({ notification }) {
         <div className='text-gray-400 text-xs'>
           {timeAgoOrDateTime(
             notification?.sendTime
-              ? notification?.sendTime
+              ? notification?.sendTime + " 00:00:00"
               : notification?.createdAt
           )}
         </div>

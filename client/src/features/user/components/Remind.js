@@ -8,7 +8,7 @@ import {
   Table,
   message,
 } from "antd";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
@@ -16,17 +16,19 @@ import { Link } from "react-router-dom";
 import {
   useDeleteRemindMutation,
   useGetUserRemindQuery,
+  useUpdateRemindMutation,
 } from "app/api/notificationService";
+import { socketContext } from "components/SocketProvider";
 function Remind() {
-  const { accessToken, notificationSetting } = useSelector(
-    (state) => state.auth
-  );
+  const { accessToken, userId } = useSelector((state) => state.auth);
   const [currentCart, setCurrentCart] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tab, setTab] = useState(1);
   const [sendTime, setSendTime] = useState("");
   const [deleteRemind] = useDeleteRemindMutation();
+  const [updateRemind] = useUpdateRemindMutation();
+  const socket = useContext(socketContext);
   const { data } = useGetUserRemindQuery({
     headers: {
       accessToken,
@@ -52,10 +54,10 @@ function Remind() {
     setCurrentCart(null);
     setUserInfo(null);
     setTab(1);
-    setSendTime("");
+    setSendTime(null);
   };
 
-  const handleUpdateRemind = (row) => {
+  const handleUpdateRemind = (row, _sendTime, _repeatTime) => {
     setCurrentCart(
       row?.orderItems.map((item) => ({
         ...item,
@@ -70,10 +72,31 @@ function Remind() {
       city: row.city,
       telephone: row.telephone,
       email: row.email,
+      userId: row.userId,
       totalMoney: 0,
       type: 0,
       status: 0,
+      orderId: row.id,
     });
+    if (_repeatTime.includes("*")) {
+      if (_repeatTime[4] === "*") {
+        setSendTime(
+          _repeatTime
+            .split(" ")[4]
+            .split(",")
+            .map((item) => +item)
+        );
+        setTab(2);
+      } else {
+        setSendTime(
+          _repeatTime
+            .split(" ")[2]
+            .split(",")
+            .map((item) => +item)
+        );
+        setTab(3);
+      }
+    } else setSendTime(_sendTime);
     setIsModalOpen(true);
   };
 
@@ -85,6 +108,38 @@ function Remind() {
     const totalCost = currentCart.reduce((total, item) => {
       return total + parseInt(item.price) * item.orderQuantity;
     }, 0);
+
+    updateRemind({
+      data: {
+        order: { ...userInfo, totalMoney: totalCost },
+        cart: currentCart.map((item) => ({ ...item, id: item.productId })),
+        sendTime,
+      },
+      id: userInfo.orderId,
+      headers: {
+        accessToken,
+      },
+    })
+      .then((res) => {
+        if (res.data?.error) {
+          message.error(res.data.error);
+        } else {
+          message.success("Tạo thành công!");
+          socket?.emit("schedule-notification", {
+            receiverId: userId,
+            notificationId: res.data.notification.id,
+            orderId: res.data.order.id,
+            type: 3,
+            sendTime,
+            repeatTime: sendTime,
+          });
+          handleCancel();
+        }
+      })
+      .catch((err) => {
+        message.error("Tạo thất bại!");
+        console.log(err);
+      });
   };
 
   const decodeCronString = (cronString) => {
@@ -134,7 +189,13 @@ function Remind() {
           <div className='flex gap-4'>
             <Button
               type='primary'
-              onClick={() => handleUpdateRemind(record?.order)}
+              onClick={() =>
+                handleUpdateRemind(
+                  record?.order,
+                  record.sendTime,
+                  record.repeatTime
+                )
+              }
             >
               Sửa
             </Button>
@@ -281,7 +342,7 @@ function Remind() {
         title='Tạo lời nhắc cho đơn hàng'
         open={isModalOpen}
         onOk={handleOk}
-        okText='Tạo lời nhắc'
+        okText='Sửa lời nhắc'
         cancelText='Hủy'
         onCancel={handleCancel}
       >
@@ -298,7 +359,7 @@ function Remind() {
           }}
           onChange={(value) => {
             setTab(value);
-            setSendTime("");
+            setSendTime(null);
           }}
           value={tab}
           options={[
@@ -316,7 +377,7 @@ function Remind() {
                   setSendTime(value?.format("YYYY-MM-DD"));
                 } else setSendTime("");
               }}
-              value={sendTime ? dayjs(sendTime, "YYYY-MM-DD") : null}
+              defaultValue={tab === 1 ? sendTime : null}
               size='small'
               minDate={dayjs(dayjs(Date.now()).add(1, "day"), "YYYY-MM-DD")}
               inputReadOnly
@@ -334,6 +395,7 @@ function Remind() {
               allowClear
               placement='topRight'
               className='ml-4 flex-1'
+              defaultValue={tab === 2 ? sendTime : []}
               onChange={(value) => {
                 if (value) {
                   setSendTime(`0 0 * * ${value.join(",")}`);
@@ -380,6 +442,7 @@ function Remind() {
               mode='multiple'
               allowClear
               className='ml-4 flex-1'
+              defaultValue={tab === 3 ? sendTime : []}
               onChange={(value) => {
                 if (value) {
                   const sortedValue = value?.sort(function (a, b) {

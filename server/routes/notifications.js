@@ -8,6 +8,11 @@ router.put(
   validateToken,
   notificationsController.updateScheduleNotifications
 );
+router.put(
+  "/update-remind/:orderId",
+  validateToken,
+  notificationsController.updateRemind
+);
 router.put("/:id", validateToken, notificationsController.updateNotification);
 router.put("/", validateToken, notificationsController.updateSeenNotification);
 router.post("/", validateToken, notificationsController.createNotification);

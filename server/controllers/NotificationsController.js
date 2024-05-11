@@ -111,6 +111,57 @@ class NotificationsController {
     }
   }
 
+  // [PUT] /update-remind/:orderId
+  async updateRemind(req, res) {
+    const id = parseInt(req.params.orderId);
+    const userId = req.user.id;
+    if (req.user.role < 2 && req.user.id !== userId) {
+      return res.json({
+        error: "Bạn không đủ quyền thực hiện chức năng này!",
+      });
+    }
+    const { order, cart, sendTime } = req.body;
+    try {
+      const newOrder = await orders.create({
+        address: order.address,
+        fullName: order.fullName,
+        city: order.city,
+        telephone: order.telephone,
+        email: order.email,
+        totalMoney: order.totalMoney,
+        type: order.type,
+        userId: order.userId,
+        status: order.status,
+      });
+
+      cart.map(async (item) => {
+        await orderItems.create({
+          quantity: item.orderQuantity,
+          productId: item.productId,
+          orderId: newOrder.id,
+        });
+      });
+
+      const newNotification = await notifications.create({
+        sendTime: sendTime,
+        repeatTime: sendTime,
+        type: 0,
+        status: 0,
+        orderId: newOrder.id,
+        receiverId: userId,
+        content: "Bạn có lời nhắc đặt hàng",
+      });
+
+      await orders.destroy({
+        where: { id },
+      });
+      return res.json({ notification: newNotification, order: newOrder });
+    } catch (error) {
+      console.log(error);
+      return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+    }
+  }
+
   // [POST] /
   async createNotification(req, res) {
     const userId = req.user.id;
@@ -153,7 +204,7 @@ class NotificationsController {
         await _notification.destroy();
         return res.json("Thành công!");
       }
-      
+
       if (!_notification) {
         return res.json("Thông báo không tồn tại!");
       } else {

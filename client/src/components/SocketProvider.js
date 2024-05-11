@@ -23,7 +23,6 @@ function SocketProvider({ children }) {
     }
 
     socket?.on("delete-notificationId", (notification) => {
-      console.log("deleting...");
       deleteNotification({
         id: notification.id,
       })
