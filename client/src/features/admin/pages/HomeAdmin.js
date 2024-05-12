@@ -15,7 +15,7 @@ const { Search } = Input;
 
 const HomeAdmin = () => {
   const [searchValue, setSearchValue] = useState("");
-  const { accessToken, userId } = useSelector((state) => state.auth);
+  const { accessToken } = useSelector((state) => state.auth);
   const { data, isError, isLoading } = useGetAllUserQuery({
     accessToken,
   });

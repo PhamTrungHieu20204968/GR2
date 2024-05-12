@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
 import { Row, Col, Spin } from "antd";
 import { Link } from "react-router-dom";
@@ -9,7 +9,7 @@ import CreateBlog from "../components/CreateBlog";
 import { useGetBlogQuery } from "app/api/blogService";
 function UpdateBlog() {
   const params = useParams();
-  const { accessToken, userId } = useSelector((state) => state.auth);
+  const { accessToken } = useSelector((state) => state.auth);
   const { data } = useGetBlogQuery({ id: params.id });
   if (!data || data.error) {
     return <Spin />;

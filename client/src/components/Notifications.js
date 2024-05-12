@@ -1,4 +1,4 @@
-import { Badge, Popover, Tooltip, notification } from "antd";
+import { Badge, Popover, Tooltip } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { BellOutlined } from "@ant-design/icons";
@@ -10,7 +10,6 @@ import {
   useUpdateSeenNotificationMutation,
   useUpdateNotificationMutation,
   useUpdateScheduleNotificationsMutation,
-  useDeleteNotificationMutation,
 } from "app/api/notificationService";
 import { socketContext } from "./SocketProvider";
 
