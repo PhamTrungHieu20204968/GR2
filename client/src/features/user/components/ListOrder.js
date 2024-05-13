@@ -21,7 +21,7 @@ import {
 import { socketContext } from "components/SocketProvider";
 function ListOrder() {
   const { accessToken, userId } = useSelector((state) => state.auth);
-  const { data, isLoading } = useGetUserOrdersQuery({
+  const { data } = useGetUserOrdersQuery({
     accessToken,
   });
   const socket = useContext(socketContext);
@@ -31,7 +31,7 @@ function ListOrder() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tab, setTab] = useState(1);
   const [sendTime, setSendTime] = useState("");
-  if (isLoading) {
+  if (!data || data.error) {
     return <Spin />;
   }
   const handleReOrder = (row) => {
