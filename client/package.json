@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@paypal/react-paypal-js": "^8.2.0",
+    "@react-oauth/google": "^0.12.1",
     "@reduxjs/toolkit": "^1.9.7",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -46,9 +47,9 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "7.21.11",
     "autoprefixer": "^10.4.19",
     "postcss-nesting": "^12.0.2",
-    "tailwindcss": "^3.3.6",
-    "@babel/plugin-proposal-private-property-in-object": "7.21.11"
+    "tailwindcss": "^3.3.6"
   }
 }

@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 
 import { useLoginMutation } from "app/api/authService";
 import { setUser } from "app/slices/authSlice";
-
+import GoogleLogin from "../component/GoogleLogin";
 function Login() {
   const navigate = useNavigate();
   const [login] = useLoginMutation();
@@ -106,14 +106,15 @@ function Login() {
           <Form.Item className='w-3/5'>
             <Divider>Hoặc đăng nhập với</Divider>
             <div className='w-full flex gap-2'>
-              <button
+              {/* <button
                 className='bg-[#ea4235] h-10 text-white rounded-lg custom-btn hover:bg-[#ea4235cc] w-full'
                 onClick={loginWithGoogleHandler}
                 type='button'
               >
                 <GoogleOutlined className='mr-1' />
                 Gmail
-              </button>
+              </button> */}
+              <GoogleLogin />
               <button
                 className='bg-blue-500 h-10 rounded-lg text-white custom-btn hover:bg-[#4096ff] w-full'
                 type='button'
