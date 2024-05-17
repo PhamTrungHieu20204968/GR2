@@ -4,9 +4,9 @@ const app = express();
 const cors = require("cors");
 const passport = require("passport");
 require("./passport");
+require("dotenv").config();
 const route = require("./routes");
 const { connectSocket } = require("./socketIo");
-
 app.use(
   cookieSession({
     name: "session",
@@ -18,7 +18,7 @@ app.use(
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_URL,
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   })
@@ -26,6 +26,11 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+// Set 'X-Frame-Options' header to 'SAMEORIGIN'
+// app.use((req, res, next) => {
+//   res.setHeader("X-Frame-Options", "SAMEORIGIN");
+//   next();
+// });
 
 const db = require("./models");
 

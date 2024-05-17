@@ -11,6 +11,15 @@ export const AuthService = apiService.injectEndpoints({
       invalidatesTags: ["auth"],
     }),
 
+    googleLogin: builder.mutation({
+      query: ({ data }) => ({
+        url: `users/google-login`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["auth"],
+    }),
+
     signUp: builder.mutation({
       query: (data) => ({
         url: `users/signup`,
@@ -39,4 +48,5 @@ export const {
   useLoginMutation,
   useSignUpMutation,
   useGoogleLoginSuccessQuery,
+  useGoogleLoginMutation,
 } = AuthService;

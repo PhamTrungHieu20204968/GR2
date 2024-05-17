@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   LockOutlined,
   UserOutlined,
-  GoogleOutlined,
   FacebookOutlined,
 } from "@ant-design/icons";
 import { Button, Form, Input, Divider, message } from "antd";
