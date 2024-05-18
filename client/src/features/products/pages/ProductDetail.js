@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Col, Row, Button, Tabs, Spin, InputNumber, Image } from "antd";
-import { StarFilled } from "@ant-design/icons";
+import { StarFilled, FacebookOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 
 import Layout from "components/Layout";
@@ -11,6 +11,7 @@ import ListCard from "components/ListCard";
 import { useGetProductByNameQuery } from "app/api/productService";
 import { addToCart } from "app/slices/cartSlice";
 import { useGetProductRatesQuery } from "app/api/rateService";
+import { FacebookShareButton } from "react-share";
 
 function ProductDetail() {
   const params = useParams();
@@ -171,6 +172,17 @@ function ProductDetail() {
               >
                 Thêm sản phẩm
               </Button>
+            </div>
+            <div className='mt-4 text-lg'>
+              <FacebookShareButton url={`${window.location.href}`}>
+                <button
+                  className='bg-blue-500 h-10 px-2 rounded-md text-white custom-btn hover:bg-[#4096ff] w-full'
+                  type='button'
+                >
+                  Chia sẻ
+                  <FacebookOutlined className='ml-1' />
+                </button>
+              </FacebookShareButton>
             </div>
           </Col>
         </Row>

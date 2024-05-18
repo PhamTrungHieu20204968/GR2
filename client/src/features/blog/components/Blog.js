@@ -8,6 +8,7 @@ import {
   MoreOutlined,
 } from "@ant-design/icons";
 import { useSelector } from "react-redux";
+import { FacebookShareButton } from "react-share";
 
 import {
   useCreateLikeMutation,
@@ -64,7 +65,7 @@ function Blog({ blog }) {
               content: `${name} đã thích bài viết của bạn`,
               blogId: blog.id,
               senderId: userId,
-              type:1,
+              type: 1,
             });
           }
         })
@@ -151,6 +152,7 @@ function Blog({ blog }) {
           <div className='flex flex-wrap items-center'>
             {blog.images.map((item) => (
               <Image
+                key={item.id}
                 src={item.url}
                 width={blog.images.length > 1 ? "50%" : "100%"}
                 height={"100%"}
@@ -188,8 +190,13 @@ function Blog({ blog }) {
             <CommentOutlined /> Bình luận
           </div>
           <div className='flex-1 text-center py-2 my-[2px] cursor-pointer flex items-center gap-1 justify-center rounded-md hover:bg-gray-200'>
-            <ShareAltOutlined />
-            Chia sẻ
+            <FacebookShareButton
+              url={`${window.location.href}/detail/${blog?.id}`}
+              hashtag={blog?.tag}
+            >
+              <ShareAltOutlined />
+              Chia sẻ
+            </FacebookShareButton>
           </div>
         </div>
       </div>

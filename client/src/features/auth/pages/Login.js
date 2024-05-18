@@ -35,10 +35,6 @@ function Login() {
       });
   };
 
-  const loginWithGoogleHandler = () => {
-    window.open("http://localhost:3001/users/google", "_self");
-  };
-
   return (
     <div className='flex min-h-screen overflow-hidden'>
       <div className='flex-1 mim-h-full'>

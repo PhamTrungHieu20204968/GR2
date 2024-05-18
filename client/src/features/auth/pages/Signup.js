@@ -10,6 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, Form, Input, Divider, message } from "antd";
 
 import { useSignUpMutation } from "app/api/authService";
+import GoogleLogin from "../component/GoogleLogin";
 function Signup() {
   const navigate = useNavigate();
   const [signup] = useSignUpMutation();
@@ -156,25 +157,16 @@ function Signup() {
           </Form.Item>
 
           <Form.Item className='w-3/5'>
-            <Divider>Hoặc đăng nhập với</Divider>
+            <Divider>Hoặc đăng ký với</Divider>
             <div className='w-full flex gap-2'>
-              <Button
-                type='default'
-                icon={<GoogleOutlined />}
-                size='large'
-                className='bg-[#ea4235] text-white custom-btn hover:bg-[#ea4235cc] w-full'
-                onClick={loginWithGoogleHandler}
+              <GoogleLogin />
+              <button
+                className='bg-blue-500 h-10 rounded-lg text-white custom-btn hover:bg-[#4096ff] w-full'
+                type='button'
               >
-                Gmail
-              </Button>
-              <Button
-                type='default'
-                icon={<FacebookOutlined />}
-                size='large'
-                className='bg-blue-500 text-white custom-btn hover:bg-[#4096ff] w-full'
-              >
+                <FacebookOutlined className='mr-1' />
                 Facebook
-              </Button>
+              </button>
             </div>
           </Form.Item>
         </Form>
