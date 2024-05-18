@@ -173,14 +173,14 @@ function ProductDetail() {
                 Thêm sản phẩm
               </Button>
             </div>
-            <div className='mt-4 text-lg'>
+            <div className='mt-4'>
               <FacebookShareButton url={`${window.location.href}`}>
                 <button
-                  className='bg-blue-500 h-10 px-2 rounded-md text-white custom-btn hover:bg-[#4096ff] w-full'
+                  className='bg-blue-500 p-2 rounded-md text-white custom-btn hover:bg-[#4096ff] w-full'
                   type='button'
                 >
+                  <FacebookOutlined className='mr-1' />
                   Chia sẻ
-                  <FacebookOutlined className='ml-1' />
                 </button>
               </FacebookShareButton>
             </div>
