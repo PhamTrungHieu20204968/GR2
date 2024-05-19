@@ -1,20 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  LockOutlined,
-  UserOutlined,
-  FacebookOutlined,
-} from "@ant-design/icons";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Divider, message } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useLoginMutation } from "app/api/authService";
 import { setUser } from "app/slices/authSlice";
 import GoogleLogin from "../component/GoogleLogin";
+import FacebookLogin from "../component/FacebookLogin";
 function Login() {
   const navigate = useNavigate();
   const [login] = useLoginMutation();
   const dispatch = useDispatch();
+  const { isLoggedIn } = useSelector((state) => state.auth);
 
   const onFinish = (values) => {
     login(values)
@@ -34,7 +32,11 @@ function Login() {
         console.log(err);
       });
   };
-
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/");
+    }
+  }, []);
   return (
     <div className='flex min-h-screen overflow-hidden'>
       <div className='flex-1 mim-h-full'>
@@ -101,22 +103,8 @@ function Login() {
           <Form.Item className='w-3/5'>
             <Divider>Hoặc đăng nhập với</Divider>
             <div className='w-full flex gap-2'>
-              {/* <button
-                className='bg-[#ea4235] h-10 text-white rounded-lg custom-btn hover:bg-[#ea4235cc] w-full'
-                onClick={loginWithGoogleHandler}
-                type='button'
-              >
-                <GoogleOutlined className='mr-1' />
-                Gmail
-              </button> */}
               <GoogleLogin />
-              <button
-                className='bg-blue-500 h-10 rounded-lg text-white custom-btn hover:bg-[#4096ff] w-full'
-                type='button'
-              >
-                <FacebookOutlined className='mr-1' />
-                Facebook
-              </button>
+              <FacebookLogin />
             </div>
           </Form.Item>
         </Form>
