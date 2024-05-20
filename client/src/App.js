@@ -11,7 +11,6 @@ import ListProducts from "features/admin/pages/ListProducts";
 import ListOrders from "features/admin/pages/ListOrders";
 import Products from "features/products/pages/Products";
 import ProductDetail from "features/products/pages/ProductDetail";
-import GoogleLoginSuccess from "features/auth/pages/GoogleLoginSuccess";
 import Cart from "features/pay/pages/PayCart";
 import Pay from "features/pay/pages/PayForm";
 import UserPay from "features/pay/pages/UserPay";
@@ -44,10 +43,6 @@ function App() {
           <Route path='/blogs/:id' element={<UpdateBlog />} />
           <Route path='/user' element={<UserInfor />} />
           <Route path='/user/exchange' element={<Exchange />} />
-          <Route
-            path='/google-login-success'
-            element={<GoogleLoginSuccess />}
-          />
           <Route path='/products/:category' element={<Products />} />
           <Route path='/products/:category/:name' element={<ProductDetail />} />
 

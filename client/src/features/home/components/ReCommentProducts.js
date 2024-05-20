@@ -15,7 +15,7 @@ function ReCommentProducts() {
 
   return (
     <div>
-      {!data || data.error ? (
+      {!data || data?.error || data?.length < 1 ? (
         <></>
       ) : (
         <section className='container mx-auto mt-8 overflow-hidden'>

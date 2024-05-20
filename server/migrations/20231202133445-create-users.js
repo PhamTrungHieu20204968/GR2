@@ -50,7 +50,7 @@ module.exports = {
         defaultValue: "Tập sự",
       },
       avatar: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       status: {
         type: Sequelize.INTEGER,
@@ -62,6 +62,9 @@ module.exports = {
         defaultValue: 0,
       },
       googleId: {
+        type: Sequelize.STRING,
+      },
+      facebookId: {
         type: Sequelize.STRING,
       },
       createdAt: {

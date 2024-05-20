@@ -60,39 +60,6 @@ class UsersController {
     });
   }
 
-  // [GET] Google:login success
-  // async googleLoginSuccess(req, res) {
-  //   if (req.user) {
-  //     const [_user, created] = await users.findOrCreate({
-  //       where: { googleId: req.user.id },
-  //       defaults: {
-  //         name: req.user.displayName,
-  //         role: 1,
-  //         email: req.user.emails[0].value,
-  //         avatar: req.user.photos[0].value,
-  //         status: 0,
-  //       },
-  //     });
-  //     const accessToken = sign(
-  //       { id: _user.id, role: _user.role },
-  //       "secretkey"
-  //       //   { expiresIn: "4h" }
-  //     );
-  //     return res
-  //       .status(200)
-  //       .json({
-  //         role: _user.role,
-  //         id: _user.id,
-  //         name: _user.name,
-  //         notificationSetting: _user.notificationSetting,
-  //         accessToken,
-  //       })
-  //   } else {
-  //     res.status(403);
-  //     return res.json({ error: "Đăng nhập thất bại" });
-  //   }
-  // }
-
   // [POST] /google-login
   async googleLogin(req, res) {
     const user = req.body;
@@ -130,17 +97,41 @@ class UsersController {
     }
   }
 
-  // [GET] Google:login failed
-  async googleLoginFailed(req, res) {
-    return res.json({
-      error: "Thất bại",
-    });
-  }
-
-  // [GET] /logout
-  async logout(req, res) {
-    req.logout();
-    res.redirect(process.env.CLIENT_URL);
+  // [POST] /facebook-login
+  async facebookLogin(req, res){
+    const user = req.body;
+    if (user) {
+      try {
+        const [_user, created] = await users.findOrCreate({
+          where: { facebookId: user.id },
+          defaults: {
+            name: user.name,
+            role: 1,
+            email: user?.email || '',
+            avatar: user.avatar,
+            status: 0,
+          },
+        });
+        const accessToken = sign(
+          { id: _user.id, role: _user.role },
+          "secretkey"
+          //   { expiresIn: "4h" }
+        );
+        return res.status(200).json({
+          role: _user.role,
+          id: _user.id,
+          name: _user.name,
+          notificationSetting: _user.notificationSetting,
+          accessToken,
+        });
+      } catch (error) {
+        console.log(error);
+        return res.json({ error: "Đăng nhập thất bại" });
+      }
+    } else {
+      res.status(403);
+      return res.json({ error: "Đăng nhập thất bại" });
+    }
   }
 
   // [GET] /getOne

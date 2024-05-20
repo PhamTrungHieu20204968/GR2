@@ -1,17 +1,50 @@
-import React, { useState } from "react";
+import React from "react";
 import { FacebookOutlined } from "@ant-design/icons";
 import { LoginSocialFacebook } from "reactjs-social-login";
+import { message } from "antd";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
+import { useFacebookLoginMutation } from "app/api/authService";
+import { setUser } from "app/slices/authSlice";
 
 function FacebookLogin() {
-  const [profile, setProfile] = useState();
+  const [facebookLogin] = useFacebookLoginMutation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const loginSuccess = (data) => {
+    if (data) {
+      facebookLogin({
+        data: {
+          name: data?.name,
+          email: data?.email || "",
+          avatar: data?.picture.data.url || "",
+          id: data?.userID,
+        },
+      })
+        .then((res) => {
+          if (res.data.error) {
+            message.error(res.data.error);
+          } else {
+            dispatch(setUser({ ...res.data, isLoggedIn: true }));
+            message.success("Đăng nhập thành công");
+            if (res.data.role === 2) {
+              navigate("/admin");
+            } else navigate("/");
+          }
+        })
+        .catch((err) => {
+          message.error("Đăng nhập thất bại");
+          console.log(err);
+        });
+    }
+  };
   return (
     <div className='w-full'>
       <LoginSocialFacebook
-        appId='984411069788733'
-        onResolve={(res) => {
-          console.log(res);
-          setProfile(res.data);
-        }}
+        appId='1015418813346177'
+        onResolve={(res) => loginSuccess(res?.data)}
         onReject={(err) => console.log(err)}
       >
         <button
@@ -22,14 +55,6 @@ function FacebookLogin() {
           Facebook
         </button>
       </LoginSocialFacebook>
-      {profile && (
-        <div>
-          <h1>{profile.name}</h1>
-          <h1>{profile.email}</h1>
-          <h1>{profile.userId}</h1>
-          <img src={profile.picture.data.url} alt='img' />
-        </div>
-      )}
     </div>
   );
 }
