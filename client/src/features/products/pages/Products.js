@@ -101,9 +101,11 @@ function Products() {
                         return <></>;
                       }
                       if (
-                        (parseFloat(item.price) * 100) / filter.maxPrice <
+                        (parseFloat(item.salePrice || item.price) * 100) /
+                          filter.maxPrice <
                           filter.price[0] ||
-                        (parseFloat(item.price) * 100) / filter.maxPrice >
+                        (parseFloat(item.salePrice || item.price) * 100) /
+                          filter.maxPrice >
                           filter.price[1]
                       ) {
                         return <></>;
@@ -118,8 +120,10 @@ function Products() {
                       ?.slice()
                       .sort((a, b) =>
                         filter.order === 2
-                          ? parseFloat(a.price) - parseFloat(b.price)
-                          : parseFloat(b.price) - parseFloat(a.price)
+                          ? parseFloat(a.salePrice || a.price) -
+                            parseFloat(b.salePrice || b.price)
+                          : parseFloat(b.salePrice || b.price) -
+                            parseFloat(a.salePrice || a.price)
                       )
                       .map((item) => {
                         if (
@@ -129,9 +133,11 @@ function Products() {
                           return <></>;
                         }
                         if (
-                          (parseFloat(item.price) * 100) / filter.maxPrice <
+                          (parseFloat(item.salePrice || item.price) * 100) /
+                            filter.maxPrice <
                             filter.price[0] ||
-                          (parseFloat(item.price) * 100) / filter.maxPrice >
+                          (parseFloat(item.salePrice || item.price) * 100) /
+                            filter.maxPrice >
                             filter.price[1]
                         ) {
                           return <></>;

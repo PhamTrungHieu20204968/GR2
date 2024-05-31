@@ -10,6 +10,22 @@ export const orderService = apiService.injectEndpoints({
       providesTags: ["order"],
     }),
 
+    getStatistics: builder.query({
+      query: (headers) => ({
+        url: `orders/statistics`,
+        headers,
+      }),
+      providesTags: ["order"],
+    }),
+
+    getTopSale: builder.query({
+      query: (headers) => ({
+        url: `orders/top-sale`,
+        headers,
+      }),
+      providesTags: ["order"],
+    }),
+
     getUserOrders: builder.query({
       query: (headers) => ({
         url: `orders/user`,
@@ -60,6 +76,8 @@ export const orderService = apiService.injectEndpoints({
 export const {
   useGuestCreateOrderMutation,
   useUserCreateOrderMutation,
+  useGetStatisticsQuery,
+  useGetTopSaleQuery,
   useGetAllOrdersQuery,
   useUpdateOrderMutation,
   useGetUserOrdersQuery,

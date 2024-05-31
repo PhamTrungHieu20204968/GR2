@@ -12,6 +12,7 @@ function getItem(label, key, icon, children, type) {
   };
 }
 const items = [
+  getItem("Thống kê", "6", null, null),
   getItem("Người dùng", "sub1", null, [getItem("Danh sách người dùng", "1")]),
   getItem("Sản phẩm", "sub2", null, [
     getItem("Danh sách sản phẩm", "2"),
@@ -20,7 +21,7 @@ const items = [
   getItem("Bài viết", "sub3", null, [getItem("Danh sách bài viết", "4")]),
   getItem("Đơn hàng", "sub4", null, [getItem("Danh sách đơn hàng", "5")]),
 ];
-function Sidebar({ SelectedKey = "1", OpenKeys = ["sub1"] }) {
+function Sidebar({ SelectedKey = "6", OpenKeys = [] }) {
   const navigate = useNavigate();
   const handlerClickMenu = ({ key }) => {
     if (key === SelectedKey) {
@@ -28,7 +29,7 @@ function Sidebar({ SelectedKey = "1", OpenKeys = ["sub1"] }) {
     }
     switch (key) {
       case "1":
-        navigate("/admin");
+        navigate("/admin/list-users");
         break;
       case "2":
         navigate("/admin/list-products");
@@ -41,6 +42,9 @@ function Sidebar({ SelectedKey = "1", OpenKeys = ["sub1"] }) {
         break;
       case "5":
         navigate("/admin/list-orders");
+        break;
+      case "6":
+        navigate("/admin");
         break;
       default:
         break;

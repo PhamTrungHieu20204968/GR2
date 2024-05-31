@@ -4,6 +4,7 @@ import React from "react";
 import Home from "features/home/Home";
 import Login from "features/auth/pages/Login";
 import Signup from "features/auth/pages/Signup";
+import ListUser from "features/admin/pages/ListUser";
 import HomeAdmin from "features/admin/pages/HomeAdmin";
 import CreateProduct from "features/admin/pages/CreateProduct";
 import UpdateProduct from "features/admin/pages/UpdateProduct";
@@ -20,6 +21,8 @@ import UpdateBlog from "features/blog/pages/UpdateBlog";
 import ListBlogs from "features/admin/pages/ListBlogs";
 import UserInfor from "features/user/pages/UserInfor";
 import Exchange from "features/user/pages/Exchange";
+import Policy from "features/policy/pages/Policy";
+import AboutUs from "features/about-us/pages/AboutUs";
 
 function App() {
   return (
@@ -37,6 +40,8 @@ function App() {
           <Route path='/signup' element={<Signup />} />
           <Route path='/cart' element={<Cart />} />
           <Route path='/pay' element={<Pay />} />
+          <Route path='/policy' element={<Policy />} />
+          <Route path='/about-us' element={<AboutUs />} />
           <Route path='/user-pay/:id' element={<UserPay />} />
           <Route path='/blogs' element={<Blogs />} />
           <Route path='/blogs/detail/:id' element={<BlogDetail />} />
@@ -48,6 +53,7 @@ function App() {
 
           <Route path='admin'>
             <Route index element={<HomeAdmin />} />
+            <Route path='list-users' element={<ListUser />} />
             <Route path='update-product/:id' element={<UpdateProduct />} />
             <Route path='create-product' element={<CreateProduct />} />
             <Route path='list-products' element={<ListProducts />} />

@@ -29,8 +29,12 @@ function Header({ page }) {
         </Link>
         <ul className='flex justify-between h-[70px] items-center uppercase font-bold'>
           <Link
-            to='/'
-            className='h-full px-4 hover:bg-primary flex items-center'
+            to='/about-us'
+            className={
+              page[0] === "about-us"
+                ? "h-full px-4 bg-primary flex items-center"
+                : "h-full px-4 hover:bg-primary flex items-center"
+            }
           >
             Giới thiệu
           </Link>

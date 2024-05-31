@@ -34,7 +34,7 @@ function ListOrders() {
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
   if (isLoading) {
-    <Spin />;
+    return <Spin />;
   }
 
   const onChangeTab = (value) => {

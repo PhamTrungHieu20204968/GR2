@@ -54,7 +54,7 @@ const ButtonWrapper = ({
             })
             .then((orderId) => orderId)
         }
-        onApprove={(data, actions) =>
+        onApprove={(data, actions) => {
           actions.order.capture().then(async (response) => {
             if (response.status === "COMPLETED") {
               const values = payload.form.getFieldsValue(true);
@@ -65,8 +65,8 @@ const ButtonWrapper = ({
                 guestCreateOrder(values, 1);
               }
             }
-          })
-        }
+          });
+        }}
       />
     </>
   );

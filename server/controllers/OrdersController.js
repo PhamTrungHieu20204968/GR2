@@ -6,6 +6,8 @@ const {
   users,
   sales,
   notifications,
+  images,
+  categories,
 } = require("../models");
 const { Op } = require("sequelize");
 class OrdersController {
@@ -25,6 +27,62 @@ class OrdersController {
                 model: products,
                 attributes: ["name", "price"],
               },
+            ],
+          },
+        ],
+      });
+      return res.json(List);
+    } catch (error) {
+      console.log(error);
+      return res.status(403).json({ error });
+    }
+  }
+
+  // [GET] /statistics
+  async getStatistics(req, res) {
+    if (req.user.role < 2) {
+      return res.json({ error: "Không có quyền truy cập!" });
+    }
+    try {
+      const ninetyDaysAgo = new Date();
+      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+      const List = await orders.findAll({
+        where: {
+          type: { [Op.gt]: 0 },
+          updatedAt: { [Op.gte]: ninetyDaysAgo },
+          status: 3,
+        },
+        attributes: ["totalMoney", "id", "updatedAt"],
+      });
+      return res.json(List);
+    } catch (error) {
+      console.log(error);
+      return res.status(403).json({ error });
+    }
+  }
+
+  // [GET] /top-sale
+  async getTopSale(req, res) {
+    if (req.user.role < 2) {
+      return res.json({ error: "Không có quyền truy cập!" });
+    }
+    try {
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      const List = await orderItems.findAll({
+        where: {
+          updatedAt: { [Op.gte]: thirtyDaysAgo },
+        },
+        include: [
+          {
+            model: products,
+            include: [images, categories],
+          },
+          {
+            model: orders,
+            attributes: ["userId"],
+            include: [
+              { model: users, attributes: ["avatar", "name", "email"] },
             ],
           },
         ],

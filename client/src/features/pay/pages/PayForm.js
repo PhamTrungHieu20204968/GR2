@@ -9,6 +9,7 @@ import {
   Steps,
   message,
   Spin,
+  Checkbox,
 } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -479,6 +480,30 @@ function PayForm() {
                         </Radio>
                         <Radio value={3}>Thanh toán khi nhận hàng</Radio>
                       </Radio.Group>
+                    </Form.Item>
+
+                    <Form.Item
+                      name='policy'
+                      rules={[
+                        {
+                          required: true,
+                          message:
+                            "Vui lòng đồng ý với chính sách của cửa hàng!",
+                        },
+                      ]}
+                      valuePropName='checked'
+                    >
+                      <Checkbox>
+                        Tôi đồng ý với{" "}
+                        <a
+                          href='/policy'
+                          target="_blank"
+                          className='underline text-blue-400 hover:text-blue-500 hover:underline'
+                        >
+                          chính sách
+                        </a>{" "}
+                        của cửa hàng
+                      </Checkbox>
                     </Form.Item>
 
                     <div
