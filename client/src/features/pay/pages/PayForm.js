@@ -10,6 +10,7 @@ import {
   message,
   Spin,
   Checkbox,
+  Space,
 } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,7 +29,7 @@ import { updateVoucher } from "app/slices/voucherSlice";
 function PayForm() {
   const [form] = Form.useForm();
   const cart = useSelector((state) => state.cart);
-  const { accessToken } = useSelector((state) => state.auth);
+  const { accessToken, language } = useSelector((state) => state.auth);
   const [guestCreate] = useGuestCreateOrderMutation();
   const [userCreate] = useUserCreateOrderMutation();
   const navigate = useNavigate();
@@ -75,18 +76,22 @@ function PayForm() {
     })
       .then((res) => {
         if (res.data?.error) {
-          message.error(res.data.error);
+          if (language === "vi") {
+            message.error(res.data.error);
+          } else message.error("失敗しました");
         } else {
           setCurrentStep(2);
           setOrder(cart);
           setFlag(0);
           dispatch(deleteCart());
           dispatch(updateVoucher(0));
-          message.success("Đặt hàng thành công!");
+          message.success(
+            language === "vi" ? "Đặt hàng thành công!" : "注文に成功しました!"
+          );
         }
       })
       .catch((err) => {
-        message.error("Đặt hàng thất bại!");
+        message.error("失敗しました");
         console.log(err);
       });
   };
@@ -103,17 +108,21 @@ function PayForm() {
     })
       .then((res) => {
         if (res.data?.error) {
-          message.error(res.data.error);
+          if (language === "vi") {
+            message.error(res.data.error);
+          } else message.error("失敗しました");
         } else {
           setCurrentStep(2);
           setOrder(cart);
           setFlag(0);
           dispatch(deleteCart());
-          message.success("Đặt hàng thành công!");
+          message.success(
+            language === "vi" ? "Đặt hàng thành công!" : "注文に成功しました!"
+          );
         }
       })
       .catch((err) => {
-        message.error("Đặt hàng thất bại!");
+        message.error("失敗しました");
         console.log(err);
       });
   };
@@ -138,7 +147,11 @@ function PayForm() {
   const onChangeStep = (value) => {
     if (value === 0) navigate("/cart");
     else if (value === 2) {
-      message.info("Bạn cần hoàn thành bước 2 trước");
+      message.info(
+        language === "vi"
+          ? "Bạn cần hoàn thành bước 2 trước"
+          : "ステップ2を完了する必要があります"
+      );
       return;
     }
     setCurrentStep(value);
@@ -164,13 +177,13 @@ function PayForm() {
                 className='w-full'
                 items={[
                   {
-                    title: "Xem giỏ hàng",
+                    title: language === "vi" ? "Xem giỏ hàng" : "カートを見る",
                   },
                   {
-                    title: "Thanh toán",
+                    title: language === "vi" ? "Thanh toán" : "支払い",
                   },
                   {
-                    title: "Hoàn tất đặt hàng",
+                    title: language === "vi" ? "Hoàn tất đặt hàng" : "完了",
                   },
                 ]}
               />
@@ -181,10 +194,14 @@ function PayForm() {
               <Col span={14}>
                 <div className='p-4'>
                   <div className='text-3xl font-bold mb-4'>
-                    Cảm ơn đã đặt hàng!
+                    {language === "vi"
+                      ? "Cảm ơn đã đặt hàng!"
+                      : "ありがとうございました！"}
                   </div>
                   <div className=''>
-                    Chúng tôi sẽ liên hệ với bạn để xác nhận về đơn hàng.
+                    {language === "vi"
+                      ? "Chúng tôi sẽ liên hệ với bạn để xác nhận về đơn hàng."
+                      : "こちらからすぐに連絡いたします。"}
                   </div>
 
                   <Button
@@ -193,16 +210,24 @@ function PayForm() {
                     className='mt-32'
                     onClick={() => navigate("/")}
                   >
-                    Quay về trang chủ
+                    {language === "vi"
+                      ? "Quay về trang chủ"
+                      : "ホームページに戻る"}
                   </Button>
                 </div>
               </Col>
               <Col span={8}>
                 <div className='border-2 p-4 border-primary '>
-                  <div className='text-xl mb-4 font-bold'>Đơn hàng của bạn</div>
+                  <div className='text-xl mb-4 font-bold'>
+                    {language === "vi" ? "Đơn hàng của bạn" : "お客様の注文"}
+                  </div>
                   <div className='flex pb-2 border-b-2 justify-between text-base'>
-                    <div className=''>Sản phẩm</div>
-                    <div className=''>Tổng cộng</div>
+                    <div className=''>
+                      {language === "vi" ? "Sản phẩm" : "商品"}
+                    </div>
+                    <div className=''>
+                      {language === "vi" ? "Tổng cộng" : "合計"}
+                    </div>
                   </div>
                   {order?.map((item) => (
                     <div key={item.id} className='flex mt-2 text-sm gap-4'>
@@ -220,19 +245,33 @@ function PayForm() {
                     </div>
                   ))}
                   <div className='flex my-4 pt-2 border-t-2 justify-between text-sm'>
-                    <div className=''>Phương thức thanh toán</div>
+                    <div className=''>
+                      {language === "vi"
+                        ? "Phương thức thanh toán"
+                        : "支払い方法"}
+                    </div>
                     <b className=''>
-                      {payType === 1 && "Thanh toán toàn bộ đơn hàng"}
-                      {payType === 2 && "Thanh toán 50% đơn hàng"}
-                      {payType === 3 && "Thanh toán khi nhận hàng"}
+                      {payType === 1 && language === "vi"
+                        ? "Thanh toán toàn bộ đơn hàng"
+                        : "全部支払う"}
+                      {payType === 2 && language === "vi"
+                        ? "Thanh toán 50% đơn hàng"
+                        : "半分支払う"}
+                      {payType === 3 && language === "vi"
+                        ? "Thanh toán khi nhận hàng"
+                        : "受けてから支払う"}
                     </b>
                   </div>
                   <div className='flex mt-2 justify-between text-sm'>
-                    <div className=''>Ngày:</div>
+                    <div className=''>
+                      {language === "vi" ? "Ngày:" : "日時"}
+                    </div>
                     <b className=''>{getDate()}</b>
                   </div>
                   <div className='flex mt-2 justify-between text-base'>
-                    <div className=''>Tổng:</div>
+                    <div className=''>
+                      {language === "vi" ? "Tổng:" : "合計："}
+                    </div>
                     <b className=''>
                       {totalCost.toLocaleString("vi", {
                         style: "currency",
@@ -255,33 +294,45 @@ function PayForm() {
               <Row gutter={16}>
                 <Col span={14}>
                   <div className='text-xl mb-4 font-bold'>
-                    Thông tin thanh toán
+                    {language === "vi" ? "Thông tin thanh toán" : "支払い情報"}
                   </div>
                   <Form.Item
                     name='name'
-                    label='Họ và tên'
+                    label={language === "vi" ? "Họ và tên" : "名前"}
                     rules={[
                       {
                         required: true,
-                        message: "Vui lòng nhập họ và tên!",
+                        message:
+                          language === "vi"
+                            ? "Vui lòng nhập họ và tên!"
+                            : "名前を入力しなければならない",
                       },
                     ]}
                     validateTrigger='onBlur'
                   >
-                    <Input placeholder='Họ và tên' size='large' />
+                    <Input
+                      placeholder={language === "vi" ? "Họ và tên" : "名前"}
+                      size='large'
+                    />
                   </Form.Item>
 
                   <Form.Item
                     name='email'
-                    label='Địa chỉ mail'
+                    label={language === "vi" ? "Địa chỉ mail" : "メール"}
                     rules={[
                       {
                         required: true,
-                        message: "Vui lòng nhập địa chỉ mail!",
+                        message:
+                          language === "vi"
+                            ? "Vui lòng nhập địa chỉ mail!"
+                            : "メールを入力しなければならない",
                       },
                       {
                         type: "email",
-                        message: "Vui lòng đúng địa chỉ mail!",
+                        message:
+                          language === "vi"
+                            ? "Vui lòng đúng địa chỉ mail!"
+                            : "メールが正しくない",
                       },
                     ]}
                     validateTrigger='onBlur'
@@ -291,33 +342,50 @@ function PayForm() {
 
                   <Form.Item
                     name='telephone'
-                    label='Số điện thoại'
+                    label={language === "vi" ? "Số điện thoại" : "電話番号"}
                     rules={[
                       {
                         required: true,
-                        message: "Vui lòng nhập số điện thoại!",
+                        message:
+                          language === "vi"
+                            ? "Vui lòng nhập số điện thoại!"
+                            : "電話番号を入力しなければならない",
                       },
                       {
                         len: 10,
                         whitespace: false,
-                        message: "Vui lòng nhập đủ số điện thoại!",
+                        message:
+                          language === "vi"
+                            ? "Vui lòng nhập đủ số điện thoại!"
+                            : "数字が足りない",
                       },
                       {
                         pattern: /^[0-9]+$/,
-                        message: "Vui lòng nhập đúng số điện thoại!",
+                        message:
+                          language === "vi"
+                            ? "Vui lòng nhập đúng số điện thoại!"
+                            : "数字だけ入力してください",
                       },
                     ]}
                     validateTrigger='onBlur'
                   >
-                    <Input placeholder='Số điện thoại' size='large' />
+                    <Input
+                      placeholder={
+                        language === "vi" ? "Số điện thoại" : "電話番号"
+                      }
+                      size='large'
+                    />
                   </Form.Item>
                   <Form.Item
                     name='city'
-                    label='Thành phố'
+                    label={language === "vi" ? "Thành phố" : "町"}
                     rules={[
                       {
                         required: true,
-                        message: "Vui lòng chọn thành phố!",
+                        message:
+                          language === "vi"
+                            ? '"Vui lòng chọn thành phố!"'
+                            : "町を選ばなければならない",
                       },
                     ]}
                     initialValue={"Tp.Hà Nội"}
@@ -396,35 +464,52 @@ function PayForm() {
 
                   <Form.Item
                     name='address'
-                    label='Địa chỉ'
+                    label={language === "vi" ? "Địa chỉ" : "アドレス"}
                     rules={[
                       {
                         required: true,
-                        message: "Vui lòng nhập địa chỉ!",
+                        message:
+                          language === "vi"
+                            ? "Vui lòng nhập địa chỉ!"
+                            : "アドレスを入力しなければならない",
                       },
                     ]}
                     validateTrigger='onBlur'
                   >
-                    <Input placeholder='Địa chỉ' size='large' />
+                    <Input
+                      placeholder={language === "vi" ? "Địa chỉ" : "アドレス"}
+                      size='large'
+                    />
                   </Form.Item>
 
-                  <Form.Item label='Ghi chú đơn hàng' name='note'>
+                  <Form.Item
+                    label={language === "vi" ? "Ghi chú đơn hàng" : "メモ"}
+                    name='note'
+                  >
                     <Input.TextArea
                       allowClear
                       rows={4}
                       size='large'
-                      placeholder='Ghi chú về đơn hàng, ví dụ: thời gian hay chỉ dẫn địa điểm giao hàng chi tiết hơn.'
+                      placeholder={
+                        language === "vi"
+                          ? "Ghi chú về đơn hàng, ví dụ: thời gian hay chỉ dẫn địa điểm giao hàng chi tiết hơn."
+                          : "注文に関するメモ、例えば: 配送時間や詳細な配送場所の指示など。"
+                      }
                     />
                   </Form.Item>
                 </Col>
                 <Col span={8}>
                   <div className='border-2 p-4 border-primary '>
                     <div className='text-xl mb-4 font-bold'>
-                      Đơn hàng của bạn
+                      {language === "vi" ? "Đơn hàng của bạn" : "お客様の注文"}
                     </div>
                     <div className='flex pb-2 border-b-2 justify-between text-base'>
-                      <div className=''>Sản phẩm</div>
-                      <div className=''>Tạm tính</div>
+                      <div className=''>
+                        {language === "vi" ? "Sản phẩm" : "商品"}
+                      </div>
+                      <div className=''>
+                        {language === "vi" ? "Tạm tính" : "合計："}
+                      </div>
                     </div>
                     {cart?.map((item) => (
                       <div key={item.id} className='flex mt-2 gap-4 text-sm'>
@@ -442,15 +527,22 @@ function PayForm() {
                       </div>
                     ))}
                     <div className='flex mt-4 justify-between text-base'>
-                      <div className='font-bold'>Mã ưu đãi</div>
+                      <div className='font-bold'>
+                        {language === "vi" ? "Mã ưu đãi" : "クーポン券"}
+                      </div>
                       {voucher === 0 ? (
-                        <span>Không</span>
+                        <span>{language === "vi" ? "Không" : "ない"}</span>
                       ) : (
-                        <span>Mã giảm giá {voucher}%</span>
+                        <span>
+                          {language === "vi" ? "Mã giảm giá" : "クーポン券"}{" "}
+                          {voucher}%
+                        </span>
                       )}
                     </div>
                     <div className='flex my-4 pt-2 border-t-2 justify-between text-base'>
-                      <div className=''>Tổng:</div>
+                      <div className=''>
+                        {language === "vi" ? "Tổng:" : "合計："}
+                      </div>
                       <b className=''>
                         {Math.ceil(
                           cart.reduce((total, item) => {
@@ -472,13 +564,24 @@ function PayForm() {
 
                     <Form.Item name='payType' initialValue={1}>
                       <Radio.Group>
-                        <Radio value={1} className='mb-2'>
-                          Thanh toán toàn bộ đơn hàng
-                        </Radio>
-                        <Radio value={2} className='mb-2'>
-                          Thanh toán 50% đơn hàng
-                        </Radio>
-                        <Radio value={3}>Thanh toán khi nhận hàng</Radio>
+                        <Space direction='vertical'>
+                          <Radio value={1} className='mb-2'>
+                            {language === "vi"
+                              ? "Thanh toán toàn bộ đơn hàng"
+                              : "全部支払う"}
+                          </Radio>
+                          <Radio value={2} className='mb-2'>
+                            {language === "vi"
+                              ? "Thanh toán 50% đơn hàng"
+                              : "半分支払う"}
+                          </Radio>
+                          <Radio value={3}>
+                            {" "}
+                            {language === "vi"
+                              ? "Thanh toán khi nhận hàng"
+                              : "受けてから支払う"}
+                          </Radio>
+                        </Space>
                       </Radio.Group>
                     </Form.Item>
 
@@ -488,21 +591,23 @@ function PayForm() {
                         {
                           required: true,
                           message:
-                            "Vui lòng đồng ý với chính sách của cửa hàng!",
+                            language === "vi"
+                              ? "Vui lòng đồng ý với chính sách của cửa hàng!"
+                              : "店舗の方針に同意してください",
                         },
                       ]}
                       valuePropName='checked'
                     >
                       <Checkbox>
-                        Tôi đồng ý với{" "}
+                        {language === "vi" ? "Tôi đồng ý với" : "この"}
                         <a
                           href='/policy'
-                          target="_blank"
+                          target='_blank'
                           className='underline text-blue-400 hover:text-blue-500 hover:underline'
                         >
-                          chính sách
-                        </a>{" "}
-                        của cửa hàng
+                          {language === "vi" ? "chính sách" : "方針"}
+                        </a>
+                        {language === "vi" ? "của cửa hàng" : "に同意します。"}
                       </Checkbox>
                     </Form.Item>
 
@@ -531,14 +636,16 @@ function PayForm() {
                           type='submit'
                           className='text-white bg-pink-500 w-full h-10 mb-4 text-lg font-semibold hover:text-white hover:bg-pink-600'
                         >
-                          ĐẶT HÀNG
+                          {language === "vi" ? "ĐẶT HÀNG" : "注文"}
                         </button>
                         <button
                           type='button'
                           className='text-black bg-gray-100 w-full h-10 text-base hover:text-black hover:bg-gray-300'
                           onClick={() => navigate("/cart")}
                         >
-                          Quay lại giỏ hàng
+                          {language === "vi"
+                            ? "Quay lại giỏ hàng"
+                            : "カートに戻る"}
                         </button>
                       </div>
                     )}
@@ -550,14 +657,18 @@ function PayForm() {
         </div>
       ) : (
         <div className='flex flex-col justify-center items-center w-full h-full'>
-          <div className='w-fit'>Chưa có sản phẩm nào trong giỏ hàng.</div>
+          <div className='w-fit'>
+            {language === "vi"
+              ? "Chưa có sản phẩm nào trong giỏ hàng."
+              : "何もない"}
+          </div>
           <Button
             type='primary'
             size='large'
             className='rounded-none w-fit mt-4 font-bold'
             onClick={() => navigate("/")}
           >
-            QUAY TRỞ LẠI CỬA HÀNG
+            {language === "vi" ? "QUAY TRỞ LẠI CỬA HÀNG" : "ホームページに戻る"}
           </Button>
         </div>
       )}

@@ -1,11 +1,14 @@
 import React from "react";
 import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import CartItem from "./CartItem";
 
 function Cart({ cart }) {
   const navigate = useNavigate();
+  const { language } = useSelector((state) => state.auth);
+
   return (
     <div className='max-w-xs'>
       {cart.length > 0 ? (
@@ -18,18 +21,20 @@ function Cart({ cart }) {
             type='dashed'
             onClick={() => navigate("/cart")}
           >
-            Xem giỏ hàng
+            {language === "vi" ? "Xem giỏ hàng" : "カートを見る"}
           </Button>
           <Button
             className='w-full '
             type='primary'
             onClick={() => navigate("/pay")}
           >
-            Thanh toán
+            {language === "vi" ? "Thanh toán" : "支払う"}
           </Button>
         </div>
       ) : (
-        <div className='p-2 text-gray-400'>Chưa có sản phẩm nào</div>
+        <div className='p-2 text-gray-400'>
+          {language === "vi" ? "Chưa có sản phẩm nào" : "何もない"}
+        </div>
       )}
     </div>
   );

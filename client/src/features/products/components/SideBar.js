@@ -1,12 +1,13 @@
 import React from "react";
 import { Button, Slider } from "antd";
 import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { setCategory, setPrice, clearFilter } from "app/slices/filterSlice";
 
-function SideBar({ filter }) {
+function SideBar({ filter, data }) {
   const params = useParams();
+  const { language } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const onChangePrice = (newValue) => {
     dispatch(setPrice(newValue));
@@ -19,7 +20,6 @@ function SideBar({ filter }) {
       dispatch(setCategory(c));
     }
   };
-
   const handleClearFilter = () => {
     dispatch(
       clearFilter({
@@ -35,29 +35,49 @@ function SideBar({ filter }) {
       {params.category === "pets" ? (
         <div>
           <div className='font-bold relative uppercase py-4 before:bottom-0 before:absolute before:content-[""] before:w-1/6 before:h-1 before:bg-gray-200'>
-            DANH MỤC SẢN PHẨM
+            {language === "vi" ? "DANH MỤC SẢN PHẨM" : "製品カテゴリー"}
           </div>
           <div className='w-full mt-4 p-4 border-2'>
             <ul>
               <li
                 onClick={() => handleSelectCategory("Chó cảnh")}
-                className={
-                  filter.category === "Chó cảnh"
-                    ? "text-pink-500 cursor-pointer py-2"
-                    : "hover:text-pink-500 cursor-pointer py-2"
-                }
+                className='flex justify-between items-center border-b-2 last:border-b-0'
               >
-                Chó cảnh
+                <span
+                  className={
+                    filter.category === "Chó cảnh"
+                      ? "text-pink-500 cursor-pointer py-2"
+                      : "hover:text-pink-500 cursor-pointer py-2"
+                  }
+                >
+                  {language === "vi" ? "Chó cảnh" : "ワンちゃん"}{" "}
+                </span>
+                <div className='bg-pink-500 text-white p-1 text-xs rounded-2xl'>
+                  {
+                    data?.filter((item) => item.category.name === "CHÓ CẢNH")
+                      .length
+                  }
+                </div>
               </li>
               <li
                 onClick={() => handleSelectCategory("Mèo cảnh")}
-                className={
-                  filter.category === "Mèo cảnh"
-                    ? "text-pink-500 cursor-pointer py-2 border-t-2"
-                    : "hover:text-pink-500 cursor-pointer py-2 border-t-2"
-                }
+                className='flex justify-between items-center border-b-2 last:border-b-0'
               >
-                Mèo cảnh
+                <span
+                  className={
+                    filter.category === "Mèo cảnh"
+                      ? "text-pink-500 cursor-pointer py-2"
+                      : "hover:text-pink-500 cursor-pointer py-2"
+                  }
+                >
+                  {language === "vi" ? "Mèo cảnh" : "ネコちゃん"}
+                </span>
+                <div className='bg-pink-500 text-white p-1 text-xs rounded-2xl'>
+                  {
+                    data?.filter((item) => item.category.name === "MÈO CẢNH")
+                      .length
+                  }
+                </div>
               </li>
             </ul>
           </div>
@@ -67,7 +87,7 @@ function SideBar({ filter }) {
       )}
 
       <div className='font-bold relative uppercase py-4 before:bottom-0 before:absolute before:content-[""] before:w-1/6 before:h-1 before:bg-gray-200'>
-        LỌC THEO GIÁ
+        {language === "vi" ? "LỌC THEO GIÁ" : "価格でフィルター"}
       </div>
       <div className='w-full mt-4'>
         <Slider
@@ -111,10 +131,10 @@ function SideBar({ filter }) {
           </div>
           <div>
             <Button className='mr-4' type='primary'>
-              Lọc
+              {language === "vi" ? "Lọc" : "フィルター"}
             </Button>
             <Button onClick={handleClearFilter} type='default'>
-              Xóa
+              {language === "vi" ? "Xóa" : "リセット"}
             </Button>
           </div>
         </div>

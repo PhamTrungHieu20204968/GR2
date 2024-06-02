@@ -1,15 +1,20 @@
 import React from "react";
 import { PhoneOutlined, MailOutlined, GlobalOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import logo from "assets/imgs/footer-logo.png";
-import { Link } from "react-router-dom";
 
 function Footer({ page = ["home"] }) {
+  const { language } = useSelector((state) => state.auth);
+
   return (
     <div className='footer w-screen text-white mt-8'>
       <div className='flex container mx-auto w-full justify-between py-10'>
         <div className='nav flex-1'>
-          <h2 className='text-xl font-bold'>ĐIỀU HƯỚNG</h2>
+          <h2 className='text-xl font-bold'>
+            {language === "vi" ? "ĐIỀU HƯỚNG" : "ナビゲーション"}
+          </h2>
           <ul className='text-[#ccc]'>
             <li
               className={
@@ -18,10 +23,12 @@ function Footer({ page = ["home"] }) {
                   : "my-2 hover:text-yellow-300 cursor-pointer list-pink-dot"
               }
             >
-              <Link to='/'>Trang chủ</Link>
+              <Link to='/'>{language === "vi" ? "Trang chủ" : "ホーム"}</Link>
             </li>
             <li className='my-2 hover:text-yellow-300 cursor-pointer list-pink-dot'>
-              Về chúng tôi
+              <Link to='/about-us'>
+                {language === "vi" ? "Giới thiệu" : "アバウト・アス"}
+              </Link>
             </li>
             <li
               className={
@@ -30,17 +37,23 @@ function Footer({ page = ["home"] }) {
                   : "my-2 hover:text-yellow-300 cursor-pointer list-pink-dot"
               }
             >
-              <Link to='/products/pets'>Sản phẩm</Link>
+              <Link to='/products/pets'>
+                {language === "vi" ? "Sản phẩm" : "商品"}
+              </Link>
             </li>
-            <li className={
+            <li
+              className={
                 page[0] === "blogs"
                   ? "my-2 text-cyan-300 hover:text-yellow-300 cursor-pointer list-pink-dot"
                   : "my-2 hover:text-yellow-300 cursor-pointer list-pink-dot"
-              }>
-              Bài viết
+              }
+            >
+              <Link to='/blogs'>
+                {language === "vi" ? "Bài viết" : "ブログ"}
+              </Link>
             </li>
             <li className='my-2 hover:text-yellow-300 cursor-pointer list-pink-dot'>
-              Liên hệ
+              {language === "vi" ? "Liên hệ" : "コンタクト"}
             </li>
           </ul>
         </div>
@@ -51,22 +64,25 @@ function Footer({ page = ["home"] }) {
             className='w-auto h-auto max-h-[70px] py-2'
           />
           <p className='text-[#ccc]'>
-            Một trang web đáng tin dùng về thú cưng và các sản phẩm liên quan
-            đến thú cưng
+            {language === "vi"
+              ? "Một trang web đáng tin dùng về thú cưng và các sản phẩm liên quan đến thú cưng"
+              : "ペットやペット用品に関する信頼できるウェブサイト"}
           </p>
         </div>
         <div className='information flex-1 pl-2 text-[#ccc]'>
-          <h2 className='text-xl font-bold text-white'>THÔNG TIN LIÊN HỆ</h2>
-          <p className='flex items-center text-lg my-4'>
-            <GlobalOutlined className='text-cyan-300 mr-3 text-2xl hover:text-yellow-300' />
+          <h2 className='text-xl font-bold text-white'>
+            {language === "vi" ? "THÔNG TIN LIÊN HỆ" : "連絡先"}
+          </h2>
+          <p className='flex items-center text-lg my-4 cursor-pointer text-cyan-300 hover:text-yellow-300'>
+            <GlobalOutlined className='mr-3 text-2xl' />
             <span>số 16 ngõ 37 Lê Thanh Nghị Hai Bà Trưng Hà Nội</span>
           </p>
-          <p className='flex items-center text-lg my-4'>
-            <PhoneOutlined className='text-cyan-300 mr-3 text-2xl hover:text-yellow-300' />
+          <p className='flex items-center text-lg my-4 cursor-pointer text-cyan-300 hover:text-yellow-300'>
+            <PhoneOutlined className='mr-3 text-2xl' />
             <span>0965504095</span>
           </p>
-          <p className='flex items-center text-lg my-4'>
-            <MailOutlined className='text-cyan-300 mr-3 text-2xl hover:text-yellow-300' />
+          <p className='flex items-center text-lg my-4 cursor-pointer text-cyan-300 hover:text-yellow-300'>
+            <MailOutlined className='mr-3 text-2xl' />
             <span>phamhieu15082002@gmail.com</span>
           </p>
         </div>

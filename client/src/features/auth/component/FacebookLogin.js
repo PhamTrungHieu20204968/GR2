@@ -3,7 +3,7 @@ import { FacebookOutlined } from "@ant-design/icons";
 import { LoginSocialFacebook } from "reactjs-social-login";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useFacebookLoginMutation } from "app/api/authService";
 import { setUser } from "app/slices/authSlice";
@@ -12,7 +12,7 @@ function FacebookLogin() {
   const [facebookLogin] = useFacebookLoginMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const { language } = useSelector((state) => state.auth);
   const loginSuccess = (data) => {
     if (data) {
       facebookLogin({
@@ -25,17 +25,30 @@ function FacebookLogin() {
       })
         .then((res) => {
           if (res.data.error) {
-            message.error(res.data.error);
+            if (language === "vi") {
+              message.error(res.data.error);
+            } else
+              message.error(
+                language === "vi"
+                  ? "Đăng nhập thất bại"
+                  : "ログインに失敗しました"
+              );
           } else {
             dispatch(setUser({ ...res.data, isLoggedIn: true }));
-            message.success("Đăng nhập thành công");
+            message.success(
+              language === "vi"
+                ? "Đăng nhập thành công"
+                : "ログインに成功しました"
+            );
             if (res.data.role === 2) {
               navigate("/admin");
             } else navigate("/");
           }
         })
         .catch((err) => {
-          message.error("Đăng nhập thất bại");
+          message.error(
+            language === "vi" ? "Đăng nhập thất bại" : "ログインに失敗しました"
+          );
           console.log(err);
         });
     }

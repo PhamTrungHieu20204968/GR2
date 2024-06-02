@@ -26,6 +26,7 @@ function Cart({ cart, voucherList = [] }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const voucher = useSelector((state) => state.voucher);
+  const { language, isLoggedIn } = useSelector((state) => state.auth);
   const [deletedItem, setDeletedItem] = useState();
   const [notify, setNotify] = useState();
   const [flag, setFlag] = useState(false);
@@ -50,7 +51,7 @@ function Cart({ cart, voucherList = [] }) {
       setCartData(newData);
       setFlag(true);
     } else {
-      message.error("Giá trị không hợp lệ!");
+      message.error(language === "vi" ? "Giá trị không hợp lệ" : "無効な値");
       setFlag(false);
     }
   };
@@ -64,7 +65,13 @@ function Cart({ cart, voucherList = [] }) {
     });
     setCartData(newData);
     dispatch(deleteItem(product.id));
-    setNotify({ status: "delete", message: ` "${product.name}" đã xóa.` });
+    setNotify({
+      status: "delete",
+      message:
+        language === "vi"
+          ? ` "${product.name}" đã xóa.`
+          : ` "${product.name}" を削除した。`,
+    });
   };
 
   const handleReverseDelete = () => {
@@ -75,12 +82,15 @@ function Cart({ cart, voucherList = [] }) {
 
   const handleUpdateCart = () => {
     dispatch(updateCart(cartData));
-    setNotify({ status: "update", message: "Đã cập nhật giỏ hàng" });
+    setNotify({
+      status: "update",
+      message: language === "vi" ? "Đã cập nhật giỏ hàng" : "カートを更新した",
+    });
   };
 
   const columns = [
     {
-      title: "SẢN PHẨM",
+      title: language === "vi" ? "SẢN PHẨM" : "製品",
       dataIndex: "product",
       key: "product",
       render: (_, record) => (
@@ -111,7 +121,7 @@ function Cart({ cart, voucherList = [] }) {
       ),
     },
     {
-      title: "GIÁ",
+      title: language === "vi" ? "GIÁ" : "値段",
       dataIndex: "price",
       render: (_, record) => (
         <b>
@@ -125,7 +135,7 @@ function Cart({ cart, voucherList = [] }) {
       ),
     },
     {
-      title: "SỐ LƯỢNG",
+      title: language === "vi" ? "SỐ LƯỢNG" : "量",
       dataIndex: "quantity",
       key: "quantity",
       render: (_, record) => (
@@ -139,7 +149,7 @@ function Cart({ cart, voucherList = [] }) {
       ),
     },
     {
-      title: "TỔNG CỘNG",
+      title: language === "vi" ? "TỔNG CỘNG" : "合計",
       dataIndex: "total",
       key: "total",
       render: (_, record) => (
@@ -168,7 +178,7 @@ function Cart({ cart, voucherList = [] }) {
                   className='text-black font-normal cursor-pointer hover:text-pink-500'
                   onClick={handleReverseDelete}
                 >
-                  Khôi phục?
+                  {language === "vi" ? "Khôi phục?" : "復元する?"}
                 </span>
               )}
             </span>
@@ -183,7 +193,7 @@ function Cart({ cart, voucherList = [] }) {
             onClick={() => navigate("/")}
           >
             <ArrowLeftOutlined />
-            TIẾP TỤC XEM SẢN PHẨM
+            {language === "vi" ? "TIẾP TỤC XEM SẢN PHẨM" : "ホームページに戻る"}
           </Button>
           <Button
             className='mt-4 text-sm font-semibold'
@@ -192,16 +202,16 @@ function Cart({ cart, voucherList = [] }) {
             disabled={!flag}
             onClick={() => handleUpdateCart()}
           >
-            CẬP NHẬT GIỎ HÀNG
+            {language === "vi" ? "CẬP NHẬT GIỎ HÀNG" : "カートを更新する"}
           </Button>
         </div>
       </Col>
       <Col span={10}>
         <div className='font-semibold text-base pb-1 w-full border-b-2'>
-          TỔNG SỐ LƯỢNG
+          {language === "vi" ? "TỔNG SỐ LƯỢNG" : "量"}
         </div>
         <div className='mt-4 text-base flex justify-between pb-1 border-b-[1px]'>
-          <div className=''>Tổng cộng</div>
+          <div className=''>{language === "vi" ? "Tổng cộng" : "合計"}</div>
           <b>
             {totalCost.toLocaleString("vi", {
               style: "currency",
@@ -210,15 +220,19 @@ function Cart({ cart, voucherList = [] }) {
           </b>
         </div>
         <div className='py-2 text-base flex justify-between border-b-[1px]'>
-          <div className=''>Mã ưu đãi</div>
+          <div className=''>
+            {language === "vi" ? "Mã ưu đãi" : "クーポン券"}
+          </div>
           {voucher === 0 ? (
-            <span>Không</span>
+            <span>{language === "vi" ? "Không" : "ない"}</span>
           ) : (
-            <span>Mã giảm giá {voucher}%</span>
+            <span>
+              {language === "vi" ? "Mã ưu đãi" : "クーポン券"} {voucher}%
+            </span>
           )}
         </div>
         <div className='mt-4 text-base flex justify-between pb-1 border-b-[1px]'>
-          <div className=''>Tổng cộng</div>
+          <div className=''>{language === "vi" ? "Tổng cộng" : "合計"}</div>
           <b>
             {totalCost.toLocaleString("vi", {
               style: "currency",
@@ -231,12 +245,12 @@ function Cart({ cart, voucherList = [] }) {
           onClick={() => navigate("/pay")}
           className='text-white bg-pink-500 w-full h-10 text-lg font-semibold mt-4 hover:text-white hover:bg-pink-600'
         >
-          TIẾN HÀNH THANH TOÁN
+          {language === "vi" ? "TIẾN HÀNH THANH TOÁN" : "支払う"}
         </button>
 
         <div className='mt-6 font-semibold text-base pb-1 flex gap-2 w-full border-b-2'>
           <TagFilled />
-          Mã ưu đãi
+          {language === "vi" ? "Mã ưu đãi" : "クーポン券"}
         </div>
         {voucherList.length > 0 ? (
           <Select
@@ -247,23 +261,41 @@ function Cart({ cart, voucherList = [] }) {
             options={[
               ...voucherList.map((item) => ({
                 value: item.percent,
-                label: `Mã giảm giá ${item.percent}%`,
+                label:
+                  language === "vi"
+                    ? `Mã giảm giá ${item.percent}%`
+                    : `クーポン券 ${item.percent}%`,
               })),
-              { value: 0, label: "Không áp dụng" },
+              {
+                value: 0,
+                label: language === "vi" ? "Không áp dụng" : "使わない",
+              },
             ]}
             onChange={(value) => dispatch(updateVoucher(value))}
           ></Select>
         ) : (
-          <div className='w-full my-4'>
-            Bạn chưa có phiếu giảm giá nào!
-            <Link
-              to='/signup'
-              className='text-blue-600 mx-1 underline hover:underline'
-            >
-              Đăng ký
-            </Link>
-            để nhận thêm ưu đãi
-          </div>
+          <>
+            {!isLoggedIn ? (
+              <div className='w-full my-4'>
+                {language === "vi"
+                  ? "Bạn chưa có phiếu giảm giá nào!"
+                  : "クーポン券がない。"}
+                <Link
+                  to='/signup'
+                  className='text-blue-600 mx-1 underline hover:underline'
+                >
+                  {language === "vi" ? "Đăng ký" : "登録"}
+                </Link>
+                {language === "vi" ? "để nhận thêm ưu đãi" : "してください。"}
+              </div>
+            ) : (
+              <div className='w-full my-4'>
+                {language === "vi"
+                  ? "Bạn chưa có phiếu giảm giá nào!"
+                  : "クーポン券がない。"}
+              </div>
+            )}
+          </>
         )}
       </Col>
     </Row>

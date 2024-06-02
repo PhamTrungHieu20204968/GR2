@@ -9,7 +9,7 @@ import { useGetAllProductsQuery } from "app/api/productService";
 
 function SearchProduct() {
   const [searchInput, setSearchInput] = useState("");
-  const { accessToken } = useSelector((state) => state.auth);
+  const { accessToken,language } = useSelector((state) => state.auth);
   const { data, isLoading } = useGetAllProductsQuery({
     accessToken,
   });
@@ -21,7 +21,7 @@ function SearchProduct() {
     <div className='w-80 max-h-[500px] overflow-y-auto'>
       <Input
         onChange={(e) => setSearchInput(e.target.value)}
-        placeholder='Nhập tên sản phẩm...'
+        placeholder={language === 'vi' ? 'Nhập tên sản phẩm...' : '名前を入れて。。。'}
         suffix={<SearchOutlined />}
       />
       <div className='mt-4 '>

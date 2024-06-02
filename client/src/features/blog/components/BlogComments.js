@@ -9,7 +9,7 @@ import { useGetUserQuery } from "app/api/userService";
 import UserComment from "../components/UserComment";
 
 function BlogComments({ blog, comments, handleCancel }) {
-  const { accessToken } = useSelector((state) => state.auth);
+  const { accessToken, language } = useSelector((state) => state.auth);
   const [edit, setEdit] = useState({ status: false, content: "", id: 0 });
   const { data, isLoading } = useGetUserQuery({
     accessToken: accessToken,
@@ -21,7 +21,7 @@ function BlogComments({ blog, comments, handleCancel }) {
     <div className='overflow-hidden'>
       <div className='flex items-center'>
         <div className='flex-1 text-center text-2xl font-semibold'>
-          Danh sách bình luận
+          {language === "vi" ? "Danh sách bình luận" : "コメント一覧"}
         </div>
         <CloseOutlined
           className='text-base text-gray-500 p-2 rounded-full cursor-pointer hover:bg-gray-200 hover:text-black'
@@ -41,7 +41,7 @@ function BlogComments({ blog, comments, handleCancel }) {
           ))
         ) : (
           <div className='text-xl my-4 font-semibold text-gray-300 text-center'>
-            Chưa có bình luận nào
+            {language === "vi" ? "Chưa có bình luận nào" : "コメント一がない"}
           </div>
         )}
       </div>
@@ -52,19 +52,38 @@ function BlogComments({ blog, comments, handleCancel }) {
         )
       ) : (
         <div className='text-center mt-4 text-xs'>
-          Bạn hãy{" "}
-          <Link
-            to='/login'
-            className='underline text-blue-300 hover:underline hover:text-blue-500'
-          >
-            đăng nhập
-          </Link>{" "}
-          để bình luận!
+        {language === 'vi' ? (
+          <div>
+            Bạn hãy{" "}
+            <Link
+              to='/login'
+              className='underline text-blue-300 hover:underline hover:text-blue-500'
+            >
+              đăng nhập
+            </Link>{" "}
+            để bình luận!
+          </div>
+        ) : (
+          <div>
+           コメントをするため、
+            <Link
+              to='/login'
+              className='underline text-blue-300 hover:underline hover:text-blue-500'
+            >
+              ログイン
+            </Link>{" "}
+            してください。
+          </div>
+        )}
+          
         </div>
       )}
       {edit.status && (
         <div className='mt-4'>
-          <div className='font-semibold text-base'>Chỉnh sửa bình luận</div>
+          <div className='font-semibold text-base'>
+          {language === "vi" ? "Chỉnh sửa bình luận" : "コメントを編集する"}
+          
+          </div>
           <div className=''>
             <UserComment
               user={data}
@@ -79,7 +98,7 @@ function BlogComments({ blog, comments, handleCancel }) {
               className='text-red-400 mt-2'
               onClick={() => setEdit({ status: false, content: "", id: 0 })}
             >
-              Hủy
+              {language === "vi" ? "Hủy" : "キャンセル"}
             </Button>
           </div>
         </div>

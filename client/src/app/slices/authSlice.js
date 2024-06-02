@@ -9,6 +9,7 @@ const authSlice = createSlice({
     userId: 0,
     notificationSetting: 0,
     name: "",
+    language: "vi",
   },
   reducers: {
     setUser: (state, action) => {
@@ -17,7 +18,12 @@ const authSlice = createSlice({
       state.isLoggedIn = action.payload.isLoggedIn;
       state.userId = action.payload.id;
       state.name = action.payload.name;
-      state.notificationSetting = action.payload.notificationSetting;
+      if (action.payload.notificationSetting) {
+        state.notificationSetting = action.payload.notificationSetting;
+      }
+      if (action.payload.language) {
+        state.language = action.payload.language;
+      }
     },
     logout: (state, action) => {
       state.accessToken = null;

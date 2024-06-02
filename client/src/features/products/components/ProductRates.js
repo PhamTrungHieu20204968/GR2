@@ -9,11 +9,13 @@ import { useUpdateRateMutation } from "app/api/rateService";
 function ProductRates({ productId, rates }) {
   const [update] = useUpdateRateMutation();
   const [form] = Form.useForm();
-  const { accessToken } = useSelector((state) => state.auth);
+  const { accessToken, language } = useSelector((state) => state.auth);
 
   const onFinish = (values) => {
     if (!accessToken) {
-      message.error("Bạn cần đăng nhập trước!");
+      message.error(
+        language === "vi" ? "Bạn cần đăng nhập trước!" : "ログインしていません!"
+      );
     }
 
     update({
@@ -27,14 +29,29 @@ function ProductRates({ productId, rates }) {
     })
       .then((res) => {
         if (res.data?.error) {
-          message.error(res.data.error);
+          if (language === "vi") {
+            message.error(res.data.error);
+          } else
+            message.error(
+              language === "vi"
+                ? "Lỗi kết nối server! Vui lòng thử lại sau."
+                : "サーバー接続エラー！後でもう一度お試しください。"
+            );
         } else {
-          message.success("Cảm ơn bạn đã đóng góp ý kiến!");
+          message.success(
+            language === "vi"
+              ? "Cảm ơn bạn đã đóng góp ý kiến"
+              : "ご意見をいただきありがとうございます"
+          );
           form.resetFields();
         }
       })
       .catch((err) => {
-        message.error("Lỗi kết nối server! Vui lòng thử lại sau.");
+        message.error(
+          language === "vi"
+            ? "Lỗi kết nối server! Vui lòng thử lại sau."
+            : "サーバー接続エラー！後でもう一度お試しください。"
+        );
         console.log(err);
       });
   };
@@ -44,13 +61,19 @@ function ProductRates({ productId, rates }) {
         {rates.length > 0 ? (
           rates?.map((item) => <UserRate key={item.id} rate={item}></UserRate>)
         ) : (
-          <span>Chưa có đánh giá nào cho sản phẩm này</span>
+          <span>
+            {language === "vi"
+              ? "Chưa có đánh giá nào cho sản phẩm này"
+              : "評価がない"}
+          </span>
         )}
       </div>
       <Form form={form} onFinish={onFinish} layout='vertical'>
         <div className='mt-4 text-lg '>
           <div className='flex items-center'>
-            <span className='mr-4'>Đánh giá của bạn :</span>
+            <span className='mr-4'>
+              {language === "vi" ? "Đánh giá của bạn :" : "評価："}
+            </span>
             <Form.Item name='rate' initialValue={5} className='mb-0'>
               <Rate className='text-3xl' />
             </Form.Item>
@@ -68,7 +91,7 @@ function ProductRates({ productId, rates }) {
             type='primary'
             size='large'
           >
-            Gửi
+            {language === "vi" ? "Gửi" : "出す"}
           </Button>
         </div>
       </Form>

@@ -15,7 +15,7 @@ import UserMenu from "./UserMenu";
 import Notifications from "./Notifications";
 function Header({ page }) {
   const cart = useSelector((state) => state.cart);
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { isLoggedIn, language } = useSelector((state) => state.auth);
 
   return (
     <div className='w-screen fixed top-0 left-0 right-0 z-50 text-white bg-[#333] '>
@@ -36,7 +36,7 @@ function Header({ page }) {
                 : "h-full px-4 hover:bg-primary flex items-center"
             }
           >
-            Giới thiệu
+            {language === "vi" ? "Giới thiệu" : "アバウト・アス"}
           </Link>
           <Link
             to='/products/pets'
@@ -46,7 +46,7 @@ function Header({ page }) {
                 : "h-full px-4 hover:bg-primary flex items-center"
             }
           >
-            Thú cưng
+            {language === "vi" ? "Thú cưng" : "ペット"}
           </Link>
           <Link
             to='/products/foods'
@@ -56,7 +56,7 @@ function Header({ page }) {
                 : "h-full px-4 hover:bg-primary flex items-center"
             }
           >
-            Đồ ăn
+            {language === "vi" ? "Đồ ăn" : "料理"}
           </Link>
           <Link
             to='/products/accessories'
@@ -66,7 +66,7 @@ function Header({ page }) {
                 : "h-full px-4 hover:bg-primary flex items-center"
             }
           >
-            Phụ kiện
+            {language === "vi" ? "Phụ kiện" : "アクセサリー"}
           </Link>
           <Link
             to='/blogs'
@@ -76,19 +76,19 @@ function Header({ page }) {
                 : "h-full px-4 hover:bg-primary flex items-center"
             }
           >
-            Bài viết
+            {language === "vi" ? "Bài viết" : "ブログ"}
           </Link>
           <Link
             to='/'
             className='h-full px-4 hover:bg-primary flex items-center'
           >
-            Liên hệ
+            {language === "vi" ? "Liên hệ" : "コンタクト"}
           </Link>
         </ul>
         <div className='flex items-center gap-4'>
           <Popover trigger='click' className='test' content={<SearchProduct />}>
             <Tooltip
-              title='Tìm kiếm'
+              title={language === "vi" ? "Tìm kiếm" : "検索"}
               placement='bottom'
               color='#666'
               zIndex={60}
@@ -103,7 +103,7 @@ function Header({ page }) {
           <Popover trigger='click' content={<Cart cart={cart} />}>
             <Badge count={cart.length}>
               <Tooltip
-                title='Giỏ hàng'
+                title={language === "vi" ? "Giỏ hàng" : "カート"}
                 placement='bottom'
                 color='#666'
                 zIndex={60}

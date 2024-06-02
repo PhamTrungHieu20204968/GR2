@@ -1,25 +1,28 @@
 import { Col, Row } from "antd";
 import Layout from "components/Layout";
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 function Policy() {
+  const { language } = useSelector((state) => state.auth);
+
   return (
     <Layout page={["policy"]}>
       <div className='container mx-auto mt-8 overflow-hidden'>
         <Row>
           <div className='uppercase text-xl'>
             <Link to='/' className='text-gray-400 font-bold hover:text-black'>
-              Trang chủ
+              {language === "vi" ? "Trang chủ" : "ホーム"}
             </Link>
             <span className='mx-2 text-gray-400'>/</span>
-            <span className=' font-bold'>Chính sách mua hàng</span>
+            <span className=' font-bold'>{language === "vi" ? "Chính sách mua hàng" : "購入ポリシー"}</span>
           </div>
         </Row>
         <Row className='mt-4' gutter={16} justify='center'>
           <Col span={19}>
             <div className='bg-[#344a5fbd] text-white p-8'>
-              <div className='home__title font-bold'>Chính sách mua hàng</div>
+              <div className='home__title font-bold'>{language === "vi" ? "Chính sách mua hàng" : "購入ポリシー"}</div>
               <div class='object-detail-content text-lg'>
                 <p>
                   <span>

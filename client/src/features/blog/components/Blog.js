@@ -22,7 +22,7 @@ function Blog({ blog }) {
   const [createLike] = useCreateLikeMutation();
   const [deleteBlogLike] = useDeleteBlogLikeMutation();
   const socket = useContext(socketContext);
-  const { accessToken, userId, role, name } = useSelector(
+  const { accessToken, userId, role, name, language } = useSelector(
     (state) => state.auth
   );
   const [liked, setLiked] = useState(
@@ -43,7 +43,9 @@ function Blog({ blog }) {
   }
   const handleLikeBlog = () => {
     if (!accessToken) {
-      message.info("Bạn chưa đăng nhập!");
+      message.info(
+        language === "vi" ? "Bạn chưa đăng nhập!" : "ログインしていません!"
+      );
       return;
     }
     if (!liked) {
@@ -57,7 +59,9 @@ function Blog({ blog }) {
       })
         .then((res) => {
           if (res.data?.error) {
-            message.error(res.data.error);
+            if (language === "vi") {
+              message.error(res.data.error);
+            } else message.error("失敗しました");
           } else {
             setLiked(true);
             socket?.emit("new-notification", {
@@ -81,7 +85,9 @@ function Blog({ blog }) {
       })
         .then((res) => {
           if (res.data?.error) {
-            message.error(res.data.error);
+            if (language === "vi") {
+              message.error(res.data.error);
+            } else message.error("失敗しました");
           } else {
             setLiked(false);
           }
@@ -170,8 +176,13 @@ function Blog({ blog }) {
 
       <div className='mt-2'>
         <div className='flex justify-between'>
-          <div className=''>{blog.likes.length + " lượt thích"}</div>
-          <div className=''>{blog.comments.length + " bình luận"}</div>
+          <div className=''>
+            {blog.likes.length + (language === "vi" ? " lượt thích" : "いいね")}
+          </div>
+          <div className=''>
+            {blog.comments.length +
+              (language === "vi" ? " Bình luận" : "コメント")}
+          </div>
         </div>
         <div className='flex border-y-2 font-semibold'>
           <div
@@ -180,14 +191,20 @@ function Blog({ blog }) {
             }`}
             onClick={handleLikeBlog}
           >
-            {liked ? <LikeFilled /> : <LikeOutlined />}{" "}
-            {liked ? "Đã thích" : "Thích"}
+            {liked ? <LikeFilled /> : <LikeOutlined />}
+            {liked
+              ? language === "vi"
+                ? "Đã thích"
+                : "いいねした"
+              : language === "vi"
+              ? "Thích"
+              : "いいね"}
           </div>
           <div
             className='flex-1 text-center py-2 my-[2px] cursor-pointer flex items-center gap-1 justify-center rounded-md hover:bg-gray-200'
             onClick={showModal}
           >
-            <CommentOutlined /> Bình luận
+            <CommentOutlined /> {language === "vi" ? "Bình luận" : "コメント"}
           </div>
           <div className='flex-1 text-center py-2 my-[2px] cursor-pointer flex items-center gap-1 justify-center rounded-md hover:bg-gray-200'>
             <FacebookShareButton
@@ -195,7 +212,7 @@ function Blog({ blog }) {
               hashtag={blog?.tag}
             >
               <ShareAltOutlined />
-              Chia sẻ
+              {language === "vi" ? "Chia sẻ" : "シェア"}
             </FacebookShareButton>
           </div>
         </div>

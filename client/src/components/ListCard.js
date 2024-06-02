@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Col, Row, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import ProductCard from "./ProductCard";
 
@@ -8,6 +9,7 @@ import { useGetAllProductsByCategoryQuery } from "app/api/productService";
 
 function ListCard({ category, quantity = 8, id = 0 }) {
   const navigate = useNavigate();
+  const { language } = useSelector((state) => state.auth);
   const { data, isLoading } = useGetAllProductsByCategoryQuery({
     name: category,
   });
@@ -46,7 +48,7 @@ function ListCard({ category, quantity = 8, id = 0 }) {
                 type='primary'
                 onClick={handleOnclick}
               >
-                Xem thêm
+                {language === "vi" ? "Xem thêm" : "もっと"}
               </Button>
             )}
           </div>

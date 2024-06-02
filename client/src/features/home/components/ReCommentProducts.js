@@ -6,7 +6,7 @@ import ProductCard from "components/ProductCard";
 import { useGetSimilarProductsQuery } from "app/api/productService";
 
 function ReCommentProducts() {
-  const { accessToken } = useSelector((state) => state.auth);
+  const { accessToken, language } = useSelector((state) => state.auth);
   const { data } = useGetSimilarProductsQuery({
     headers: {
       accessToken,
@@ -19,7 +19,9 @@ function ReCommentProducts() {
         <></>
       ) : (
         <section className='container mx-auto mt-8 overflow-hidden'>
-          <div className='home__title fly-in'>Sản phẩm gợi ý</div>
+          <div className='home__title fly-in'>
+            {language === "vi" ? "Sản phẩm gợi ý" : "おすすめ商品"}
+          </div>
           <Row gutter={[16, 16]}>
             {data.map(
               (item, i) =>

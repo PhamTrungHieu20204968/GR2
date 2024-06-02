@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Col, Row, Button, Tabs, Spin, InputNumber, Image } from "antd";
 import { StarFilled, FacebookOutlined } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Layout from "components/Layout";
 import ProductDescription from "../components/ProductDescription";
@@ -16,6 +16,7 @@ import { FacebookShareButton } from "react-share";
 function ProductDetail() {
   const params = useParams();
   const dispatch = useDispatch();
+  const { language } = useSelector((state) => state.auth);
   const [quantity, setQuantity] = useState(1);
   const { data, isLoading } = useGetProductByNameQuery({
     name: params.name,
@@ -39,7 +40,7 @@ function ProductDetail() {
       <div className='container mx-auto pt-3 h-full'>
         <div className='uppercase text-xl'>
           <Link to='/' className='text-gray-400 hover:text-black font-bold'>
-            Trang chủ
+            {language === "vi" ? "Trang chủ" : "ホーム"}
           </Link>
           <span className='mx-2 text-gray-400'>/</span>
           {params.category === "pets" && (
@@ -47,7 +48,7 @@ function ProductDetail() {
               to='/products/pets'
               className=' text-gray-400 hover:text-black font-bold'
             >
-              Thú cưng
+              {language === "vi" ? "Thú cưng" : "ペット"}
             </Link>
           )}
           {params.category === "foods" && (
@@ -55,7 +56,7 @@ function ProductDetail() {
               to='/products/foods'
               className=' text-gray-400 hover:text-black font-bold'
             >
-              Đồ ăn
+              {language === "vi" ? "Đồ ăn" : "料理"}
             </Link>
           )}
           {params.category === "accessories" && (
@@ -63,7 +64,7 @@ function ProductDetail() {
               to='/products/accessories'
               className=' text-gray-400 hover:text-black font-bold'
             >
-              Phụ kiện
+              {language === "vi" ? "Phụ kiện" : "アクセサリー"}
             </Link>
           )}
           <span className='mx-2 text-gray-400'>/</span>
@@ -99,7 +100,9 @@ function ProductDetail() {
             <h1 className='text-3xl font-bold'>{params.name}</h1>
             <div className='w-full flex justify-between text-lg mt-2'>
               <div>
-                <span className='mr-2'>Giá:</span>
+                <span className='mr-2'>
+                  {language === "vi" ? "Giá:" : "値段："}
+                </span>
                 <b>
                   {parseFloat(data?.price).toLocaleString("vi", {
                     style: "currency",
@@ -108,7 +111,11 @@ function ProductDetail() {
                 </b>
               </div>
               <div>
-                <span className='mr-2 '>{`Đánh giá(${rates?.length}):`}</span>
+                <span className='mr-2 '>
+                  {language === "vi"
+                    ? `Đánh giá(${rates?.length}):`
+                    : `評価(${rates?.length}):`}
+                </span>
                 {rates?.length > 0 ? (
                   <span className='text-xl'>
                     {rates?.reduce((total, item) => {
@@ -116,8 +123,10 @@ function ProductDetail() {
                     }, 0) / rates?.length}
                     <StarFilled className=' text-yellow-300 ml-1' />
                   </span>
-                ) : (
+                ) : language === "vi" ? (
                   "Chưa có đánh giá"
+                ) : (
+                  "評価がない"
                 )}
               </div>
             </div>
@@ -170,7 +179,7 @@ function ProductDetail() {
                 type='primary'
                 onClick={handleAddToCart}
               >
-                Thêm sản phẩm
+                {language === "vi" ? "Thêm sản phẩm" : "カートに追加"}
               </Button>
             </div>
             <div className='mt-4'>
@@ -180,7 +189,7 @@ function ProductDetail() {
                   type='button'
                 >
                   <FacebookOutlined className='mr-1' />
-                  Chia sẻ
+                  {language === "vi" ? "Chia sẻ" : "シェア"}
                 </button>
               </FacebookShareButton>
             </div>
@@ -194,8 +203,16 @@ function ProductDetail() {
             type='card'
             items={new Array(2).fill(null).map((_, i) => {
               const id = String(i + 1);
+              let label;
+              if(i === 0) {
+                if (language === 'vi') label = "Mô tả"
+                else label = "説明"
+              }else {
+                if (language === 'vi') label = "Đánh giá"
+                else label = "レート"
+              }
               return {
-                label: i === 0 ? "Mô tả" : "Đánh giá",
+                label,
                 key: id,
                 children:
                   i === 0 ? (
@@ -210,7 +227,7 @@ function ProductDetail() {
 
         <Row gutter={[16, 24]}>
           <div className='my-4 w-full text-3xl font-bold'>
-            Sản phẩm tương tự
+            {language === "vi" ? " Sản phẩm tương tự" : "同様の製品"}
           </div>
           <ListCard
             category={params.category}

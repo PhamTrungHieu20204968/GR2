@@ -12,23 +12,31 @@ function Login() {
   const navigate = useNavigate();
   const [login] = useLoginMutation();
   const dispatch = useDispatch();
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { isLoggedIn, language } = useSelector((state) => state.auth);
 
   const onFinish = (values) => {
     login(values)
       .then((res) => {
         if (res.data.error) {
-          message.error(res.data.error);
+          if (language === "vi") {
+            message.error(res.data.error);
+          } else message.error("ログインに失敗しました");
         } else {
           dispatch(setUser({ ...res.data, isLoggedIn: true }));
-          message.success("Đăng nhập thành công");
+          message.success(
+            language === "vi"
+              ? "Đăng nhập thành công"
+              : "ログインに成功しました"
+          );
           if (res.data.role === 2) {
             navigate("/admin");
           } else navigate("/");
         }
       })
       .catch((err) => {
-        message.error("Đăng nhập thất bại");
+        message.error(
+          language === "vi" ? "Đăng nhập thất bại" : "ログインに失敗しました"
+        );
         console.log(err);
       });
   };
@@ -47,7 +55,7 @@ function Login() {
           onFinish={onFinish}
         >
           <h1 className='text-left w-3/5 text-3xl mb-4 font-bold '>
-            Đăng nhập
+            {language === "vi" ? "Đăng nhập" : "ログイン"}
           </h1>
           <Form.Item
             name='account'
@@ -55,13 +63,16 @@ function Login() {
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhâp tài khoản!",
+                message:
+                  language === "vi"
+                    ? "Vui lòng nhập tài khoản!"
+                    : "アカウントを入力してください！",
               },
             ]}
           >
             <Input
               prefix={<UserOutlined className='site-form-item-icon' />}
-              placeholder='Tài khoản'
+              placeholder={language === "vi" ? "Tài khoản" : "アカウント"}
             />
           </Form.Item>
           <Form.Item
@@ -70,19 +81,24 @@ function Login() {
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhâp mật khẩu!",
+                message:
+                  language === "vi"
+                    ? "Vui lòng nhập mật khẩu"
+                    : "パスワードを入力してください",
               },
             ]}
           >
             <Input.Password
               prefix={<LockOutlined className='site-form-item-icon' />}
               type='password'
-              placeholder='Mật khẩu'
+              placeholder={language === "vi" ? "Mật khẩu" : "パスワード"}
             />
           </Form.Item>
           <Form.Item className='w-3/5'>
             <a className='text-blue-600' href='/login'>
-              Quên mật khẩu?
+              {language === "vi"
+                ? "Quên mật khẩu?"
+                : "パスワードをお忘れですか？"}
             </a>
           </Form.Item>
 
@@ -92,16 +108,20 @@ function Login() {
               htmlType='submit'
               className='bg-primary w-full'
             >
-              Đăng nhập
+              {language === "vi" ? "Đăng nhập" : "ログイン"}
             </Button>
-            Bạn chưa có tài khoản?{" "}
+            {language === "vi"
+              ? "Bạn chưa có tài khoản?"
+              : "アカウントをお持ちではありませんか？"}
             <Link to='/signup' className='text-blue-600'>
-              Đăng ký tại đây!
+              {language === "vi" ? "Đăng ký tại đây!" : "こちらで登録！"}
             </Link>
           </Form.Item>
 
           <Form.Item className='w-3/5'>
-            <Divider>Hoặc đăng nhập với</Divider>
+            <Divider>
+              {language === "vi" ? "Hoặc đăng nhập với" : "またはログイン"}
+            </Divider>
             <div className='w-full flex gap-2'>
               <GoogleLogin />
               <FacebookLogin />

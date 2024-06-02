@@ -2,38 +2,40 @@ import React from "react";
 import {
   LockOutlined,
   UserOutlined,
-  GoogleOutlined,
-  FacebookOutlined,
   PhoneOutlined,
 } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Form, Input, Divider, message } from "antd";
+import { useSelector } from "react-redux";
 
 import { useSignUpMutation } from "app/api/authService";
 import GoogleLogin from "../component/GoogleLogin";
+import FacebookLogin from "../component/FacebookLogin";
 function Signup() {
   const navigate = useNavigate();
   const [signup] = useSignUpMutation();
+  const { language } = useSelector((state) => state.auth);
   const onFinish = (values) => {
     signup(values)
       .then((res) => {
         if (res.data.error) {
-          message.error(res.data.error);
+          if (language === "vi") {
+            message.error(res.data.error);
+          } else message.error("登録に失敗しました");
         } else {
-          message.success("Đăng ký thành công");
+          message.success(
+            language === "vi" ? "Đăng ký thành công" : "登録に成功しました"
+          );
           navigate("/login");
         }
       })
       .catch((err) => {
-        message.error("Đăng ký thất bại");
+        message.error(
+          language === "vi" ? "Đăng ký thất bại" : "登録に失敗しました"
+        );
         console.log(err);
       });
   };
-
-  const loginWithGoogleHandler = () => {
-    window.open("http://localhost:3001/users/google", "_self");
-  };
-
   return (
     <div className='flex min-h-screen overflow-hidden'>
       <div className='hidden md:block flex-1 mim-h-full overflow-hidden bg-center bg-cover bg-[url("https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")]'></div>
@@ -45,7 +47,9 @@ function Signup() {
           size='large'
           onFinish={onFinish}
         >
-          <h1 className='text-left w-3/5 text-3xl mb-4 font-bold '>Đăng ký</h1>
+          <h1 className='text-left w-3/5 text-3xl mb-4 font-bold '>
+            {language === "vi" ? "Đăng ký" : "登録！"}
+          </h1>
 
           <Form.Item
             name='name'
@@ -53,13 +57,16 @@ function Signup() {
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhập họ và tên!",
+                message:
+                  language === "vi"
+                    ? "Vui lòng nhập họ và tên!"
+                    : "名前を入力しなければならない",
               },
             ]}
           >
             <Input
               prefix={<UserOutlined className='site-form-item-icon' />}
-              placeholder='Họ và tên'
+              placeholder={language === "vi" ? "Họ và tên" : "名前"}
             />
           </Form.Item>
           <Form.Item
@@ -68,13 +75,16 @@ function Signup() {
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhập tài khoản!",
+                message:
+                  language === "vi"
+                    ? "Vui lòng nhập tài khoản!"
+                    : "アカウントを入力しなければならない",
               },
             ]}
           >
             <Input
               prefix={<UserOutlined className='site-form-item-icon' />}
-              placeholder='Tài khoản'
+              placeholder={language === "vi" ? "Tài khoản" : "アカウント"}
             />
           </Form.Item>
           <Form.Item
@@ -83,14 +93,17 @@ function Signup() {
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhập mật khẩu!",
+                message:
+                  language === "vi"
+                    ? "Vui lòng nhập mật khẩu"
+                    : "パスワードを入力してください",
               },
             ]}
           >
             <Input.Password
               prefix={<LockOutlined className='site-form-item-icon' />}
               type='password'
-              placeholder='Mật khẩu'
+              placeholder={language === "vi" ? "Mật khẩu" : "パスワード"}
             />
           </Form.Item>
           <Form.Item
@@ -100,7 +113,10 @@ function Signup() {
             rules={[
               {
                 required: true,
-                message: "Vui lòng xác nhập lại mật khẩu!",
+                message:
+                  language === "vi"
+                    ? "Vui lòng xác nhập lại mật khẩu!"
+                    : "パスワードを再入力してください!",
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
@@ -114,7 +130,11 @@ function Signup() {
           >
             <Input.Password
               prefix={<LockOutlined className='site-form-item-icon' />}
-              placeholder='Nhập lại mật khẩu'
+              placeholder={
+                language === "vi"
+                  ? "Nhập lại mật khẩu"
+                  : "パスワードを再入力する"
+              }
             />
           </Form.Item>
 
@@ -148,25 +168,23 @@ function Signup() {
               htmlType='submit'
               className='bg-primary w-full'
             >
-              Đăng ký
+              {language === "vi" ? "Đăng ký" : "登録！"}
             </Button>
-            Bạn đã có tài khoản?{" "}
+            {language === "vi"
+              ? "Bạn chưa có tài khoản?"
+              : "アカウントをお持ちましたか？"}
             <Link to='/login' className='text-blue-600'>
-              Đăng nhập tại đây!
+              {language === "vi" ? "Đăng nhập tại đây!" : "こちらでログイン！"}
             </Link>
           </Form.Item>
 
           <Form.Item className='w-3/5'>
-            <Divider>Hoặc đăng ký với</Divider>
+            <Divider>
+              i{language === "vi" ? "Hoặc đăng ký vớ" : "または登録"}
+            </Divider>
             <div className='w-full flex gap-2'>
               <GoogleLogin />
-              <button
-                className='bg-blue-500 h-10 rounded-lg text-white custom-btn hover:bg-[#4096ff] w-full'
-                type='button'
-              >
-                <FacebookOutlined className='mr-1' />
-                Facebook
-              </button>
+              <FacebookLogin />
             </div>
           </Form.Item>
         </Form>

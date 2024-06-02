@@ -3,7 +3,6 @@
 @tailwind utilities;
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800;900&display=swap");
 
-
 body {
   font-family: Roboto;
 }
@@ -36,11 +35,12 @@ body {
   animation: fadeInAnimation ease 1s;
 }
 
-.ant-popover{
+.ant-popover {
   z-index: 40 !important;
 }
 
-.ant-popover-placement-bottom,.ant-popover-placement-top{
+.ant-popover-placement-bottom,
+.ant-popover-placement-top {
   z-index: 1001 !important;
 }
 
@@ -537,4 +537,8 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: #a8bbbf;
+}
+
+.avatar-inline {
+  display: inline-block !important;
 }

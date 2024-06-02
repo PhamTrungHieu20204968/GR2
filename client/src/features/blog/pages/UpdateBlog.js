@@ -9,7 +9,7 @@ import CreateBlog from "../components/CreateBlog";
 import { useGetBlogQuery } from "app/api/blogService";
 function UpdateBlog() {
   const params = useParams();
-  const { accessToken } = useSelector((state) => state.auth);
+  const { accessToken,language } = useSelector((state) => state.auth);
   const { data } = useGetBlogQuery({ id: params.id });
   if (!data || data.error) {
     return <Spin />;
@@ -20,7 +20,7 @@ function UpdateBlog() {
         <Row>
           <div className='uppercase text-xl'>
             <Link to='/' className='text-gray-400 font-bold hover:text-black'>
-              Trang chủ
+            {language === "vi" ? "Trang chủ" : "ホーム"}
             </Link>
             <span className='mx-2 text-gray-400'>/</span>
             <Link

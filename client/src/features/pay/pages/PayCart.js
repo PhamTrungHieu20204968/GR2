@@ -8,7 +8,7 @@ import Cart from "../components/Cart";
 import { useGetUserSaleQuery } from "app/api/saleService";
 function PayCart() {
   const cart = useSelector((state) => state.cart);
-  const { accessToken } = useSelector((state) => state.auth);
+  const { accessToken, language } = useSelector((state) => state.auth);
   const { data } = useGetUserSaleQuery({
     accessToken,
   });
@@ -19,7 +19,7 @@ function PayCart() {
   const onChangeStep = (value) => {
     if (value === 1) navigate("/pay");
     else if (value === 2) {
-      message.info("Bạn cần hoàn thành bước 2 trước");
+      message.info(language === "vi" ? "Bạn cần hoàn thành bước 2 trước" : "ステップ2を完了する必要があります");
       return;
     }
   };
@@ -35,13 +35,13 @@ function PayCart() {
                 className='w-full'
                 items={[
                   {
-                    title: "Xem giỏ hàng",
+                    title: language === "vi" ? "Xem giỏ hàng" : "カートを見る",
                   },
                   {
-                    title: "Thanh toán",
+                    title: language === "vi" ? "Thanh toán" : "支払い",
                   },
                   {
-                    title: "Hoàn tất đặt hàng",
+                    title: language === "vi" ? "Hoàn tất đặt hàng" : "完了",
                   },
                 ]}
               />
@@ -54,14 +54,18 @@ function PayCart() {
         </div>
       ) : (
         <div className='flex flex-col justify-center items-center w-full h-full'>
-          <div className='w-fit'>Chưa có sản phẩm nào trong giỏ hàng.</div>
+          <div className='w-fit'>
+            {language === "vi"
+              ? "Chưa có sản phẩm nào trong giỏ hàng."
+              : "何もない"}
+          </div>
           <Button
             type='primary'
             size='large'
             className='rounded-none w-fit mt-4 font-bold'
             onClick={() => navigate("/")}
           >
-            QUAY TRỞ LẠI CỬA HÀNG
+            {language === "vi" ? "QUAY TRỞ LẠI CỬA HÀNG" : "ホームページに戻る"}
           </Button>
         </div>
       )}

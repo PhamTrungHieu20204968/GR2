@@ -13,7 +13,9 @@ import { socketContext } from "components/SocketProvider";
 function UserComment({ user, blogId, reply, edit, setEdit, receiverId }) {
   const [createComment] = useCreateCommentMutation();
   const [updateComment] = useUpdateCommentMutation();
-  const { userId, accessToken, name } = useSelector((state) => state.auth);
+  const { userId, accessToken, name, language } = useSelector(
+    (state) => state.auth
+  );
   const [content, setContent] = useState(edit?.status ? edit?.content : "");
   const socket = useContext(socketContext);
   const handleSubmit = () => {
@@ -32,7 +34,9 @@ function UserComment({ user, blogId, reply, edit, setEdit, receiverId }) {
       })
         .then((res) => {
           if (res.data?.error) {
-            message.error(res.data.error);
+            if (language === "vi") {
+              message.error(res.data.error);
+            } else message.error("失敗しました");
           } else {
             setContent("");
             if (userId !== receiverId) {
@@ -69,9 +73,13 @@ function UserComment({ user, blogId, reply, edit, setEdit, receiverId }) {
       })
         .then((res) => {
           if (res.data?.error) {
-            message.error(res.data.error);
+            if (language === "vi") {
+              message.error(res.data.error);
+            } else message.error("失敗しました");
           } else {
-            message.success("Đã cập nhật");
+            message.success(
+              language === "vi" ? "Cập nhật thành công" : "修正に成功しました"
+            );
             setContent("");
             setEdit({ status: false, content: "", id: 0 });
           }
@@ -102,8 +110,12 @@ function UserComment({ user, blogId, reply, edit, setEdit, receiverId }) {
       <TextArea
         placeholder={
           reply?.userName
-            ? `Phản hồi ${reply?.userName}`
-            : "Nhập bình luận của bạn ..."
+            ? language === "vi"
+              ? `Phản hồi ${reply?.userName}`
+              : `${reply?.userName}に返事する`
+            : language === "vi"
+            ? "Nhập bình luận của bạn ..."
+            : `コメントを入力。。。`
         }
         autoSize={{
           minRows: 1,

@@ -20,7 +20,7 @@ import {
 } from "app/api/orderService";
 import { socketContext } from "components/SocketProvider";
 function ListOrder() {
-  const { accessToken, userId } = useSelector((state) => state.auth);
+  const { accessToken, userId, language } = useSelector((state) => state.auth);
   const { data } = useGetUserOrdersQuery({
     accessToken,
   });
@@ -64,7 +64,7 @@ function ListOrder() {
   };
   const handleOk = () => {
     if (!sendTime) {
-      message.error("Vui lòng chọn thời gian!");
+      message.error(language === "vi" ? "Vui lòng chọn thời gian" : "時間を選択してください");
       return;
     }
     const totalCost = currentCart.reduce((total, item) => {
@@ -84,9 +84,13 @@ function ListOrder() {
     })
       .then((res) => {
         if (res.data?.error) {
-          message.error(res.data.error);
+          message.error(
+            language === "vi" ? "Tạo thất bại" : "作成に失敗しました"
+          );
         } else {
-          message.success("Tạo thành công!");
+          message.success(
+            language === "vi" ? "Tạo thành công" : "作成に成功しました"
+          );
           socket?.emit("schedule-notification", {
             receiverId: userId,
             notificationId: res.data.notification.id,
@@ -99,19 +103,21 @@ function ListOrder() {
         }
       })
       .catch((err) => {
-        message.error("Tạo thất bại!");
+        message.error(
+          language === "vi" ? "Tạo thất bại" : "作成に失敗しました"
+        );
         console.log(err);
       });
   };
   const columns = [
     {
-      title: "Địa chỉ",
+      title: language === "vi" ? "Địa chỉ" : "アドレス",
       width: 200,
       key: "address",
       render: (_, record) => `${record?.address} - ${record?.city}`,
     },
     {
-      title: "Giá",
+      title: language === "vi" ? "GIÁ" : "値段",
       key: "totalMoney",
       render: (_, record) =>
         parseInt(record?.totalMoney).toLocaleString("vi", {
@@ -122,57 +128,63 @@ function ListOrder() {
       width: 150,
     },
     {
-      title: "Ghi chú",
+      title: language === "vi" ? "Ghi chú" : "メモ",
       key: "note",
       render: (_, record) => record?.note || "Không có",
       width: 200,
     },
     {
-      title: "Trạng thái",
+      title: language === "vi" ? "Trạng thái" : "ステータス",
       key: "status",
       width: 120,
       filters: [
         {
-          text: "Đang xử lý",
+          text: language === "vi" ? "Đang xử lý" : "処理中",
           value: 1,
         },
         {
-          text: "Đang giao hàng",
+          text: language === "vi" ? "Đang giao hàng" : "配送中",
           value: 2,
         },
         {
-          text: "Đã hoàn thành",
+          text: language === "vi" ? "Đã hoàn thành" : "完了",
           value: 3,
         },
       ],
       onFilter: (value, record) => record?.status === value,
       render: (_, record) => {
         if (record?.status < 2) {
-          return "Đang xử lý";
+          return language === "vi" ? "Đang xử lý" : "処理中";
         } else if (record?.status < 3) {
-          return "Đang giao hàng";
-        } else return "Đã hoàn thành";
+          return language === "vi" ? "Đang giao hàng" : "配送中";
+        } else return language === "vi" ? "Đã hoàn thành" : "完了";
       },
     },
     {
-      title: "Loại",
+      title: language === "vi" ? "Loại" : "種類",
       key: "type",
       render: (_, record) =>
-        (record.type === 1 && "Thanh toán toàn bộ đơn hàng") ||
-        (record.type === 2 && "Thanh toán 50% đơn hàng") ||
-        (record.type === 3 && "Thanh toán khi nhận hàng"),
+        (record.type === 1 && language === "vi"
+          ? "Thanh toán toàn bộ đơn hàng"
+          : "全部支払う") ||
+        (record.type === 2 && language === "vi"
+          ? "Thanh toán 50% đơn hàng"
+          : "半分支払う") ||
+        (record.type === 3 && language === "vi"
+          ? "Thanh toán khi nhận hàng"
+          : "受けてから支払う"),
       width: 120,
     },
 
     {
-      title: "Hành động",
+      title: language === "vi" ? "Hành động" : "アクション",
       key: "action",
       fixed: "right",
-      width: 120,
+      width: language === "vi" ? 120 : 200,
       render: (_, record) => {
         return (
-          <Button type='primary' onClick={() => handleReOrder(record)}>
-            Tạo lời nhắc
+          <Button type='primary' className="text-wrap" onClick={() => handleReOrder(record)}>
+            {language === "vi" ? "Tạo lời nhắc" : "リマインダーを作成する"}
           </Button>
         );
       },
@@ -181,13 +193,13 @@ function ListOrder() {
   const expandedRowRender = (row) => {
     const columns = [
       {
-        title: "Tên sản phẩm",
+        title: language === "vi" ? "Tên sản phẩm" : "製品名",
         key: "name",
         width: "50%",
         render: (_, record) => record.product.name,
       },
       {
-        title: "Giá",
+        title: language === "vi" ? "Giá" : "値段：",
         key: "price",
         render: (_, record) =>
           parseInt(record.product.price).toLocaleString("vi", {
@@ -196,7 +208,7 @@ function ListOrder() {
           }),
       },
       {
-        title: "Số lượng",
+        title: language === "vi" ? "Số lượng" : "量",
         dataIndex: "quantity",
         key: "quantity",
       },
@@ -213,7 +225,7 @@ function ListOrder() {
 
   const cartColumns = [
     {
-      title: "SẢN PHẨM",
+      title: language === "vi" ? "SẢN PHẨM" : "製品",
       dataIndex: "product",
       key: "product",
       width: 400,
@@ -235,7 +247,7 @@ function ListOrder() {
       ),
     },
     {
-      title: "GIÁ",
+      title: language === "vi" ? "GIÁ" : "値段：",
       dataIndex: "price",
       render: (_, record) => (
         <b>
@@ -247,7 +259,7 @@ function ListOrder() {
       ),
     },
     {
-      title: "SỐ LƯỢNG",
+      title: language === "vi" ? "SỐ LƯỢNG" : "量",
       key: "quantity",
       render: (_, record) => (
         <InputNumber
@@ -268,7 +280,7 @@ function ListOrder() {
       ),
     },
     {
-      title: "TỔNG CỘNG",
+      title: language === "vi" ? "TỔNG CỘNG" : "合計",
       dataIndex: "total",
       key: "total",
       render: (_, record) => {
@@ -288,7 +300,9 @@ function ListOrder() {
   ];
   return (
     <div className=''>
-      <div className='text-2xl font-bold mb-4'>Danh sách đơn hàng</div>
+      <div className='text-2xl font-bold mb-4'>
+        {language === "vi" ? "Danh sách đơn hàng" : "注文リスト"}
+      </div>
 
       <Table
         columns={columns}
@@ -301,11 +315,15 @@ function ListOrder() {
         }}
       />
       <Modal
-        title='Tạo lời nhắc cho đơn hàng'
+        title={
+          language === "vi"
+            ? "'Tạo lời nhắc cho đơn hàng'"
+            : "注文のリマインダーを作成する"
+        }
         open={isModalOpen}
         onOk={handleOk}
-        okText='Tạo lời nhắc'
-        cancelText='Hủy'
+        okText={language === "vi" ? "Tạo lời nhắc" : "作成する"}
+        cancelText={language === "vi" ? "Hủy" : "キャンセル"}
         onCancel={handleCancel}
       >
         <Table
@@ -313,9 +331,11 @@ function ListOrder() {
           columns={cartColumns}
           pagination={false}
         />
-        <div className='my-4 text-base font-semibold'>Thiết lập thời gian</div>
+        <div className='my-4 text-base font-semibold'>
+          {language === "vi" ? "Thiết lập thời gian" : "時間を設定する"}
+        </div>
         <Segmented
-          defaultValue='Đặt 1 lần'
+          defaultValue={1}
           style={{
             marginBottom: 16,
           }}
@@ -325,14 +345,14 @@ function ListOrder() {
           }}
           value={tab}
           options={[
-            { label: "Đặt 1 lần", value: 1 },
-            { label: "Đặt hàng tuần", value: 2 },
-            { label: "Đặt hàng tháng", value: 3 },
+            { label: language === "vi" ? "Đặt 1 lần" : "一度だけ", value: 1 },
+            { label: language === "vi" ? "Đặt hàng tuần" : "毎週", value: 2 },
+            { label: language === "vi" ? "Đặt hàng tháng" : "毎月", value: 3 },
           ]}
         />
         {tab === 1 && (
           <div>
-            Đặt 1 lần vào:{" "}
+            {language === "vi" ? " Đặt 1 lần vào:" : "一度だけ："}
             <DatePicker
               onChange={(value) => {
                 if (value) {
@@ -344,15 +364,15 @@ function ListOrder() {
               minDate={dayjs(dayjs(Date.now()).add(1, "day"), "YYYY-MM-DD")}
               inputReadOnly
               className='ml-4'
-              placeholder='Chọn ngày ...'
+              placeholder={language === "vi" ? "Chọn ngày ..." : "日時を選ぶ"}
             />
           </div>
         )}
         {tab === 2 && (
           <div className='flex items-center'>
-            <span>Đặt hàng tuần vào:</span>
+            <span>{language === "vi" ? " Đặt hàng tuần vào:" : "毎週の"}</span>
             <Select
-              placeholder='Chọn ngày ...'
+              placeholder={language === "vi" ? "Chọn ngày ..." : "日時を選ぶ"}
               mode='multiple'
               allowClear
               placement='topRight'
@@ -365,31 +385,31 @@ function ListOrder() {
               options={[
                 {
                   value: 1,
-                  label: "Thứ hai",
+                  label: language === "vi" ? "Thứ hai" : "月曜日",
                 },
                 {
                   value: 2,
-                  label: "Thứ ba",
+                  label: language === "vi" ? "Thứ ba" : "火曜日",
                 },
                 {
                   value: 3,
-                  label: "Thứ tư",
+                  label: language === "vi" ? "Thứ tư" : "水曜日",
                 },
                 {
                   value: 4,
-                  label: "Thứ năm",
+                  label: language === "vi" ? "Thứ năm" : "木曜日",
                 },
                 {
                   value: 5,
-                  label: "Thứ sáu",
+                  label: language === "vi" ? "Thứ sáu" : "金曜日",
                 },
                 {
                   value: 6,
-                  label: "Thứ bảy",
+                  label: language === "vi" ? "Thứ bảy" : "土曜日",
                 },
                 {
                   value: 0,
-                  label: "Chủ nhật",
+                  label: language === "vi" ? "Chủ nhật" : "日曜日",
                 },
               ]}
             />
@@ -397,9 +417,11 @@ function ListOrder() {
         )}
         {tab === 3 && (
           <div className='flex items-center'>
-            <span>Đặt hàng tháng vào ngày:</span>
+            <span>
+              {language === "vi" ? "Đặt hàng tháng vào ngày::" : "毎月の"}
+            </span>
             <Select
-              placeholder='Chọn ngày ...'
+              placeholder={language === "vi" ? "Chọn ngày ..." : "日時を選ぶ"}
               mode='multiple'
               allowClear
               className='ml-4 flex-1'
@@ -414,127 +436,127 @@ function ListOrder() {
               options={[
                 {
                   value: 1,
-                  label: "Ngày 1",
+                  label: language === "vi" ? "Ngày 1" : "1日",
                 },
                 {
                   value: 2,
-                  label: "Ngày 2",
+                  label: language === "vi" ? "Ngày 2" : "2日",
                 },
                 {
                   value: 3,
-                  label: "Ngày 3",
+                  label: language === "vi" ? "Ngày 3" : "3日",
                 },
                 {
                   value: 4,
-                  label: "Ngày 4",
+                  label: language === "vi" ? "Ngày 4" : "4日",
                 },
                 {
                   value: 5,
-                  label: "Ngày 5",
+                  label: language === "vi" ? "Ngày 5" : "5日",
                 },
                 {
                   value: 6,
-                  label: "Ngày 6",
+                  label: language === "vi" ? "Ngày 6" : "6日",
                 },
                 {
                   value: 7,
-                  label: "Ngày 7",
+                  label: language === "vi" ? "Ngày 7" : "7日",
                 },
                 {
                   value: 8,
-                  label: "Ngày 8",
+                  label: language === "vi" ? "Ngày 8" : "8日",
                 },
                 {
                   value: 9,
-                  label: "Ngày 9",
+                  label: language === "vi" ? "Ngày 9" : "9日",
                 },
                 {
                   value: 10,
-                  label: "Ngày 10",
+                  label: language === "vi" ? "Ngày 10" : "10日",
                 },
                 {
                   value: 11,
-                  label: "Ngày 11",
+                  label: language === "vi" ? "Ngày 11" : "11日",
                 },
                 {
                   value: 12,
-                  label: "Ngày 12",
+                  label: language === "vi" ? "Ngày 12" : "12日",
                 },
                 {
                   value: 13,
-                  label: "Ngày 13",
+                  label: language === "vi" ? "Ngày 13" : "13日",
                 },
                 {
                   value: 14,
-                  label: "Ngày 14",
+                  label: language === "vi" ? "Ngày 14" : "14日",
                 },
                 {
                   value: 15,
-                  label: "Ngày 15",
+                  label: language === "vi" ? "Ngày 15" : "15日",
                 },
                 {
                   value: 16,
-                  label: "Ngày 16",
+                  label: language === "vi" ? "Ngày 16" : "16日",
                 },
                 {
                   value: 17,
-                  label: "Ngày 17",
+                  label: language === "vi" ? "Ngày 17" : "17日",
                 },
                 {
                   value: 18,
-                  label: "Ngày 18",
+                  label: language === "vi" ? "Ngày 18" : "18日",
                 },
                 {
                   value: 19,
-                  label: "Ngày 19",
+                  label: language === "vi" ? "Ngày 19" : "19日",
                 },
                 {
                   value: 20,
-                  label: "Ngày 20",
+                  label: language === "vi" ? "Ngày 20" : "20日",
                 },
                 {
                   value: 21,
-                  label: "Ngày 21",
+                  label: language === "vi" ? "Ngày 21" : "21日",
                 },
                 {
                   value: 22,
-                  label: "Ngày 22",
+                  label: language === "vi" ? "Ngày 22" : "22日",
                 },
                 {
                   value: 23,
-                  label: "Ngày 23",
+                  label: language === "vi" ? "Ngày 23" : "23日",
                 },
                 {
                   value: 24,
-                  label: "Ngày 24",
+                  label: language === "vi" ? "Ngày 24" : "24日",
                 },
                 {
                   value: 25,
-                  label: "Ngày 25",
+                  label: language === "vi" ? "Ngày 25" : "25日",
                 },
                 {
                   value: 26,
-                  label: "Ngày 26",
+                  label: language === "vi" ? "Ngày 26" : "26日",
                 },
                 {
                   value: 27,
-                  label: "Ngày 27",
+                  label: language === "vi" ? "Ngày 27" : "27日",
                 },
                 {
                   value: 28,
-                  label: "Ngày 28",
+                  label: language === "vi" ? "Ngày 28" : "28日",
                 },
                 {
                   value: 29,
-                  label: "Ngày 29",
+                  label: language === "vi" ? "Ngày 29" : "29日",
                 },
                 {
                   value: 30,
-                  label: "Ngày 30",
+                  label: language === "vi" ? "Ngày 30" : "30日",
                 },
                 {
                   value: 31,
-                  label: "Ngày 31",
+                  label: language === "vi" ? "Ngày 31" : "31日",
                 },
               ]}
             />

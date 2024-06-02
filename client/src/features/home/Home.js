@@ -1,5 +1,6 @@
 import React from "react";
 import { Carousel } from "antd";
+import { useSelector } from "react-redux";
 
 import Layout from "components/Layout";
 import ListCard from "components/ListCard";
@@ -11,6 +12,7 @@ import banner2 from "assets/imgs/banner2.jpg";
 import ReCommentProducts from "./components/ReCommentProducts";
 
 function Home() {
+  const { language } = useSelector((state) => state.auth);
   return (
     <Layout>
       <div className='home'>
@@ -27,21 +29,27 @@ function Home() {
         </Carousel>
         <ReCommentProducts />
         <section className='container mx-auto mt-8 overflow-hidden'>
-          <div className='home__title fly-in'>Thú cưng</div>
+          <div className='home__title fly-in'>
+            {language === "vi" ? "Thú cưng" : "ペット"}
+          </div>
           <ListCard category='pets'></ListCard>
         </section>
 
         <img src={banner1} alt='banner1' className='banner' />
 
         <section className='container mx-auto mt-8 overflow-hidden'>
-          <div className='home__title fly-in'>Đồ Ăn</div>
+          <div className='home__title fly-in'>
+            {language === "vi" ? "Đồ ăn" : "料理"}
+          </div>
           <ListCard category='foods'></ListCard>
         </section>
 
         <img src={banner2} alt='banner1' className='banner' />
 
         <section className='container mx-auto mt-8 overflow-hidden'>
-          <div className='home__title fly-in'>Phụ kiện</div>
+          <div className='home__title fly-in'>
+            {language === "vi" ? "Phụ kiện" : "アクセサリー"}
+          </div>
           <ListCard category='accessories'></ListCard>
         </section>
       </div>

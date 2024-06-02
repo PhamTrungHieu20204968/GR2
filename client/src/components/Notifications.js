@@ -14,7 +14,7 @@ import {
 import { socketContext } from "./SocketProvider";
 
 function Notifications() {
-  const { accessToken, notificationSetting } = useSelector(
+  const { accessToken, notificationSetting, language } = useSelector(
     (state) => state.auth
   );
   const socket = useContext(socketContext);
@@ -111,7 +111,6 @@ function Notifications() {
           console.log(err);
         });
     });
-
   }, [socket]);
 
   useEffect(() => {
@@ -158,7 +157,12 @@ function Notifications() {
       content={<ListNotifications data={filteredData} />}
     >
       <Badge count={filteredData?.filter((item) => item.status === 0)?.length}>
-        <Tooltip title='Thông báo' placement='bottom' color='#666' zIndex={60}>
+        <Tooltip
+          title={language === "vi" ? "Thông báo" : "お知らせ"}
+          placement='bottom'
+          color='#666'
+          zIndex={60}
+        >
           <BellOutlined
             className='text-2xl text-white font-bold cursor-pointer hover:text-primary'
             onClick={handleSeenNotifications}

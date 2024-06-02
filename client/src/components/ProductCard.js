@@ -2,12 +2,13 @@ import React from "react";
 import { ShoppingOutlined, ShoppingFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { Image, Tooltip } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { addToCart } from "app/slices/cartSlice";
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
+  const { language } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const handleOnclickProduct = () => {
     if (product?.categoryId === 1) {
@@ -41,7 +42,7 @@ function ProductCard({ product }) {
         />
         <div className='product-card__card-icon absolute bottom-5 left-5 text-3xl text-primary hover:cursor-pointer'>
           <ShoppingOutlined className='icon-outline fly-in' />
-          <Tooltip title='Thêm vào giỏ'>
+          <Tooltip title={language === "vi" ? "Thêm vào giỏ" : "カートに追加"}>
             <ShoppingFilled className='icon-filled' onClick={handleAddToCart} />
           </Tooltip>
         </div>
@@ -64,7 +65,7 @@ function ProductCard({ product }) {
           })}
         </b>
         {product?.salePrice && (
-          <b className="ml-2">
+          <b className='ml-2'>
             {parseInt(product?.salePrice).toLocaleString("vi", {
               style: "currency",
               currency: "VND",

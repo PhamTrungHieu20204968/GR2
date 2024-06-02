@@ -11,7 +11,7 @@ import { useGoogleLoginMutation } from "app/api/authService";
 import { setUser } from "app/slices/authSlice";
 function GoogleLogin() {
   const [info, setInfo] = useState();
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { isLoggedIn, language } = useSelector((state) => state.auth);
   const [googleLogin] = useGoogleLoginMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -44,17 +44,27 @@ function GoogleLogin() {
           })
             .then((res) => {
               if (res.data.error) {
-                message.error(res.data.error);
+                if (language === "vi") {
+                  message.error(res.data.error);
+                } else message.error("ログインに失敗しました");
               } else {
                 dispatch(setUser({ ...res.data, isLoggedIn: true }));
-                message.success("Đăng nhập thành công");
+                message.success(
+                  language === "vi"
+                    ? "Đăng nhập thành công"
+                    : "ログインに成功しました"
+                );
                 if (res.data.role === 2) {
                   navigate("/admin");
                 } else navigate("/");
               }
             })
             .catch((err) => {
-              message.error("Đăng nhập thất bại");
+              message.error(
+                language === "vi"
+                  ? "Đăng nhập thất bại"
+                  : "ログインに失敗しました"
+              );
               console.log(err);
             });
         })

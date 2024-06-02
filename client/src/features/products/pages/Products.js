@@ -12,6 +12,7 @@ import { setOrder, setMaxPrice } from "app/slices/filterSlice";
 function Products() {
   const params = useParams();
   const filter = useSelector((state) => state.filter);
+  const { language } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { data, isLoading } = useGetAllProductsByCategoryQuery({
     name: params.category,
@@ -48,17 +49,23 @@ function Products() {
         <div className='flex justify-between'>
           <div className='uppercase text-xl'>
             <Link to='/' className='text-gray-400 font-bold hover:text-black'>
-              Trang chủ
+              {language === "vi" ? "Trang chủ" : "ホーム"}
             </Link>
             <span className='mx-2 text-gray-400'>/</span>
             {params.category === "pets" && (
-              <span className=' font-bold'>Thú cưng</span>
+              <span className=' font-bold'>
+                {language === "vi" ? "Thú cưng" : "ペット"}
+              </span>
             )}
             {params.category === "foods" && (
-              <span className=' font-bold'>Đồ ăn</span>
+              <span className=' font-bold'>
+                {language === "vi" ? "Đồ ăn" : "料理"}
+              </span>
             )}
             {params.category === "accessories" && (
-              <span className=' font-bold'>Phụ kiện</span>
+              <span className=' font-bold'>
+                {language === "vi" ? "Phụ kiện" : "アクセサリー"}
+              </span>
             )}
           </div>
           <div className='options'>
@@ -71,15 +78,27 @@ function Products() {
               options={[
                 {
                   value: 0,
-                  label: "Thứ tự mặc định",
+                  label: (
+                    <span>
+                      {language === "vi" ? "Thứ tự mặc định" : "デフォルト"}
+                    </span>
+                  ),
                 },
                 {
                   value: 1,
-                  label: "Thứ tự theo giá: Giảm dần",
+                  label: (
+                    <span>
+                      {language === "vi" ? "Thứ tự theo giá: Giảm dần" : "降順"}
+                    </span>
+                  ),
                 },
                 {
                   value: 2,
-                  label: "Thứ tự theo giá: Tăng dần",
+                  label: (
+                    <span>
+                      {language === "vi" ? "Thứ tự theo giá: Tăng dần" : "昇順"}
+                    </span>
+                  ),
                 },
               ]}
             />
@@ -87,7 +106,7 @@ function Products() {
         </div>
         <Row className='mt-4' gutter={16}>
           <Col span={6} className='sidebar'>
-            <SideBar filter={filter}></SideBar>
+            <SideBar filter={filter} data={data}></SideBar>
           </Col>
           <Col span={18} className='content'>
             {data?.length > 0 ? (
@@ -151,7 +170,11 @@ function Products() {
               </Row>
             ) : (
               <Row>
-                <span>Không tìm thấy sản phẩm nào</span>
+                <span>
+                  {language === "vi"
+                    ? "Không tìm thấy sản phẩm nào"
+                    : "何もない"}
+                </span>
               </Row>
             )}
           </Col>

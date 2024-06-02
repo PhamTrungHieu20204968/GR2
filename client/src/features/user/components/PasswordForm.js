@@ -7,7 +7,7 @@ function PasswordForm() {
   const [form] = Form.useForm();
   const [update] = useUpdateUserPasswordMutation();
   const [loading, setLoading] = useState(false);
-  const { accessToken, userId } = useSelector((state) => state.auth);
+  const { accessToken, userId, language } = useSelector((state) => state.auth);
 
   const formItemLayout = {
     labelCol: {
@@ -39,22 +39,30 @@ function PasswordForm() {
     })
       .then((res) => {
         if (res.data?.error) {
-          message.error(res.data.error);
+          if (language === "vi") {
+            message.error(res.data.error);
+          } else message.error("失敗しました");
         } else {
-          message.success("Cập nhật thành công!");
+          message.success(
+            language === "vi" ? "Cập nhật thành công" : "修正に成功しました"
+          );
         }
         form.resetFields();
         setLoading(false);
       })
       .catch((err) => {
-        message.error("Cập nhật thất bại!");
+        message.error(
+          language === "vi" ? "Cập nhật thất bại" : "修正に失敗しました"
+        );
         console.log(err);
         setLoading(false);
       });
   };
   return (
     <div>
-      <div className='text-2xl font-bold mb-4'>Thay đổi mật khẩu</div>
+      <div className='text-2xl font-bold mb-4'>
+        {language === "vi" ? "Thay đổi mật khẩu" : "パスワードを変更する"}
+      </div>
       <Form
         form={form}
         name='control-hooks'
@@ -64,11 +72,14 @@ function PasswordForm() {
       >
         <Form.Item
           name='password'
-          label='Mật khẩu'
+          label={language === "vi" ? "Mật khẩu" : "パスワード"}
           rules={[
             {
               required: true,
-              message: "Vui lòng nhập mật khẩu!",
+              message:
+                language === "vi"
+                  ? "Vui lòng nhập mật khẩu!"
+                  : "パスワードを入力しなければならない",
             },
           ]}
           hasFeedback
@@ -78,20 +89,29 @@ function PasswordForm() {
 
         <Form.Item
           name='confirm'
-          label='Nhập lại mật khẩu'
+          label={language === "vi" ? "Nhập lại mật khẩu" : "パスワードの再入力"}
           dependencies={["password"]}
           hasFeedback
           rules={[
             {
               required: true,
-              message: "Vui lòng nhập lại mật khẩu!",
+              message:
+                language === "vi"
+                  ? "Vui lòng nhập lại mật khẩu!"
+                  : "パスワードを再入力しなければならない",
             },
             ({ getFieldValue }) => ({
               validator(_, value) {
                 if (!value || getFieldValue("password") === value) {
                   return Promise.resolve();
                 }
-                return Promise.reject(new Error("Mật khẩu không trùng khớp!"));
+                return Promise.reject(
+                  new Error(
+                    language === "vi"
+                      ? "Mật khẩu không trùng khớp!"
+                      : "再入力が正しくない"
+                  )
+                );
               },
             }),
           ]}
@@ -106,7 +126,7 @@ function PasswordForm() {
           }}
         >
           <Button type='primary' htmlType='submit' loading={loading}>
-            Đổi mật khẩu
+            {language === "vi" ? "Đổi mật khẩu" : "変更する"}
           </Button>
         </Form.Item>
       </Form>

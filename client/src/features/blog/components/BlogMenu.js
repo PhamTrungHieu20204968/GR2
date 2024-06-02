@@ -6,7 +6,9 @@ import { useNavigate } from "react-router-dom";
 import { useDeleteBlogMutation } from "app/api/blogService";
 function BlogMenu({ blog }) {
   const [deleteBlog] = useDeleteBlogMutation();
-  const { accessToken, userId, role } = useSelector((state) => state.auth);
+  const { accessToken, userId, role, language } = useSelector(
+    (state) => state.auth
+  );
   const navigate = useNavigate();
   const handleDeleteBlog = () => {
     deleteBlog({
@@ -17,9 +19,11 @@ function BlogMenu({ blog }) {
     })
       .then((res) => {
         if (res.data?.error) {
-          message.error(res.data.error);
+          if (language === "vi") {
+            message.error(res.data.error);
+          } else message.error("失敗しました");
         } else {
-          message.success("Xóa thành công");
+          message.success(language === "vi" ? "Xóa thành công" : "削除に成功しました");
         }
       })
       .catch((err) => {
@@ -30,11 +34,11 @@ function BlogMenu({ blog }) {
   return (
     <div className='z-40'>
       <div className='text-base mb-2 last:mb-0 cursor-pointer hover:bg-gray-200 rounded-md p-2'>
-        Báo cáo bài viết
+        {language === "vi" ? "Báo cáo bài viết" : "報告する"}
       </div>
       {(userId === blog.userId || role > 1) && (
         <div className='text-base mb-2 last:mb-0 cursor-pointer hover:bg-gray-200 rounded-md p-2'>
-          Gỡ bài viết
+          {language === "vi" ? "Gỡ bài viết" : "抜く"}
         </div>
       )}
       {(userId === blog.userId || role > 1) && (
@@ -42,19 +46,19 @@ function BlogMenu({ blog }) {
           className='text-base mb-2 last:mb-0 cursor-pointer hover:bg-gray-200 rounded-md p-2'
           onClick={() => navigate(`/blogs/${blog.id}`)}
         >
-          Sửa bài viết
+          {language === "vi" ? "Sửa bài viết" : "編集する"}
         </div>
       )}
       {(userId === blog.userId || role > 1) && (
         <Popconfirm
           title='Xóa bài viết'
           description='Bạn muốn xóa bài viết này?'
-          okText='Có'
-          cancelText='Không'
+          okText={language === "vi" ? "Có" : "オーケー"}
+          cancelText={language === "vi" ? "Không" : "いいえ"}
           onConfirm={handleDeleteBlog}
         >
           <div className='text-base mb-2 text-red-500 last:mb-0 cursor-pointer hover:bg-gray-200 rounded-md p-2'>
-            Xóa bài viết
+            {language === "vi" ? "Xóa bài viết" : "削除する"}
           </div>
         </Popconfirm>
       )}

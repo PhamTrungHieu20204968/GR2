@@ -10,7 +10,7 @@ function InforForm({ data }) {
   const [update] = useUpdateUserMutation();
   const [loading, setLoading] = useState(false);
   const [edit, setEdit] = useState(false);
-  const { accessToken, userId } = useSelector((state) => state.auth);
+  const { accessToken, userId, language } = useSelector((state) => state.auth);
 
   const formItemLayout = {
     labelCol: {
@@ -52,15 +52,22 @@ function InforForm({ data }) {
     })
       .then((res) => {
         if (res.data?.error) {
-          message.error(res.data.error);
+          if (language === "vi") {
+            message.error(res.data.error);
+          } else
+            message.error(
+              language === "vi"
+                ? "Lỗi kết nối server! Vui lòng thử lại sau."
+                : "サーバー接続エラー！後でもう一度お試しください。"
+            );
         } else {
-          message.success("Cập nhật thành công!");
+          message.success(language === "vi" ? "Sửa thành công" : "修正に成功しました");
           setEdit(false);
         }
         setLoading(false);
       })
       .catch((err) => {
-        message.error("Cập nhật thất bại!");
+        message.error(language === "vi" ? "Sửa thất bại" : "修正に失敗しました");
         console.log(err);
         setLoading(false);
       });
@@ -68,7 +75,9 @@ function InforForm({ data }) {
 
   return (
     <div>
-      <div className='text-2xl font-bold mb-4'>Thông tin người dùng</div>
+      <div className='text-2xl font-bold mb-4'>
+        {language === "vi" ? "Thông tin người dùng" : "自己情報"}
+      </div>
       <Form
         form={form}
         name='control-hooks'
@@ -77,7 +86,11 @@ function InforForm({ data }) {
         initialValues={{ ...data }}
         {...formItemLayout}
       >
-        <Form.Item name='avatar' label='Ảnh đại diện' className='text-center'>
+        <Form.Item
+          name='avatar'
+          label={language === "vi" ? "Ảnh đại diện" : "アバター"}
+          className='text-center'
+        >
           {edit ? (
             <Upload
               onChange={({ file }) => {
@@ -87,10 +100,13 @@ function InforForm({ data }) {
               listType='picture-circle'
               beforeUpload={() => false}
               maxCount={1}
+              className='mx-auto avatar-inline'
             >
               <button style={{ border: 0, background: "none" }} type='button'>
                 <PlusOutlined />
-                <div style={{ marginTop: 8 }}>Đăng hình ảnh</div>
+                <div style={{ marginTop: 8 }}>
+                  {language === "vi" ? "Đăng hình ảnh" : "写真をつく"}
+                </div>
               </button>
             </Upload>
           ) : data?.avatar ? (
@@ -129,17 +145,23 @@ function InforForm({ data }) {
         </Form.Item>
         <Form.Item
           name='name'
-          label='Họ và tên'
+          label={language === "vi" ? "Họ và tên" : "名前"}
           rules={[
             {
               required: true,
-              message: "Vui lòng nhập họ và tên!",
+              message:
+                language === "vi"
+                  ? "Vui lòng nhập họ và tên!"
+                  : "名前を入力しなければならない",
             },
           ]}
           validateTrigger='onBlur'
         >
           {edit ? (
-            <Input placeholder='Họ và tên' size='large' />
+            <Input
+              placeholder={language === "vi" ? "Họ và tên" : "名前"}
+              size='large'
+            />
           ) : (
             <span>{data?.name}</span>
           )}
@@ -147,11 +169,14 @@ function InforForm({ data }) {
 
         <Form.Item
           name='email'
-          label='Địa chỉ mail'
+          label={language === "vi" ? "Địa chỉ mail" : "メール"}
           rules={[
             {
               type: "email",
-              message: "Vui lòng đúng địa chỉ mail!",
+              message:
+                language === "vi"
+                  ? "Vui lòng đúng địa chỉ mail!"
+                  : "メールが正しくない",
             },
           ]}
           validateTrigger='onBlur'
@@ -159,43 +184,62 @@ function InforForm({ data }) {
           {edit ? (
             <Input placeholder='A@gmail.com' size='large' />
           ) : (
-            <span>{data?.email || "Chưa rõ"}</span>
+            <span>
+              {data?.email || (language === "vi" ? "Chưa rõ" : "ない")}
+            </span>
           )}
         </Form.Item>
 
         <Form.Item
           name='telephone'
-          label='Số điện thoại'
+          label={language === "vi" ? "Số điện thoại" : "電話番号"}
           rules={[
             {
               required: true,
-              message: "Vui lòng nhập số điện thoại!",
+              message:
+                language === "vi"
+                  ? "Vui lòng nhập số điện thoại!"
+                  : "電話番号を入力しなければならない",
             },
             {
               len: 10,
               whitespace: false,
-              message: "Vui lòng nhập đủ số điện thoại!",
+              message:
+                language === "vi"
+                  ? "Vui lòng nhập đủ số điện thoại!"
+                  : "数字が足りない",
             },
             {
               pattern: /^[0-9]+$/,
-              message: "Vui lòng nhập đúng số điện thoại!",
+              message:
+                language === "vi"
+                  ? "Vui lòng nhập đúng số điện thoại!"
+                  : "数字だけ入力してください",
             },
           ]}
           validateTrigger='onBlur'
         >
           {edit ? (
-            <Input placeholder='Số điện thoại' size='large' />
+            <Input
+              placeholder={language === "vi" ? "Số điện thoại" : "電話番号"}
+              size='large'
+            />
           ) : (
-            <span>{data?.telephone || "Chưa rõ"}</span>
+            <span>
+              {data?.telephone || (language === "vi" ? "Chưa rõ" : "ない")}
+            </span>
           )}
         </Form.Item>
         <Form.Item
           name='city'
-          label='Thành phố'
+          label={language === "vi" ? "Thành phố" : "町"}
           rules={[
             {
               required: true,
-              message: "Vui lòng chọn thành phố!",
+              message:
+                language === "vi"
+                  ? '"Vui lòng chọn thành phố!"'
+                  : "町を選ばなければならない",
             },
           ]}
         >
@@ -272,15 +316,25 @@ function InforForm({ data }) {
               ]}
             ></Select>
           ) : (
-            <span>{data?.city || "Chưa rõ"}</span>
+            <span>
+              {data?.city || (language === "vi" ? "Chưa rõ" : "ない")}
+            </span>
           )}
         </Form.Item>
 
-        <Form.Item name='address' label='Địa chỉ'>
+        <Form.Item
+          name='address'
+          label={language === "vi" ? "Địa chỉ" : "アドレス"}
+        >
           {edit ? (
-            <Input placeholder='Địa chỉ' size='large' />
+            <Input
+              placeholder={language === "vi" ? "Địa chỉ" : "アドレス"}
+              size='large'
+            />
           ) : (
-            <span>{data?.address || "Chưa rõ"}</span>
+            <span>
+              {data?.address || (language === "vi" ? "Chưa rõ" : "ない")}
+            </span>
           )}
         </Form.Item>
 
@@ -298,7 +352,7 @@ function InforForm({ data }) {
                 className='mr-4'
                 loading={loading}
               >
-                Lưu
+                {language === "vi" ? "Lưu" : "保存"}
               </Button>
               <Button
                 htmlType='button'
@@ -307,7 +361,7 @@ function InforForm({ data }) {
                   setEdit(false);
                 }}
               >
-                Hủy
+                {language === "vi" ? "Hủy" : "キャンセル"}
               </Button>
             </div>
           ) : (
@@ -316,7 +370,7 @@ function InforForm({ data }) {
               htmlType='button'
               onClick={() => setEdit(true)}
             >
-              Chỉnh sửa
+              {language === "vi" ? "Chỉnh sửa" : "編集"}
             </Button>
           )}
         </Form.Item>

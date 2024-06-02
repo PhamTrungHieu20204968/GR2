@@ -16,7 +16,9 @@ function CommentItem({ comment, user, setEdit, blogId }) {
   const [createLike] = useCreateLikeMutation();
   const [deleteComment] = useDeleteCommentMutation();
   const [deleteCommentLike] = useDeleteCommentLikeMutation();
-  const { accessToken, userId, name } = useSelector((state) => state.auth);
+  const { accessToken, userId, name, language } = useSelector(
+    (state) => state.auth
+  );
   const socket = useContext(socketContext);
   const [liked, setLiked] = useState(
     !userId && !comment?.CommentId
@@ -46,7 +48,9 @@ function CommentItem({ comment, user, setEdit, blogId }) {
   }
   const handleLikeComment = () => {
     if (!accessToken) {
-      message.info("Bạn chưa đăng nhập!");
+      message.info(
+        language === "vi" ? "Bạn chưa đăng nhập!" : "ログインしていません!"
+      );
       return;
     }
     if (!liked) {
@@ -60,7 +64,9 @@ function CommentItem({ comment, user, setEdit, blogId }) {
       })
         .then((res) => {
           if (res.data?.error) {
-            message.error(res.data.error);
+            if (language === "vi") {
+              message.error(res.data.error);
+            } else message.error("失敗しました");
           } else {
             socket?.emit("new-notification", {
               receiverId: comment.userId,
@@ -84,7 +90,9 @@ function CommentItem({ comment, user, setEdit, blogId }) {
       })
         .then((res) => {
           if (res.data?.error) {
-            message.error(res.data.error);
+            if (language === "vi") {
+              message.error(res.data.error);
+            } else message.error("失敗しました");
           } else {
             setLiked(false);
           }
@@ -114,7 +122,9 @@ function CommentItem({ comment, user, setEdit, blogId }) {
 
   const onDeleteComment = (e) => {
     if (!accessToken) {
-      message.info("Bạn chưa đăng nhập!");
+      message.info(
+        language === "vi" ? "Bạn chưa đăng nhập!" : "ログインしていません!"
+      );
       return;
     }
     deleteComment({
@@ -125,9 +135,11 @@ function CommentItem({ comment, user, setEdit, blogId }) {
     })
       .then((res) => {
         if (res.data?.error) {
-          message.error(res.data.error);
+          if (language === "vi") {
+            message.error(res.data.error);
+          } else message.error("失敗しました");
         } else {
-          message.success("Đã xóa");
+          message.success(language === "vi" ? "Xóa thành công" : "削除に成功しました");
         }
       })
       .catch((err) => {
@@ -160,7 +172,7 @@ function CommentItem({ comment, user, setEdit, blogId }) {
           <div className='font-semibold'>
             <div className='flex items-center justify-between'>
               {comment.user.name}
-              {accessToken && (
+              {accessToken && comment?.userId === userId && (
                 <Popover
                   content={
                     <div className='w-fit'>
@@ -174,17 +186,17 @@ function CommentItem({ comment, user, setEdit, blogId }) {
                           })
                         }
                       >
-                        Chỉnh sửa
+                        {language === "vi" ? "Chỉnh sửa" : "編集"}
                       </div>
                       <Popconfirm
                         title='Xóa bình luận?'
                         description='Bạn muốn xóa bình luận này?'
                         onConfirm={onDeleteComment}
-                        okText='Có'
-                        cancelText='Không'
+                        okText={language === "vi" ? "Có" : "オーケー"}
+                        cancelText={language === "vi" ? "Không" : "いいえ"}
                       >
                         <div className='cursor-pointer p-2 rounded-md font-semibold hover:bg-gray-200'>
-                          Xóa
+                          {language === "vi" ? "Xóa" : "削除"}
                         </div>
                       </Popconfirm>
                     </div>
@@ -208,14 +220,20 @@ function CommentItem({ comment, user, setEdit, blogId }) {
               }`}
               onClick={handleLikeComment}
             >
-              {liked ? "Đã thích" : "Thích"}
+              {liked
+                ? language === "vi"
+                  ? "Đã thích"
+                  : "いいねした"
+                : language === "vi"
+                ? "Thích"
+                : "いいね"}
             </span>
             {!comment.parent && (
               <span
                 className='font-bold hover:underline cursor-pointer'
                 onClick={handleOnReply}
               >
-                Phản hồi
+                {language === "vi" ? "Phản hồi" : "返事"}
               </span>
             )}
             <span>{comment.edited ? "Đã chỉnh sửa" : ""}</span>

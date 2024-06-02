@@ -1,7 +1,10 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 import Blog from "./Blog";
 function ListBlog({ data = [], filter }) {
+  const { language } = useSelector((state) => state.auth);
+
   const filteredData = data
     .filter((item) =>
       item.user.name
@@ -24,7 +27,7 @@ function ListBlog({ data = [], filter }) {
         </div>
       ) : (
         <div className='w-fit mx-auto text-2xl font-semibold'>
-          Không tìm thấy bài viết nào
+          {language === "vi" ? "Không tìm thấy bài viết nào" : "何もない"}
         </div>
       )}
     </div>
