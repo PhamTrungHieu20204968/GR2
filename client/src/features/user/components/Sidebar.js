@@ -1,6 +1,8 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 function Sidebar({ tab, setTab }) {
+  const { language } = useSelector((state) => state.auth);
   return (
     <div className='w-full p-4 border-2'>
       <div
@@ -9,7 +11,7 @@ function Sidebar({ tab, setTab }) {
         }`}
         onClick={() => setTab(1)}
       >
-        Thông tin cá nhân
+        {language === "vi" ? "Thông tin cá nhân" : "自己情報"}
       </div>
       <div
         className={`font-bold relative uppercase py-4 border-b-2 before:bottom-0 cursor-pointer hover:text-pink-400 ${
@@ -17,7 +19,7 @@ function Sidebar({ tab, setTab }) {
         }`}
         onClick={() => setTab(2)}
       >
-        Đổi mật khẩu
+        {language === "vi" ? "Đổi mật khẩu" : "パスワードを変更する"}
       </div>
       <div
         className={`font-bold relative uppercase py-4 border-b-2 before:bottom-0 cursor-pointer hover:text-pink-400 ${
@@ -25,7 +27,7 @@ function Sidebar({ tab, setTab }) {
         }`}
         onClick={() => setTab(3)}
       >
-        Thông tin đơn hàng
+        {language === "vi" ? "Thông tin đơn hàng" : "注文リスト"}
       </div>
       <div
         className={`font-bold relative uppercase py-4 border-b-2 before:bottom-0 cursor-pointer hover:text-pink-400 ${
@@ -33,7 +35,7 @@ function Sidebar({ tab, setTab }) {
         }`}
         onClick={() => setTab(4)}
       >
-        Danh sách lời nhắc
+        {language === "vi" ? "Danh sách lời nhắc" : "リマインダーの一覧"}
       </div>
     </div>
   );

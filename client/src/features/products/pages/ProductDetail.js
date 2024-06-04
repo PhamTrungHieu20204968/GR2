@@ -151,11 +151,17 @@ function ProductDetail() {
                 rules={[
                   {
                     required: true,
-                    message: "Vui lòng nhập số số lượng!",
+                    message:
+                      language === "vi"
+                        ? "Vui lòng nhập số lượng"
+                        : "数量を入力してください",
                   },
                   {
                     pattern: /^[0-9]+$/,
-                    message: "Vui lòng nhập đúng số lượng!",
+                    message:
+                      language === "vi"
+                        ? "Vui lòng nhập đúng số lượng"
+                        : "数字だけ入力してください",
                   },
                 ]}
                 onChange={(value) => setQuantity(value)}
@@ -204,12 +210,12 @@ function ProductDetail() {
             items={new Array(2).fill(null).map((_, i) => {
               const id = String(i + 1);
               let label;
-              if(i === 0) {
-                if (language === 'vi') label = "Mô tả"
-                else label = "説明"
-              }else {
-                if (language === 'vi') label = "Đánh giá"
-                else label = "レート"
+              if (i === 0) {
+                if (language === "vi") label = "Mô tả";
+                else label = "説明";
+              } else {
+                if (language === "vi") label = "Đánh giá";
+                else label = "レート";
               }
               return {
                 label,

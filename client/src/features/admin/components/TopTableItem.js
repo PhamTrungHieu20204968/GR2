@@ -4,7 +4,6 @@ import React from "react";
 function TopTableItem({ item, tab }) {
   const avatar =
     tab === 0 ? item?.product?.images[0].url : item.order.user?.avatar;
-  console.log(item);
   return (
     <div className='flex justify-between mb-2 pb-2 border-b-2 last:pb-0 last:border-b-0 items-center'>
       <div className='flex gap-2 items-center'>

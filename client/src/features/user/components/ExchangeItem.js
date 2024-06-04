@@ -9,8 +9,7 @@ function ExchangeItem({ item, ExchangeItem, user }) {
   const [form] = Form.useForm();
   const [userCreateOrder] = useUserCreateOrderMutation();
   const [userCreateSale] = useCreateSaleMutation();
-  const { accessToken } = useSelector((state) => state.auth);
-  const type = ["Danh hiệu", "Vật phẩm", "Phiếu giảm giá"];
+  const { accessToken, language } = useSelector((state) => state.auth);
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
   const [isVoucherModalOpen, setIsVoucherModalOpen] = useState(false);
   const voucherQuantity = useRef();
@@ -110,25 +109,30 @@ function ExchangeItem({ item, ExchangeItem, user }) {
       });
   };
   return (
-    <div className='p-4 text-center font-semibold'>
-      <div className='text-2xl'>{item.name}</div>
-      <div className='my-2'>{type[item.type]}</div>
-      <div className='mb-1'>
+    <div className='flex-1'>
+      <div className='font-bold'>{item.name}</div>
+      <div className='mb-2 mt-4 text-[#D8780A]'>
         {item.price === 0 ? "Miễn phí" : `${item.price} điểm`}
       </div>
       {item.type === 0 && user.title === item.name ? (
-        <div className='text-pink-500'>Đang sử dụng</div>
+        <div className='text-pink-500'>
+          {language === "vi" ? "Đang sử dụng" : "使用中"}
+        </div>
       ) : (
         <Button type='primary' onClick={handleExchangeItem}>
-          Đổi
+          {language === "vi" ? "Đổi" : "交換"}
         </Button>
       )}
       <Modal
-        title={`Đổi vật phẩm - ${item.name}`}
+        title={
+          language === "vi"
+            ? `Đổi vật phẩm - ${item.name}`
+            : `アイテムの交換 - ${item.name}`
+        }
         open={isItemModalOpen}
         onOk={handleOk}
-        okText='Đặt hàng'
-        cancelText='Hủy'
+        okText={language === "vi" ? "Đặt hàng" : "注文"}
+        cancelText={language === "vi" ? "Hủy" : "キャンセル"}
         onCancel={handleCancel}
       >
         <div className='flex items-center gap-2'>
@@ -143,11 +147,14 @@ function ExchangeItem({ item, ExchangeItem, user }) {
           >
             <Form.Item
               name='quantity'
-              label='Số lượng'
+              label={language === "vi" ? "Số lượng" : "量"}
               rules={[
                 {
                   required: true,
-                  message: "Vui lòng nhập số lượng!",
+                  message:
+                    language === "vi"
+                      ? "Vui lòng nhập số lượng"
+                      : "数量を入力してください",
                 },
               ]}
               initialValue={1}
@@ -170,29 +177,41 @@ function ExchangeItem({ item, ExchangeItem, user }) {
 
             <Form.Item
               name='name'
-              label='Họ và tên'
+              label={language === "vi" ? "Họ và tên" : "名前"}
               rules={[
                 {
                   required: true,
-                  message: "Vui lòng nhập họ và tên!",
+                  message:
+                    language === "vi"
+                      ? "Vui lòng nhập họ và tên!"
+                      : "名前を入力しなければならない",
                 },
               ]}
               validateTrigger='onBlur'
             >
-              <Input placeholder='Họ và tên' size='large' />
+              <Input
+                placeholder={language === "vi" ? "Họ và tên" : "名前"}
+                size='large'
+              />
             </Form.Item>
 
             <Form.Item
               name='email'
-              label='Địa chỉ mail'
+              label={language === "vi" ? "Địa chỉ mail" : "メール"}
               rules={[
                 {
                   required: true,
-                  message: "Vui lòng nhập địa chỉ mail!",
+                  message:
+                    language === "vi"
+                      ? "Vui lòng nhập địa chỉ mail!"
+                      : "メールを入力しなければならない",
                 },
                 {
                   type: "email",
-                  message: "Vui lòng đúng địa chỉ mail!",
+                  message:
+                    language === "vi"
+                      ? "Vui lòng đúng địa chỉ mail!"
+                      : "メールが正しくない",
                 },
               ]}
               validateTrigger='onBlur'
@@ -202,33 +221,48 @@ function ExchangeItem({ item, ExchangeItem, user }) {
 
             <Form.Item
               name='telephone'
-              label='Số điện thoại'
+              label={language === "vi" ? "Số điện thoại" : "電話番号"}
               rules={[
                 {
                   required: true,
-                  message: "Vui lòng nhập số điện thoại!",
+                  message:
+                    language === "vi"
+                      ? "Vui lòng nhập số điện thoại!"
+                      : "電話番号を入力しなければならない",
                 },
                 {
                   len: 10,
                   whitespace: false,
-                  message: "Vui lòng nhập đủ số điện thoại!",
+                  message:
+                    language === "vi"
+                      ? "Vui lòng nhập đủ số điện thoại!"
+                      : "数字が足りない",
                 },
                 {
                   pattern: /^[0-9]+$/,
-                  message: "Vui lòng nhập đúng số điện thoại!",
+                  message:
+                    language === "vi"
+                      ? "Vui lòng nhập đúng số điện thoại!"
+                      : "数字だけ入力してください",
                 },
               ]}
               validateTrigger='onBlur'
             >
-              <Input placeholder='Số điện thoại' size='large' />
+              <Input
+                placeholder={language === "vi" ? "Số điện thoại" : "電話番号"}
+                size='large'
+              />
             </Form.Item>
             <Form.Item
               name='city'
-              label='Thành phố'
+              label={language === "vi" ? "Thành phố" : "町"}
               rules={[
                 {
                   required: true,
-                  message: "Vui lòng chọn thành phố!",
+                  message:
+                    language === "vi"
+                      ? '"Vui lòng chọn thành phố!"'
+                      : "町を選ばなければならない",
                 },
               ]}
               initialValue={"Tp.Hà Nội"}
@@ -307,11 +341,14 @@ function ExchangeItem({ item, ExchangeItem, user }) {
 
             <Form.Item
               name='address'
-              label='Địa chỉ'
+              label={language === "vi" ? "Địa chỉ" : "アドレス"}
               rules={[
                 {
                   required: true,
-                  message: "Vui lòng nhập địa chỉ!",
+                  message:
+                    language === "vi"
+                      ? "Vui lòng nhập địa chỉ!"
+                      : "アドレスを入力しなければならない",
                 },
               ]}
               validateTrigger='onBlur'
@@ -319,27 +356,39 @@ function ExchangeItem({ item, ExchangeItem, user }) {
               <Input placeholder='Địa chỉ' size='large' />
             </Form.Item>
 
-            <Form.Item label='Ghi chú đơn hàng' name='note'>
+            <Form.Item
+              label={language === "vi" ? "Ghi chú đơn hàng" : "メモ"}
+              size='large'
+              name='note'
+            >
               <Input.TextArea
                 allowClear
                 rows={4}
                 size='large'
-                placeholder='Ghi chú về đơn hàng, ví dụ: thời gian hay chỉ dẫn địa điểm giao hàng chi tiết hơn.'
+                placeholder={
+                  language === "vi"
+                    ? "Ghi chú về đơn hàng, ví dụ: thời gian hay chỉ dẫn địa điểm giao hàng chi tiết hơn."
+                    : "注文に関するメモ、例えば: 配送時間や詳細な配送場所の指示など。"
+                }
               />
             </Form.Item>
           </Form>
         </div>
       </Modal>
       <Modal
-        title={`Đổi vật phẩm - ${item.name}`}
+        title={
+          language === "vi"
+            ? `Đổi vật phẩm - ${item.name}`
+            : `アイテムの交換 - ${item.name}`
+        }
         open={isVoucherModalOpen}
         onOk={handleChangeVoucher}
-        okText='Đổi'
-        cancelText='Hủy'
+        okText={language === "vi" ? "Đặt hàng" : "注文"}
+        cancelText={language === "vi" ? "Hủy" : "キャンセル"}
         onCancel={handleCancel}
       >
         <div className='flex items-center gap-2'>
-          <div className=''>Số lượng:</div>
+          <div className=''>{language === "vi" ? "Số lượng:" : "量:"}</div>
           <InputNumber
             min={1}
             ref={voucherQuantity}
