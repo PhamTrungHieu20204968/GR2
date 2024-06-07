@@ -30,7 +30,6 @@ function BlogMenu({ blog }) {
         console.log(err);
       });
   };
-  console.log(blog);
   return (
     <div className='z-40'>
       <div className='text-base mb-2 last:mb-0 cursor-pointer hover:bg-gray-200 rounded-md p-2'>

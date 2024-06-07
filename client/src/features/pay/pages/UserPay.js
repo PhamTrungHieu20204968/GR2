@@ -39,7 +39,13 @@ function UserPay() {
     },
   });
   if (!data) {
-    return <Spin />;
+    return (
+      <Layout>
+        <div className='container mx-auto mt-8 overflow-hidden'>
+          <Spin />
+        </div>
+      </Layout>
+    );
   }
   const onFinish = (values, status = 0) => {
     if (payType < 3) {
@@ -67,7 +73,7 @@ function UserPay() {
             } else message.error("失敗しました");
           } else {
             message.success(
-              language === "vi" ? "Sửa thành công" : "修正に成功しました"
+              language === "vi" ? "Đặt hàng thành công" : "成功しました"
             );
             socket?.emit("delete-notification", {
               id: data?.notifications[0]?.id,
@@ -78,7 +84,7 @@ function UserPay() {
         })
         .catch((err) => {
           message.error(
-            language === "vi" ? "Sửa thất bại" : "修正に失敗しました"
+            language === "vi" ? "Đặt hàng thất bại" : "失敗しました"
           );
           console.log(err);
         });
@@ -115,7 +121,7 @@ function UserPay() {
           } else message.error("失敗しました");
         } else {
           message.success(
-            language === "vi" ? "Sửa thành công" : "修正に成功しました"
+            language === "vi" ? "Đặt hàng thành công" : "成功しました"
           );
           socket?.emit("delete-notification", {
             id: data?.notifications[0]?.id,
@@ -125,7 +131,9 @@ function UserPay() {
         }
       })
       .catch((err) => {
-        message.error(language === "vi" ? "Sửa thất bại" : "修正に失敗しました");
+        message.error(
+          language === "vi" ? "Đặt hàng thất bại" : "失敗しました"
+        );
         console.log(err);
       });
   };

@@ -28,7 +28,7 @@ function Blogs() {
           </div>
         </Row>
         <Row className='mt-4' gutter={16}>
-          <Col span={accessToken ? 5 : 0}>
+          <Col span={5}>
             <SideBar
               tab={tab}
               setTab={setTab}
@@ -36,7 +36,7 @@ function Blogs() {
               filter={filter}
             />
           </Col>
-          <Col span={accessToken ? 19 : 24}>
+          <Col span={19}>
             {tab === 1 && (
               <div className='text-lg my-2 flex items-center gap-4 pb-2 border-b-2'>
                 <div className=''>

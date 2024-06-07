@@ -4,43 +4,47 @@ import { UpOutlined, DownOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 
 function SideBar({ tab, setTab, filter, setFilter }) {
-  const { language } = useSelector((state) => state.auth);
+  const { language, isloggedIn } = useSelector((state) => state.auth);
 
   const [openSearch, setOpenSearch] = useState(false);
   return (
     <div className='w-full p-4 border-2'>
-      <div
-        className={`font-bold relative uppercase py-4 border-b-2 before:bottom-0 cursor-pointer hover:text-pink-400 ${
-          tab === 1 && "text-primary"
-        }`}
-        onClick={() => setTab(1)}
-      >
-        {language === "vi" ? "Bài viết mới nhất" : "最新のブログ"}
-      </div>
-      <div
-        className={`font-bold relative uppercase py-4 border-b-2 before:bottom-0 cursor-pointer hover:text-pink-400 ${
-          tab === 2 && "text-primary"
-        }`}
-        onClick={() => setTab(2)}
-      >
-        {language === "vi" ? "Bài viết của tôi" : "私のブログ"}
-      </div>
-      <div
-        className={`font-bold relative uppercase py-4 border-b-2 before:bottom-0 cursor-pointer hover:text-pink-400 ${
-          tab === 3 && "text-primary"
-        }`}
-        onClick={() => setTab(3)}
-      >
-        {language === "vi" ? "Bài viết đã thích" : "いいねしたブログ"}
-      </div>
-      <div
-        className={`font-bold relative uppercase py-4 border-b-2 before:bottom-0 cursor-pointer hover:text-pink-400 ${
-          tab === 4 && "text-primary"
-        }`}
-        onClick={() => setTab(4)}
-      >
-        {language === "vi" ? " Tạo bài viết" : "ブログを作る"}
-      </div>
+      {isloggedIn && (
+        <>
+          <div
+            className={`font-bold relative uppercase py-4 border-b-2 before:bottom-0 cursor-pointer hover:text-pink-400 ${
+              tab === 1 && "text-primary"
+            }`}
+            onClick={() => setTab(1)}
+          >
+            {language === "vi" ? "Bài viết mới nhất" : "最新のブログ"}
+          </div>
+          <div
+            className={`font-bold relative uppercase py-4 border-b-2 before:bottom-0 cursor-pointer hover:text-pink-400 ${
+              tab === 2 && "text-primary"
+            }`}
+            onClick={() => setTab(2)}
+          >
+            {language === "vi" ? "Bài viết của tôi" : "私のブログ"}
+          </div>
+          <div
+            className={`font-bold relative uppercase py-4 border-b-2 before:bottom-0 cursor-pointer hover:text-pink-400 ${
+              tab === 3 && "text-primary"
+            }`}
+            onClick={() => setTab(3)}
+          >
+            {language === "vi" ? "Bài viết đã thích" : "いいねしたブログ"}
+          </div>
+          <div
+            className={`font-bold relative uppercase py-4 border-b-2 before:bottom-0 cursor-pointer hover:text-pink-400 ${
+              tab === 4 && "text-primary"
+            }`}
+            onClick={() => setTab(4)}
+          >
+            {language === "vi" ? " Tạo bài viết" : "ブログを作る"}
+          </div>
+        </>
+      )}
 
       <div className='mt-4 transition-all'>
         <div className='font-bold text-lg flex items-center justify-between'>

@@ -180,7 +180,7 @@ function ListOrder() {
       title: language === "vi" ? "Hành động" : "アクション",
       key: "action",
       fixed: "right",
-      width: language === "vi" ? 120 : 200,
+      width: language === "vi" ? 160 : 200,
       render: (_, record) => {
         return (
           <Button type='primary' className="text-wrap" onClick={() => handleReOrder(record)}>

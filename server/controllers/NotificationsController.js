@@ -67,7 +67,14 @@ class NotificationsController {
     try {
       await notifications.update(
         { status: 1 },
-        { where: { receiverId: userId } }
+        {
+          where: {
+            receiverId: userId,
+            type: {
+              [Op.gt]: 0,
+            },
+          },
+        }
       );
       return res.json("Thành công!");
     } catch (error) {

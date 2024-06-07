@@ -31,7 +31,7 @@ function Notifications() {
   const [filteredData, setFilteredData] = useState([]);
 
   const handleSeenNotifications = () => {
-    if (data?.filter((item) => item.status === 0)?.length > 0) {
+    if (filteredData?.filter((item) => item.status === 0)?.length > 0) {
       updateSeen({
         headers: {
           accessToken,

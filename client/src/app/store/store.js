@@ -6,14 +6,12 @@ import { authSliceReducer } from "../slices/authSlice";
 import { filterSliceReducer } from "../slices/filterSlice";
 import { cartSliceReducer } from "../slices/cartSlice";
 import { voucherSliceReducer } from "../slices/voucherSlice";
-import { socketSliceReducer } from "../slices/socketSlice";
 const rootReducer = combineReducers({
   [apiService.reducerPath]: apiService.reducer,
   auth: authSliceReducer,
   filter: filterSliceReducer,
   cart: cartSliceReducer,
   voucher: voucherSliceReducer,
-  socket: socketSliceReducer,
 });
 
 const persistConfig = {

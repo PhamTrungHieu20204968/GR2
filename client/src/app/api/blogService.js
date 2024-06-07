@@ -8,6 +8,13 @@ export const blogService = apiService.injectEndpoints({
       }),
       providesTags: ["blog"],
     }),
+    getUnsafeBlogs: builder.query({
+      query: ({ headers }) => ({
+        url: `blogs/admin`,
+        headers,
+      }),
+      providesTags: ["blog"],
+    }),
     getBlog: builder.query({
       query: ({ id }) => ({
         url: `blogs/${id}`,
@@ -34,6 +41,16 @@ export const blogService = apiService.injectEndpoints({
       invalidatesTags: ["blog"],
     }),
 
+    updateUnsafeBlog: builder.mutation({
+      query: ({ headers, id ,data}) => ({
+        url: `blogs/unsafe-blog/${id}`,
+        method: "PUT",
+        body: data,
+        headers,
+      }),
+      invalidatesTags: ["blog"],
+    }),
+
     deleteBlog: builder.mutation({
       query: ({ id, headers }) => ({
         url: `blogs/${id}`,
@@ -50,5 +67,7 @@ export const {
   useCreateBlogMutation,
   useDeleteBlogMutation,
   useGetBlogQuery,
+  useGetUnsafeBlogsQuery,
   useUpdateBlogMutation,
+  useUpdateUnsafeBlogMutation,
 } = blogService;

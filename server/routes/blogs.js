@@ -10,12 +10,14 @@ router.post(
   validateToken,
   blogsController.createBlog
 );
+router.put("/unsafe-blog/:id", validateToken, blogsController.updateUnsafeBlog);
 router.put(
   "/:id",
   uploadCloud.array("image"),
   validateToken,
   blogsController.updateBlog
 );
+router.get("/admin", validateToken, blogsController.getUnsafeBlogs);
 router.get("/:id", blogsController.getBlog);
 router.get("/", blogsController.getAllBlogs);
 router.delete("/:id", validateToken, blogsController.deleteBlog);

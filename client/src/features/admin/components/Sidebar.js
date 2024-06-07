@@ -18,7 +18,7 @@ const items = [
     getItem("Danh sách sản phẩm", "2"),
     getItem("Thêm sản phẩm", "3"),
   ]),
-  getItem("Bài viết", "sub3", null, [getItem("Danh sách bài viết", "4")]),
+  getItem("Bài viết", "sub3", null, [getItem("Kiểm duyệt bài viết", "4")]),
   getItem("Đơn hàng", "sub4", null, [getItem("Danh sách đơn hàng", "5")]),
 ];
 function Sidebar({ SelectedKey = "6", OpenKeys = [] }) {

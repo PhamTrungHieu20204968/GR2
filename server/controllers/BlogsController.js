@@ -6,6 +6,61 @@ class BlogsController {
   async getAllBlogs(req, res, next) {
     try {
       const list = await blogs.findAll({
+        where: {
+          status: {
+            [Op.gt]: 0,
+          },
+        },
+        include: [
+          {
+            model: users,
+            attributes: ["name", "avatar"],
+          },
+          {
+            model: images,
+            attributes: ["url", "id"],
+          },
+          {
+            model: comments,
+            include: [
+              {
+                model: users,
+                attributes: ["name", "avatar"],
+              },
+              {
+                model: likes,
+                attributes: ["commentId", "userId"],
+                as: "CommentId",
+              },
+            ],
+            order: [["createdAt", "DESC"]],
+          },
+          {
+            model: likes,
+            attributes: ["blogId", "userId"],
+          },
+        ],
+        order: [["createdAt", "DESC"]],
+      });
+      return res.json(list);
+    } catch (error) {
+      console.log(error);
+      return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+    }
+  }
+
+  // [GET] /admin
+  async getUnsafeBlogs(req, res, next) {
+    if (req.user.role < 2) {
+      return res.json({
+        error: "Bạn không đủ quyền thực hiện chức năng này!",
+      });
+    }
+    try {
+      const list = await blogs.findAll({
+        where: {
+          status: 0,
+        },
         include: [
           {
             model: users,
@@ -135,8 +190,6 @@ class BlogsController {
         .toString()
         .split(",")
         .map((item) => parseInt(item));
-      console.log(values, uploadedImage);
-
       await _blog.update({ ...values });
       await images.destroy({
         where: {
@@ -162,6 +215,23 @@ class BlogsController {
           await cloudinary.uploader.destroy(item.filename);
         });
       }
+      return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+    }
+  }
+
+  // [PUT] /unsafe-blog/:id
+  async updateUnsafeBlog(req, res) {
+    const id = parseInt(req.params.id);
+    const values = req.body;
+    if (req.user.role < 2) {
+      return res.json({
+        error: "Bạn không đủ quyền thực hiện chức năng này!",
+      });
+    }
+    try {
+      await blogs.update({ ...values }, { where: { id } });
+      return res.json("Thành công");
+    } catch (error) {
       return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
     }
   }

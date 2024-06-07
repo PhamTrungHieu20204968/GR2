@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { Row, Col, Input } from "antd";
+import { useSelector } from "react-redux";
 
 import ListBlog from "features/blog/components/ListBlog";
 import Sidebar from "../components/Sidebar";
-import { useGetAllBlogsQuery } from "app/api/blogService";
+import { useGetUnsafeBlogsQuery } from "app/api/blogService";
 function ListBlogs() {
-  const { data } = useGetAllBlogsQuery();
+  const { accessToken } = useSelector((state) => state.auth);
+  const { data } = useGetUnsafeBlogsQuery({
+    headers: {
+      accessToken,
+    },
+  });
   const [filter, setFilter] = useState({ userName: "", title: "", tag: "" });
   return (
     <div className='w-full h-screen overflow-y-auto overflow-x-hidden'>
@@ -16,7 +22,7 @@ function ListBlogs() {
           </Col>
           <Col span={18}>
             <div className='my-8'>
-              <div className='text-3xl font-bold mb-4'>Danh sách bài viết</div>
+              <div className='text-3xl font-bold mb-4'>Kiểm duyệt bài viết</div>
               <div className='flex items-center gap-4'>
                 <div className='flex-1 flex flex-col'>
                   <div className='mb-2'>Tìm kiếm tên người dùng:</div>
@@ -56,26 +62,28 @@ function ListBlogs() {
                 </div>
               </div>
             </div>
-            <ListBlog
-              key={1}
-              data={data
-                ?.filter((item) =>
-                  item.user.name
-                    .toUpperCase()
-                    .includes(filter?.userName.trim().toUpperCase())
-                )
-                .filter((item) =>
-                  item.title
-                    .toUpperCase()
-                    .includes(filter?.title.trim().toUpperCase())
-                )
-                .filter((item) =>
-                  item.tag
-                    .toUpperCase()
-                    .includes(filter?.tag.trim().toUpperCase())
-                )}
-              filter={filter}
-            />
+            <div className='mb-8'>
+              <ListBlog
+                key={1}
+                data={data
+                  ?.filter((item) =>
+                    item.user.name
+                      .toUpperCase()
+                      .includes(filter?.userName.trim().toUpperCase())
+                  )
+                  .filter((item) =>
+                    item.title
+                      .toUpperCase()
+                      .includes(filter?.title.trim().toUpperCase())
+                  )
+                  .filter((item) =>
+                    item.tag
+                      .toUpperCase()
+                      .includes(filter?.tag.trim().toUpperCase())
+                  )}
+                filter={filter}
+              />
+            </div>
           </Col>
         </Row>
       </div>
