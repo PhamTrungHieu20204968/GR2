@@ -546,3 +546,7 @@ body {
 .custom-shadow {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 12px 12px;
 }
+
+.rsc-ts-bubble {
+  max-width: 80% !important;
+}

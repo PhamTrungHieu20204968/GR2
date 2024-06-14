@@ -1,5 +1,9 @@
 import React from "react";
-import { PhoneOutlined, MailOutlined, GlobalOutlined } from "@ant-design/icons";
+import {
+  PhoneOutlined,
+  MailOutlined,
+  EnvironmentOutlined,
+} from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -52,7 +56,13 @@ function Footer({ page = ["home"] }) {
                 {language === "vi" ? "Bài viết" : "ブログ"}
               </Link>
             </li>
-            <li className='my-2 hover:text-yellow-300 cursor-pointer list-pink-dot'>
+            <li
+              className={
+                page[0] === "contact"
+                  ? "my-2 text-cyan-300 hover:text-yellow-300 cursor-pointer list-pink-dot"
+                  : "my-2 hover:text-yellow-300 cursor-pointer list-pink-dot"
+              }
+            >
               {language === "vi" ? "Liên hệ" : "コンタクト"}
             </li>
           </ul>
@@ -74,8 +84,12 @@ function Footer({ page = ["home"] }) {
             {language === "vi" ? "THÔNG TIN LIÊN HỆ" : "連絡先"}
           </h2>
           <p className='flex items-center text-lg my-4 cursor-pointer text-cyan-300 hover:text-yellow-300'>
-            <GlobalOutlined className='mr-3 text-2xl' />
-            <span>số 16 ngõ 37 Lê Thanh Nghị Hai Bà Trưng Hà Nội</span>
+            <EnvironmentOutlined className='mr-3 text-2xl' />
+            <span>
+              {language === "vi"
+                ? "Số 16 ngõ 37 Lê Thanh Nghị Hai Bà Trưng Hà Nội"
+                : "ハノイ市ハイバーチュン区、レタインギー通り37番路地16番"}
+            </span>
           </p>
           <p className='flex items-center text-lg my-4 cursor-pointer text-cyan-300 hover:text-yellow-300'>
             <PhoneOutlined className='mr-3 text-2xl' />

@@ -7,7 +7,8 @@ import Layout from "components/Layout";
 import { useGetBlogQuery } from "app/api/blogService";
 import Blog from "../components/Blog";
 function BlogDetail() {
-  const params = useParams();const { language} = useSelector((state) => state.auth);
+  const params = useParams();
+  const { language } = useSelector((state) => state.auth);
   const { data } = useGetBlogQuery({ id: params.id });
   return (
     <Layout page={["blogs"]}>
@@ -15,7 +16,7 @@ function BlogDetail() {
         <Row>
           <div className='uppercase text-xl'>
             <Link to='/' className='text-gray-400 font-bold hover:text-black'>
-            {language === "vi" ? "Trang chủ" : "ホーム"}
+              {language === "vi" ? "Trang chủ" : "ホーム"}
             </Link>
             <span className='mx-2 text-gray-400'>/</span>
             <Link

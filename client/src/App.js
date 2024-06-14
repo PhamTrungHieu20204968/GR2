@@ -23,6 +23,7 @@ import UserInfor from "features/user/pages/UserInfor";
 import Exchange from "features/user/pages/Exchange";
 import Policy from "features/policy/pages/Policy";
 import AboutUs from "features/about-us/pages/AboutUs";
+import Contact from "features/contact/pages/Contact";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
+          <Route path='/contact' element={<Contact />} />
           <Route path='/cart' element={<Cart />} />
           <Route path='/pay' element={<Pay />} />
           <Route path='/policy' element={<Policy />} />

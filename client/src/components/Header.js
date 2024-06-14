@@ -79,8 +79,12 @@ function Header({ page }) {
             {language === "vi" ? "Bài viết" : "ブログ"}
           </Link>
           <Link
-            to='/'
-            className='h-full px-4 hover:bg-primary flex items-center'
+            to='/contact'
+            className={
+              page[0] === "contact"
+                ? "h-full px-4 bg-primary flex items-center"
+                : "h-full px-4 hover:bg-primary flex items-center"
+            }
           >
             {language === "vi" ? "Liên hệ" : "コンタクト"}
           </Link>

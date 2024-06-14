@@ -190,7 +190,7 @@ class BlogsController {
         .toString()
         .split(",")
         .map((item) => parseInt(item));
-      await _blog.update({ ...values });
+      await _blog.update({ ...values, status: 0 });
       await images.destroy({
         where: {
           id: {

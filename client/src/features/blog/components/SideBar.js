@@ -4,12 +4,12 @@ import { UpOutlined, DownOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 
 function SideBar({ tab, setTab, filter, setFilter }) {
-  const { language, isloggedIn } = useSelector((state) => state.auth);
+  const { language, isLoggedIn } = useSelector((state) => state.auth);
 
   const [openSearch, setOpenSearch] = useState(false);
   return (
     <div className='w-full p-4 border-2'>
-      {isloggedIn && (
+      {isLoggedIn && (
         <>
           <div
             className={`font-bold relative uppercase py-4 border-b-2 before:bottom-0 cursor-pointer hover:text-pink-400 ${
