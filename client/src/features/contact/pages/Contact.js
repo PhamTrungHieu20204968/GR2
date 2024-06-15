@@ -80,7 +80,7 @@ function Contact() {
               <FacebookOutlined className='text-4xl group-hover:text-white' />
             </div>
             <div className='mt-8 text-3xl font-semibold'>FACEBOOK</div>
-            <div className='mt-4 text-center'>
+            <div className='mt-4 text-center hover:text-primary'>
               <Link
                 to={"https://www.facebook.com/profile.php?id=61559722628923"}
               >

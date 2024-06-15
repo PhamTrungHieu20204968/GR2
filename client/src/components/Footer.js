@@ -29,7 +29,13 @@ function Footer({ page = ["home"] }) {
             >
               <Link to='/'>{language === "vi" ? "Trang chủ" : "ホーム"}</Link>
             </li>
-            <li className='my-2 hover:text-yellow-300 cursor-pointer list-pink-dot'>
+            <li
+              className={
+                page[0] === "about-us"
+                  ? "my-2 text-cyan-300 hover:text-yellow-300 cursor-pointer list-pink-dot"
+                  : "my-2 hover:text-yellow-300 cursor-pointer list-pink-dot"
+              }
+            >
               <Link to='/about-us'>
                 {language === "vi" ? "Giới thiệu" : "アバウト・アス"}
               </Link>
@@ -63,7 +69,9 @@ function Footer({ page = ["home"] }) {
                   : "my-2 hover:text-yellow-300 cursor-pointer list-pink-dot"
               }
             >
-              {language === "vi" ? "Liên hệ" : "コンタクト"}
+              <Link to='/contact'>
+                {language === "vi" ? "Liên hệ" : "コンタクト"}
+              </Link>
             </li>
           </ul>
         </div>

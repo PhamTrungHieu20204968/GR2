@@ -30,7 +30,7 @@ function ProductCard({ product }) {
   };
   return (
     <div
-      className='product-card group w-full bg-[#eee] text-center rounded-lg border-2 border-dashed shadow-sm cursor-pointer'
+      className='product-card group w-full bg-[#eee] relative text-center rounded-lg border-2 border-dashed shadow-sm cursor-pointer'
       onClick={handleOnclickProduct}
     >
       <div className='w-full overflow-hidden relative'>
@@ -65,7 +65,7 @@ function ProductCard({ product }) {
           })}
         </b>
         {product?.salePrice && (
-          <b className='ml-2'>
+          <b className='ml-2 pl-2 text-red-500 border-l-[3px] border-gray-500'>
             {parseInt(product?.salePrice).toLocaleString("vi", {
               style: "currency",
               currency: "VND",
@@ -73,6 +73,17 @@ function ProductCard({ product }) {
           </b>
         )}
       </p>
+
+      {product?.salePrice && (
+        <div className='absolute top-1 left-1 bg-red-500 text-white text-xs min-w-10 p-1'>
+          {"- " +
+            Math.round(
+              100 -
+                (parseInt(product?.salePrice) / parseInt(product?.price)) * 100
+            ) +
+            "%"}
+        </div>
+      )}
     </div>
   );
 }
