@@ -93,6 +93,16 @@ function Cart({ cart, voucherList = [] }) {
   };
 
   const handleUpdateCart = () => {
+    if (notify?.status === 'error') {
+      setNotify({
+        status: 'error',
+        message:
+          language === 'vi'
+            ? 'Không thể cập nhật giỏ hàng'
+            : 'カートを更新できません。',
+      });
+      return;
+    }
     dispatch(updateCart(cartData));
     setNotify({
       status: 'update',
