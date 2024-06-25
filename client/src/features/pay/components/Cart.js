@@ -50,8 +50,8 @@ function Cart({ cart, voucherList = [] }) {
               status: 'error',
               message:
                 language === 'vi'
-                  ? `Số lượng sản phẩm của cửa hàng không đủ.`
-                  : `残っている数が足りません。`,
+                  ? `Số lượng sản phẩm "${item.name}" của cửa hàng không đủ.`
+                  : `"${item.name}"の残っている数が足りません。`,
             });
           } else {
             setNotify();
