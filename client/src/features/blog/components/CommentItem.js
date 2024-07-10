@@ -1,16 +1,16 @@
-import { Avatar, message, Spin, Popover, Popconfirm } from "antd";
-import React, { useContext, useState } from "react";
-import { LikeTwoTone, EllipsisOutlined } from "@ant-design/icons";
-import { useSelector } from "react-redux";
+import { Avatar, message, Spin, Popover, Popconfirm } from 'antd';
+import React, { useContext, useState } from 'react';
+import { LikeTwoTone, EllipsisOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
 
 import {
   useCreateLikeMutation,
   useDeleteCommentLikeMutation,
-} from "app/api/likeService";
-import { useDeleteCommentMutation } from "app/api/commentService";
-import UserComment from "../components/UserComment";
-import { useGetCommentChildQuery } from "app/api/commentService";
-import { socketContext } from "components/SocketProvider";
+} from 'app/api/likeService';
+import { useDeleteCommentMutation } from 'app/api/commentService';
+import UserComment from '../components/UserComment';
+import { useGetCommentChildQuery } from 'app/api/commentService';
+import { socketContext } from 'components/SocketProvider';
 
 function CommentItem({ comment, user, setEdit, blogId }) {
   const [createLike] = useCreateLikeMutation();
@@ -35,7 +35,7 @@ function CommentItem({ comment, user, setEdit, blogId }) {
   const [reply, setReply] = useState({
     status: false,
     commentId: 0,
-    userName: "",
+    userName: '',
     userId: 0,
   });
 
@@ -49,7 +49,7 @@ function CommentItem({ comment, user, setEdit, blogId }) {
   const handleLikeComment = () => {
     if (!accessToken) {
       message.info(
-        language === "vi" ? "Bạn chưa đăng nhập!" : "ログインしていません!"
+        language === 'vi' ? 'Bạn chưa đăng nhập!' : 'ログインしていません!'
       );
       return;
     }
@@ -64,11 +64,11 @@ function CommentItem({ comment, user, setEdit, blogId }) {
       })
         .then((res) => {
           if (res.data?.error) {
-            if (language === "vi") {
+            if (language === 'vi') {
               message.error(res.data.error);
-            } else message.error("失敗しました");
+            } else message.error('失敗しました');
           } else {
-            socket?.emit("new-notification", {
+            socket?.emit('new-notification', {
               receiverId: comment.userId,
               content: `${name} đã thích bình luận của bạn`,
               blogId,
@@ -90,9 +90,9 @@ function CommentItem({ comment, user, setEdit, blogId }) {
       })
         .then((res) => {
           if (res.data?.error) {
-            if (language === "vi") {
+            if (language === 'vi') {
               message.error(res.data.error);
-            } else message.error("失敗しました");
+            } else message.error('失敗しました');
           } else {
             setLiked(false);
           }
@@ -123,7 +123,7 @@ function CommentItem({ comment, user, setEdit, blogId }) {
   const onDeleteComment = (e) => {
     if (!accessToken) {
       message.info(
-        language === "vi" ? "Bạn chưa đăng nhập!" : "ログインしていません!"
+        language === 'vi' ? 'Bạn chưa đăng nhập!' : 'ログインしていません!'
       );
       return;
     }
@@ -135,11 +135,13 @@ function CommentItem({ comment, user, setEdit, blogId }) {
     })
       .then((res) => {
         if (res.data?.error) {
-          if (language === "vi") {
+          if (language === 'vi') {
             message.error(res.data.error);
-          } else message.error("失敗しました");
+          } else message.error('失敗しました');
         } else {
-          message.success(language === "vi" ? "Xóa thành công" : "削除に成功しました");
+          message.success(
+            language === 'vi' ? 'Xóa thành công' : '削除に成功しました'
+          );
         }
       })
       .catch((err) => {
@@ -148,36 +150,39 @@ function CommentItem({ comment, user, setEdit, blogId }) {
   };
 
   return (
-    <div className='flex mb-4'>
+    <div className="flex mb-4">
       <div>
         {comment.user.avatar ? (
           <Avatar
-            className='mr-2'
-            size='large'
-            style={{ backgroundColor: "#fde3cf", color: "#f56a00" }}
+            className="mr-2"
+            size="large"
+            style={{ backgroundColor: '#fde3cf', color: '#f56a00' }}
             src={comment.user.avatar}
           ></Avatar>
         ) : (
           <Avatar
-            className='mr-2'
-            size='large'
-            style={{ backgroundColor: "#fde3cf", color: "#f56a00" }}
+            className="mr-2"
+            size="large"
+            style={{ backgroundColor: '#fde3cf', color: '#f56a00' }}
           >
             {comment.user.name[0]}
           </Avatar>
         )}
       </div>
-      <div className='flex-1'>
-        <div className='bg-gray-200 rounded-lg p-2 text-base'>
-          <div className='font-semibold'>
-            <div className='flex items-center justify-between'>
-              {comment.user.name}
+      <div className="flex-1">
+        <div className="bg-gray-200 rounded-lg p-2 text-base">
+          <div className="font-semibold">
+            <div className="flex items-center justify-between">
+              <div>
+                {comment.user.name} -
+                <span className="ml-1">{comment?.user.title}</span>
+              </div>
               {accessToken && comment?.userId === userId && (
                 <Popover
                   content={
-                    <div className='w-fit'>
+                    <div className="w-fit">
                       <div
-                        className='cursor-pointer p-2 rounded-md font-semibold hover:bg-gray-200'
+                        className="cursor-pointer p-2 rounded-md font-semibold hover:bg-gray-200"
                         onClick={() =>
                           setEdit({
                             status: true,
@@ -186,24 +191,24 @@ function CommentItem({ comment, user, setEdit, blogId }) {
                           })
                         }
                       >
-                        {language === "vi" ? "Chỉnh sửa" : "編集"}
+                        {language === 'vi' ? 'Chỉnh sửa' : '編集'}
                       </div>
                       <Popconfirm
-                        title='Xóa bình luận?'
-                        description='Bạn muốn xóa bình luận này?'
+                        title="Xóa bình luận?"
+                        description="Bạn muốn xóa bình luận này?"
                         onConfirm={onDeleteComment}
-                        okText={language === "vi" ? "Có" : "オーケー"}
-                        cancelText={language === "vi" ? "Không" : "いいえ"}
+                        okText={language === 'vi' ? 'Có' : 'オーケー'}
+                        cancelText={language === 'vi' ? 'Không' : 'いいえ'}
                       >
-                        <div className='cursor-pointer p-2 rounded-md font-semibold hover:bg-gray-200'>
-                          {language === "vi" ? "Xóa" : "削除"}
+                        <div className="cursor-pointer p-2 rounded-md font-semibold hover:bg-gray-200">
+                          {language === 'vi' ? 'Xóa' : '削除'}
                         </div>
                       </Popconfirm>
                     </div>
                   }
-                  trigger='click'
+                  trigger="click"
                 >
-                  <EllipsisOutlined className='cursor-pointer rounded-full hover:bg-gray-300' />
+                  <EllipsisOutlined className="cursor-pointer rounded-full hover:bg-gray-300" />
                 </Popover>
               )}
             </div>
@@ -211,35 +216,35 @@ function CommentItem({ comment, user, setEdit, blogId }) {
           <div>{comment.content}</div>
         </div>
 
-        <div className='text-xs flex justify-between'>
-          <div className='flex gap-2'>
+        <div className="text-xs flex justify-between">
+          <div className="flex gap-2">
             <span>{getDate(comment.createdAt)}</span>
             <span
               className={`font-bold hover:underline cursor-pointer ${
-                liked ? "text-blue-400" : ""
+                liked ? 'text-blue-400' : ''
               }`}
               onClick={handleLikeComment}
             >
               {liked
-                ? language === "vi"
-                  ? "Đã thích"
-                  : "いいねした"
-                : language === "vi"
-                ? "Thích"
-                : "いいね"}
+                ? language === 'vi'
+                  ? 'Đã thích'
+                  : 'いいねした'
+                : language === 'vi'
+                ? 'Thích'
+                : 'いいね'}
             </span>
             {!comment.parent && (
               <span
-                className='font-bold hover:underline cursor-pointer'
+                className="font-bold hover:underline cursor-pointer"
                 onClick={handleOnReply}
               >
-                {language === "vi" ? "Phản hồi" : "返事"}
+                {language === 'vi' ? 'Phản hồi' : '返事'}
               </span>
             )}
-            <span>{comment.edited ? "Đã chỉnh sửa" : ""}</span>
+            <span>{comment.edited ? 'Đã chỉnh sửa' : ''}</span>
           </div>
           {comment.CommentId && (
-            <div className='flex items-center gap-1'>
+            <div className="flex items-center gap-1">
               {comment.CommentId.length}
               <LikeTwoTone />
             </div>
@@ -248,7 +253,7 @@ function CommentItem({ comment, user, setEdit, blogId }) {
 
         <div>
           {!data.error && data.length > 0 && (
-            <div className='mt-4'>
+            <div className="mt-4">
               {data.map((item) => (
                 <CommentItem
                   key={item.id}

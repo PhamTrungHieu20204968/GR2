@@ -93,7 +93,7 @@ function Contact() {
             <div className='group p-4 w-24 h-24 border-[3px] border-black rounded-full hover:bg-primary hover:border-primary flex items-center justify-center'>
               <MailOutlined className='text-4xl group-hover:text-white' />
             </div>
-            <div className='mt-8 text-3xl font-semibold'>メール</div>
+            <div className='mt-8 text-3xl font-semibold'> {language === "vi" ? "ĐỊA CHỈ MAIL" : "メール"}</div>
             <div className='mt-4 text-center'>phamhieu15082002@gmail.com</div>
           </div>
         </div>

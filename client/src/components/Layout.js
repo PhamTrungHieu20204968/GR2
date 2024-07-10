@@ -23,15 +23,15 @@ const steps = [
   {
     id: "3",
     options: [
-      { value: 3, label: "Number 1", trigger: "4" },
-      { value: 4, label: "Khác", trigger: "sorry" },
+      { value: 3, label: "Không biết cách chăm sóc thú cưng", trigger: "4" },
+      { value: 4, label: "Vấn đề khác", trigger: "sorry" },
     ],
     hideInput: true,
   },
   {
     id: "4",
-    message: "Tôi không biết?",
-    trigger: "3",
+    message: "Bạn có thể tham khảo ở trang bài viết hoặc liên hệ với chúng tôi.",
+    trigger: "2",
     hideInput: true,
   },
 

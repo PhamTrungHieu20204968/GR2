@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import { Col, Row, Select, Spin } from "antd";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { Col, Row, Select, Spin } from 'antd';
+import { useSelector, useDispatch } from 'react-redux';
 
-import Layout from "components/Layout";
-import SideBar from "../components/SideBar";
-import ProductCard from "components/ProductCard";
-import { useGetAllProductsByCategoryQuery } from "app/api/productService";
-import { setOrder, setMaxPrice } from "app/slices/filterSlice";
+import Layout from 'components/Layout';
+import SideBar from '../components/SideBar';
+import ProductCard from 'components/ProductCard';
+import { useGetAllProductsByCategoryQuery } from 'app/api/productService';
+import { setOrder, setMaxPrice, clearFilter } from 'app/slices/filterSlice';
 
 function Products() {
   const params = useParams();
@@ -39,36 +39,49 @@ function Products() {
     if (data) {
       const _maxPrice = data.reduce((max, item) => {
         return parseFloat(item.price) > parseFloat(max) ? item.price : max;
-      }, "0");
+      }, '0');
       dispatch(setMaxPrice(parseFloat(_maxPrice)));
     }
   }, [data, dispatch]);
+
+  useEffect(() => {
+    if (params.category !== 'pets') {
+      dispatch(
+        clearFilter({
+          category: '',
+          price: [0, 100],
+          order: 0,
+          maxPrice: 100,
+        })
+      );
+    }
+  }, [dispatch, params]);
   return (
-    <Layout page={["products", params.category]}>
-      <div className='container mx-auto pt-3 h-full'>
-        <div className='flex justify-between'>
-          <div className='uppercase text-xl'>
-            <Link to='/' className='text-gray-400 font-bold hover:text-black'>
-              {language === "vi" ? "Trang chủ" : "ホーム"}
+    <Layout page={['products', params.category]}>
+      <div className="container mx-auto pt-3 h-full">
+        <div className="flex justify-between">
+          <div className="uppercase text-xl">
+            <Link to="/" className="text-gray-400 font-bold hover:text-black">
+              {language === 'vi' ? 'Trang chủ' : 'ホーム'}
             </Link>
-            <span className='mx-2 text-gray-400'>/</span>
-            {params.category === "pets" && (
-              <span className=' font-bold'>
-                {language === "vi" ? "Thú cưng" : "ペット"}
+            <span className="mx-2 text-gray-400">/</span>
+            {params.category === 'pets' && (
+              <span className=" font-bold">
+                {language === 'vi' ? 'Thú cưng' : 'ペット'}
               </span>
             )}
-            {params.category === "foods" && (
-              <span className=' font-bold'>
-                {language === "vi" ? "Đồ ăn" : "料理"}
+            {params.category === 'foods' && (
+              <span className=" font-bold">
+                {language === 'vi' ? 'Đồ ăn' : '料理'}
               </span>
             )}
-            {params.category === "accessories" && (
-              <span className=' font-bold'>
-                {language === "vi" ? "Phụ kiện" : "アクセサリー"}
+            {params.category === 'accessories' && (
+              <span className=" font-bold">
+                {language === 'vi' ? 'Phụ kiện' : 'アクセサリー'}
               </span>
             )}
           </div>
-          <div className='options'>
+          <div className="options">
             <Select
               value={filter.order}
               style={{
@@ -80,7 +93,7 @@ function Products() {
                   value: 0,
                   label: (
                     <span>
-                      {language === "vi" ? "Thứ tự mặc định" : "デフォルト"}
+                      {language === 'vi' ? 'Thứ tự mặc định' : 'デフォルト'}
                     </span>
                   ),
                 },
@@ -88,7 +101,7 @@ function Products() {
                   value: 1,
                   label: (
                     <span>
-                      {language === "vi" ? "Thứ tự theo giá: Giảm dần" : "降順"}
+                      {language === 'vi' ? 'Thứ tự theo giá: Giảm dần' : '降順'}
                     </span>
                   ),
                 },
@@ -96,7 +109,7 @@ function Products() {
                   value: 2,
                   label: (
                     <span>
-                      {language === "vi" ? "Thứ tự theo giá: Tăng dần" : "昇順"}
+                      {language === 'vi' ? 'Thứ tự theo giá: Tăng dần' : '昇順'}
                     </span>
                   ),
                 },
@@ -104,11 +117,11 @@ function Products() {
             />
           </div>
         </div>
-        <Row className='mt-4' gutter={16}>
-          <Col span={6} className='sidebar'>
+        <Row className="mt-4" gutter={16}>
+          <Col span={6} className="sidebar">
             <SideBar filter={filter} data={data}></SideBar>
           </Col>
-          <Col span={18} className='content'>
+          <Col span={18} className="content">
             {data?.length > 0 ? (
               <Row gutter={[16, 24]}>
                 {filter.order === 0
@@ -171,9 +184,9 @@ function Products() {
             ) : (
               <Row>
                 <span>
-                  {language === "vi"
-                    ? "Không tìm thấy sản phẩm nào"
-                    : "何もない"}
+                  {language === 'vi'
+                    ? 'Không tìm thấy sản phẩm nào'
+                    : '何もない'}
                 </span>
               </Row>
             )}

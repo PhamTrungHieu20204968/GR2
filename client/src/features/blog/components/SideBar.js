@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "antd";
 import { UpOutlined, DownOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
@@ -7,6 +7,12 @@ function SideBar({ tab, setTab, filter, setFilter }) {
   const { language, isLoggedIn } = useSelector((state) => state.auth);
 
   const [openSearch, setOpenSearch] = useState(false);
+
+  useEffect(() => {
+    if (filter.tag) {
+      setOpenSearch(true);
+    }
+  },[filter])
   return (
     <div className='w-full p-4 border-2'>
       {isLoggedIn && (
