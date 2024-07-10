@@ -1,17 +1,17 @@
-import { Badge, Popover, Tooltip } from "antd";
-import React, { useContext, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { BellOutlined } from "@ant-design/icons";
+import { Badge, Popover, Tooltip } from 'antd';
+import React, { useContext, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { BellOutlined } from '@ant-design/icons';
 
-import ListNotifications from "./ListNotifications";
+import ListNotifications from './ListNotifications';
 import {
   useCreateNotificationMutation,
   useGetUserNotificationsQuery,
   useUpdateSeenNotificationMutation,
   useUpdateNotificationMutation,
   useUpdateScheduleNotificationsMutation,
-} from "app/api/notificationService";
-import { socketContext } from "./SocketProvider";
+} from 'app/api/notificationService';
+import { socketContext } from './SocketProvider';
 
 function Notifications() {
   const { accessToken, notificationSetting, language } = useSelector(
@@ -21,8 +21,9 @@ function Notifications() {
   const [create] = useCreateNotificationMutation();
   const [updateSeen] = useUpdateSeenNotificationMutation();
   const [updateNotification] = useUpdateNotificationMutation();
-  const [updateScheduleNotifications] =
-    useUpdateScheduleNotificationsMutation();
+  const [
+    updateScheduleNotifications,
+  ] = useUpdateScheduleNotificationsMutation();
   const { data } = useGetUserNotificationsQuery({
     headers: {
       accessToken,
@@ -49,7 +50,7 @@ function Notifications() {
   };
 
   useEffect(() => {
-    socket?.on("receive-notification", (notification) => {
+    socket?.on('receive-notification', (notification) => {
       if (notificationSetting < notification.type) {
         create({
           data: { ...notification },
@@ -68,7 +69,7 @@ function Notifications() {
       }
     });
 
-    socket?.on("one-time-notification", (notification) => {
+    socket?.on('one-time-notification', (notification) => {
       updateNotification({
         data: { type: notification.type },
         id: notification.notificationId,
@@ -86,11 +87,11 @@ function Notifications() {
         });
     });
 
-    socket?.on("repeat-notification", (notification) => {
+    socket?.on('repeat-notification', (notification) => {
       const currentDate = new Date(notification.sendTime);
       const year = currentDate.getFullYear();
-      const month = String(currentDate.getMonth() + 1).padStart(2, "0");
-      const day = String(currentDate.getDate()).padStart(2, "0");
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+      const day = String(currentDate.getDate()).padStart(2, '0');
 
       const formattedDate = `${year}-${month}-${day}`;
       updateNotification({
@@ -111,19 +112,19 @@ function Notifications() {
           console.log(err);
         });
     });
-  }, [socket]);
+  }, [socket, notificationSetting]);
 
   useEffect(() => {
     if (data?.length > 0) {
       const currentDate = new Date(Date.now());
       const year = currentDate.getFullYear();
-      const month = String(currentDate.getMonth() + 1).padStart(2, "0");
-      const day = String(currentDate.getDate()).padStart(2, "0");
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+      const day = String(currentDate.getDate()).padStart(2, '0');
 
       const formattedDate = `${year}-${month}-${day}`;
       const notificationIds = [];
       const newData = data?.filter((item) => {
-        if (item.type === 0 && !item.sendTime.includes("*")) {
+        if (item.type === 0 && !item.sendTime.includes('*')) {
           if (item.sendTime <= formattedDate) notificationIds.push(item.id);
           return false;
         } else return true;
@@ -153,18 +154,18 @@ function Notifications() {
   }
   return (
     <Popover
-      trigger='click'
+      trigger="click"
       content={<ListNotifications data={filteredData} />}
     >
       <Badge count={filteredData?.filter((item) => item.status === 0)?.length}>
         <Tooltip
-          title={language === "vi" ? "Thông báo" : "お知らせ"}
-          placement='bottom'
-          color='#666'
+          title={language === 'vi' ? 'Thông báo' : 'お知らせ'}
+          placement="bottom"
+          color="#666"
           zIndex={60}
         >
           <BellOutlined
-            className='text-2xl text-white font-bold cursor-pointer hover:text-primary'
+            className="text-2xl text-white font-bold cursor-pointer hover:text-primary"
             onClick={handleSeenNotifications}
           />
         </Tooltip>

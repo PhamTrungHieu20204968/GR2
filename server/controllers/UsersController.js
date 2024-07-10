@@ -1,9 +1,9 @@
-const { users } = require("../models");
-const cloudinary = require("cloudinary").v2;
-const bcrypt = require("bcrypt");
-require("dotenv").config();
+const { users } = require('../models');
+const cloudinary = require('cloudinary').v2;
+const bcrypt = require('bcrypt');
+require('dotenv').config();
 
-const { sign } = require("jsonwebtoken");
+const { sign } = require('jsonwebtoken');
 
 class UsersController {
   // [POST] /signup
@@ -11,7 +11,7 @@ class UsersController {
     const { account, password, name, telephone } = req.body;
     const _user = await users.findOne({ where: { account } });
     if (_user) {
-      return res.json({ error: "Tài khoản đã tồn tại!" });
+      return res.json({ error: 'Tài khoản đã tồn tại!' });
     }
     bcrypt.hash(password, 10).then(async (hash) => {
       try {
@@ -23,7 +23,7 @@ class UsersController {
           role: 1,
           status: 0,
         });
-        return res.json("SUCCESS!");
+        return res.json('SUCCESS!');
       } catch (error) {
         console.log(error);
         return res.json({ error });
@@ -37,16 +37,16 @@ class UsersController {
 
     const User = await users.findOne({ where: { account } });
     if (!User || !User.password) {
-      return res.json({ error: "Người dùng không tồn tại!" });
+      return res.json({ error: 'Người dùng không tồn tại!' });
     }
 
     bcrypt.compare(password, User.password).then((match) => {
       if (!match) {
-        return res.json({ error: "Mật khẩu không chính xác!" });
+        return res.json({ error: 'Mật khẩu không chính xác!' });
       }
       const accessToken = sign(
         { id: User.id, role: User.role },
-        "secretkey"
+        'secretkey'
         //   { expiresIn: "4h" }
       );
 
@@ -77,7 +77,7 @@ class UsersController {
         });
         const accessToken = sign(
           { id: _user.id, role: _user.role },
-          "secretkey"
+          'secretkey'
           //   { expiresIn: "4h" }
         );
         return res.status(200).json({
@@ -89,16 +89,16 @@ class UsersController {
         });
       } catch (error) {
         console.log(error);
-        return res.json({ error: "Đăng nhập thất bại" });
+        return res.json({ error: 'Đăng nhập thất bại' });
       }
     } else {
       res.status(403);
-      return res.json({ error: "Đăng nhập thất bại" });
+      return res.json({ error: 'Đăng nhập thất bại' });
     }
   }
 
   // [POST] /facebook-login
-  async facebookLogin(req, res){
+  async facebookLogin(req, res) {
     const user = req.body;
     if (user) {
       try {
@@ -114,7 +114,7 @@ class UsersController {
         });
         const accessToken = sign(
           { id: _user.id, role: _user.role },
-          "secretkey"
+          'secretkey'
           //   { expiresIn: "4h" }
         );
         return res.status(200).json({
@@ -126,11 +126,11 @@ class UsersController {
         });
       } catch (error) {
         console.log(error);
-        return res.json({ error: "Đăng nhập thất bại" });
+        return res.json({ error: 'Đăng nhập thất bại' });
       }
     } else {
       res.status(403);
-      return res.json({ error: "Đăng nhập thất bại" });
+      return res.json({ error: 'Đăng nhập thất bại' });
     }
   }
 
@@ -141,21 +141,21 @@ class UsersController {
       const _user = await users.findOne({
         where: { id },
         attributes: [
-          "name",
-          "avatar",
-          "telephone",
-          "email",
-          "city",
-          "address",
-          "point",
-          "rank",
-          "title",
+          'name',
+          'avatar',
+          'telephone',
+          'email',
+          'city',
+          'address',
+          'point',
+          'rank',
+          'title',
         ],
       });
       if (_user) {
         return res.json(_user);
       } else {
-        return res.json({ error: "Không tìm thấy người dùng!" });
+        return res.json({ error: 'Không tìm thấy người dùng!' });
       }
     } catch (error) {
       console.log(error);
@@ -165,7 +165,7 @@ class UsersController {
   // [GET] /getAll
   async getAll(req, res) {
     if (req.user.role < 2) {
-      return res.json({ error: "Không có quyền truy cập!" });
+      return res.json({ error: 'Không có quyền truy cập!' });
     }
     const List = await users.findAll({ where: { role: 1 } });
     return res.json(List);
@@ -178,7 +178,7 @@ class UsersController {
     const user = req.body;
     if (req.user.role < 2 && req.user.id !== id) {
       return res.json({
-        error: "Bạn không đủ quyền thực hiện chức năng này!",
+        error: 'Bạn không đủ quyền thực hiện chức năng này!',
       });
     }
     try {
@@ -198,13 +198,13 @@ class UsersController {
           { where: { id } }
         );
       }
-      return res.json("Cập nhật thành công");
+      return res.json('Cập nhật thành công');
     } catch (error) {
       console.log(error);
       if (fileData) {
         await cloudinary.uploader.destroy(fileData.filename);
       }
-      return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+      return res.json({ error: 'Lỗi kết nối server! Vui lòng thử lại sau.' });
     }
   }
 
@@ -213,13 +213,13 @@ class UsersController {
     const id = parseInt(req.params.id);
     if (req.user.role < 2 && req.user.id !== id) {
       return res.json({
-        error: "Bạn không đủ quyền thực hiện chức năng này!",
+        error: 'Bạn không đủ quyền thực hiện chức năng này!',
       });
     }
     const _user = await users.findOne({ where: { id } });
     if (!_user.account) {
       return res.json({
-        error: "Bạn không thể cập nhật mật khẩu cho tài khoản này!",
+        error: 'Bạn không thể cập nhật mật khẩu cho tài khoản này!',
       });
     }
     const { password } = req.body;
@@ -231,13 +231,13 @@ class UsersController {
           },
           { where: { id } }
         );
-        return res.json("Cập nhật thành công");
+        return res.json('Cập nhật thành công');
       } catch (error) {
         console.log(error);
         if (fileData) {
           await cloudinary.uploader.destroy(fileData.filename);
         }
-        return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+        return res.json({ error: 'Lỗi kết nối server! Vui lòng thử lại sau.' });
       }
     });
   }
@@ -247,16 +247,16 @@ class UsersController {
     const id = parseInt(req.params.id);
     if (req.user.role < 2 && req.user.id !== id) {
       return res.json({
-        error: "Bạn không đủ quyền thực hiện chức năng này!",
+        error: 'Bạn không đủ quyền thực hiện chức năng này!',
       });
     }
     try {
       await users.destroy({
         where: { id },
       });
-      return res.json("Xóa thành công!");
+      return res.json('Xóa thành công!');
     } catch (error) {
-      return res.json({ error: "Lỗi kết nối server! Vui lòng thử lại sau." });
+      return res.json({ error: 'Lỗi kết nối server! Vui lòng thử lại sau.' });
     }
   }
 }

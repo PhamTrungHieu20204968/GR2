@@ -1,15 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const authSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState: {
     accessToken: null,
     role: null,
     isLoggedIn: false,
     userId: 0,
     notificationSetting: 0,
-    name: "",
-    language: "vi",
+    name: '',
+    language: 'vi',
   },
   reducers: {
     setUser: (state, action) => {
@@ -18,7 +18,10 @@ const authSlice = createSlice({
       state.isLoggedIn = action.payload.isLoggedIn;
       state.userId = action.payload.id;
       state.name = action.payload.name;
-      if (action.payload.notificationSetting) {
+      if (
+        action.payload.notificationSetting ||
+        action.payload.notificationSetting === 0
+      ) {
         state.notificationSetting = action.payload.notificationSetting;
       }
       if (action.payload.language) {
@@ -31,7 +34,7 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
       state.userId = 0;
       state.notificationSetting = 0;
-      state.name = "";
+      state.name = '';
     },
   },
 });
